@@ -4,6 +4,21 @@
              label-width="0px"
              class="card-box login-form">
       <h3 class="title">SIBS ASA</h3>
+      <el-form-item prop="userType">
+        <span class="svg-container">
+          <svg-icon icon-class="password"></svg-icon>
+        </span>
+        <el-select v-model="userTypeSelectArr" placeholder="请选择用户类型">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user"/>
@@ -22,15 +37,12 @@
           登录
         </el-button>
       </el-form-item>
-      <el-form-item>
-        <router-link to="/register">去注册</router-link>
-      </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
   export default {
-    name: 'login',
+    name: 'register',
     data() {
       return {
         loginForm: {
@@ -41,7 +53,26 @@
           username: [{required: true, trigger: 'blur', message: "请输入用户名"}],
           password: [{required: true, trigger: 'blur', message: "请输入密码"}]
         },
-        loading: false
+        loading: false,
+        userTypeSelectArr: {
+          option:[{
+            value: '选项1',
+            label: '黄金糕'
+          }, {
+            value: '选项2',
+            label: '双皮奶'
+          }, {
+            value: '选项3',
+            label: '蚵仔煎'
+          }, {
+            value: '选项4',
+            label: '龙须面'
+          }, {
+            value: '选项5',
+            label: '北京烤鸭'
+          }]
+        },
+        userType:''
       }
     },
     methods: {

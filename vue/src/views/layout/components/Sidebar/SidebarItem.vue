@@ -1,7 +1,10 @@
 <template>
   <div class="menu-wrapper">
+    <div class="app-title">
+      <img src="../../../../assets/login/logo.jpeg" class="logoImg"/>
+      <div class="appTitleText" >ASA选课</div>
+    </div>
     <template v-for="item in routes" v-if="!item.hidden&&item.children">
-
       <router-link v-if="item.children.length===1 && !item.children[0].children" :to="item.path+'/'+item.children[0].path" :key="item.children[0].name">
         <el-menu-item :index="item.path+'/'+item.children[0].path" class='submenu-title-noDropdown'>
           <svg-icon v-if="item.children[0].meta&&item.children[0].meta.icon" :icon-class="item.children[0].meta.icon"></svg-icon>
@@ -41,3 +44,42 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+
+  .app-title{
+    color: #188EA7;
+    font-size: larger;
+    font-weight: bolder;
+    background-color: white;
+    display: inline-flex;
+    .appTitleText{
+      margin-top: 12px;
+    }
+  }
+.logoImg{
+  width: 27%;height: 27%;    margin-left: 11%;
+}
+  .app-title:hover,app-title:active{
+    transform:scaleX(1);
+    animation:changeColor1 1.5s;
+    color:#188EA7;
+  }
+
+  @keyframes changeColor1{
+    from{
+      color: #000;
+    }
+    to{
+      color: #188EA7;
+    }
+  }
+  @keyframes changeColor2{
+    from{
+      color: #188EA7;
+    }
+    to{
+      color: #000;
+    }
+  }
+
+</style>

@@ -8,6 +8,7 @@ const _import = require('./_import_' + process.env.NODE_ENV)
 Vue.use(Router)
 export const constantRouterMap = [
   {path: '/login', component: _import('login/index'), hidden: true},
+  {path: '/register', component: _import('register/index')},
   {path: '/404', component: _import('404'), hidden: true},
   {
     path: '/',
@@ -35,10 +36,17 @@ export const asyncRouterMap = [
     children: [
       {
         path: 'article',
-        name: '文章',
+        name: '课程',
         component: _import('article/article'),
-        meta: {title: '文章', icon: 'example'},
+        meta: {title: '课程', icon: 'example'},
         menu: 'article'
+      },
+      {
+        path: 'article-student',
+        name: '学生选课',
+        component: _import('article-student/article'),
+        meta: {title: '学生选课', icon: 'example'},
+        menu: 'article-student'
       },
     ]
   },
