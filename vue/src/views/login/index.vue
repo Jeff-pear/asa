@@ -23,7 +23,7 @@
         </el-button>
       </el-form-item>
       <el-form-item>
-        <router-link to="/register">去注册</router-link>
+        <router-link to="/register">没有账号，去注册！</router-link>
       </el-form-item>
     </el-form>
   </div>
