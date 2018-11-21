@@ -57,3 +57,11 @@ a:hover {
 .app-container {
   padding: 20px;
 }
+.el-form-item__content{
+  .el-select,.el-input-number{
+    width: 89%;
+    .el-input{
+      width: 97%;
+    }
+  }
+}

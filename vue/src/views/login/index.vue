@@ -22,9 +22,9 @@
           登录
         </el-button>
       </el-form-item>
-      <el-form-item>
+      <div class="linkto">
         <router-link to="/register">去注册</router-link>
-      </el-form-item>
+      </div>
     </el-form>
   </div>
 </template>
@@ -143,6 +143,10 @@
       position: absolute;
       right: 35px;
       bottom: 28px;
+    }
+    .linkto{
+      color: #fff;
+      text-decoration: underline;
     }
   }
 </style>
