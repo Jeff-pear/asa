@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.heeexy</groupId>
-    <artifactId>example</artifactId>
+    <artifactId>asa</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>permissionExample</name>
-    <description>权限后端</description>
+    <name>AsaService</name>
+    <description>ASA后端</description>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
