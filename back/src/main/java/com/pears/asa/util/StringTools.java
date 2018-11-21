@@ -1,7 +1,7 @@
 package com.pears.asa.util;
 
 /**
- * @author: hxy
+ * @author: pears
  * @date: 2017/10/24 10:16
  */
 public class StringTools {

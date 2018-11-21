@@ -19,6 +19,8 @@
         <result column="updateTime" property="updateTime"/>
         <result column="lastLoginTime" property="lastLoginTime"/>
         <result column="deleteStatus" property="deleteStatus"/>
+        <result column="activeStatus" property="activeStatus"/>
+
         <collection property="permissionList" ofType="String">
             <id column="permissionName" property="permissionName"/>
         </collection>
@@ -35,6 +37,7 @@
                      nickname                                nickname,
                      role_id                                 roleId,
                      delete_status                           deleteStatus,
+                     active_status                           activeStatus,
                      DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
                      DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
                  FROM sys_user

@@ -3,6 +3,7 @@ package com.pears.asa.config.exception;
 import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.util.CommonUtil;
 import com.pears.asa.util.constants.ErrorEnum;
+import org.apache.shiro.authc.AuthenticationException;
 
 /**
  * @author: pears
@@ -11,7 +12,7 @@ import com.pears.asa.util.constants.ErrorEnum;
  * 拦截器可以统一拦截此错误,将其中json返回给前端
  * @date: 2017/10/24 10:29
  */
-public class CommonJsonException extends RuntimeException {
+public class UnActiveUserException extends AuthenticationException {
     private JSONObject resultJson;
 
     /**
@@ -20,11 +21,11 @@ public class CommonJsonException extends RuntimeException {
      *
      * @param errorEnum 以错误的ErrorEnum做参数
      */
-    public CommonJsonException(ErrorEnum errorEnum) {
+    public UnActiveUserException(ErrorEnum errorEnum) {
         this.resultJson = CommonUtil.errorJson(errorEnum);
     }
 
-    public CommonJsonException(JSONObject resultJson) {
+    public UnActiveUserException(JSONObject resultJson) {
         this.resultJson = resultJson;
     }
 

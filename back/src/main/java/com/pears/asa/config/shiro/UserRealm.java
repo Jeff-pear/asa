@@ -1,6 +1,8 @@
 package com.pears.asa.config.shiro;
 
 import com.alibaba.fastjson.JSONObject;
+import com.pears.asa.config.exception.CommonJsonException;
+import com.pears.asa.config.exception.UnActiveUserException;
 import com.pears.asa.service.LoginService;
 import com.pears.asa.util.constants.Constants;
 import org.apache.shiro.SecurityUtils;
@@ -17,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 
 /**
- * @author: hxy
+ * @author: pears
  * @description: 自定义Realm
  * @date: 2017/10/24 10:06
  */
@@ -53,6 +55,11 @@ public class UserRealm extends AuthorizingRealm {
         if (user == null) {
             //没找到帐号
             throw new UnknownAccountException();
+        }
+        if("0".equalsIgnoreCase(user.getString("activeStatus"))){
+            //账号未激活
+            user.put("errorMessage","账号未激活");
+            throw new UnActiveUserException(user);
         }
         //交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配，如果觉得人家的不好可以自定义实现
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(

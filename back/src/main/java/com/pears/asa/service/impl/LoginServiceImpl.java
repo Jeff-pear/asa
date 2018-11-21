@@ -1,6 +1,7 @@
 package com.pears.asa.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.pears.asa.config.exception.UnActiveUserException;
 import com.pears.asa.dao.LoginDao;
 import com.pears.asa.service.LoginService;
 import com.pears.asa.service.PermissionService;
@@ -17,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author: hxy
+ * @author: pears
  * @description: 登录service实现类
  * @date: 2017/10/24 11:53
  */
@@ -45,9 +46,13 @@ public class LoginServiceImpl implements LoginService {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         try {
             currentUser.login(token);
+            logger.info("User :"+token.getUsername()+" Login successfully!");
             returnData.put("result", "success");
         } catch (AuthenticationException e) {
             returnData.put("result", "fail");
+            if(UnActiveUserException.class.equals(e.getClass())){
+                returnData.put("errorMessage", ((UnActiveUserException)e).getResultJson().getString("errorMessage"));
+            }
         }
         return CommonUtil.successJson(returnData);
     }

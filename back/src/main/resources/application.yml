@@ -1,4 +1,12 @@
 spring:
+  mail:
+    default-encoding: UTF-8
+    host: smtp.qq.com
+    password: lwjAndroid119
+    port: 25
+    protocol: smtp
+    username: 328901261@qq.com
+
   datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3307/asa_db?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
