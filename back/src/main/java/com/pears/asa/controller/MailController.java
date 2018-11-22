@@ -19,9 +19,9 @@ public class MailController {
         //建立邮件消息
         SimpleMailMessage mainMessage = new SimpleMailMessage();
         //发送者
-        mainMessage.setFrom("328901261@qq.com");
+        mainMessage.setFrom("zhuliye@sibs.com.cn");
         //接收者
-        mainMessage.setTo("07033320a@gmail.com");
+        mainMessage.setTo("zhuliye@sibs.com.cn");
         //发送的标题
         mainMessage.setSubject("嗨喽");
         //发送的内容

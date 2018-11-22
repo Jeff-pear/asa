@@ -67,6 +67,18 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 查询角色
+     * 在注册的时候要使用此方法
+     *
+     * @return
+     */
+    @Override
+    public JSONObject getRolesWithRegister() {
+        List<JSONObject> roles = userDao.getRolesWithRegister();
+        return CommonUtil.successPage(roles);
+    }
+
+    /**
      * 修改用户
      *
      * @param jsonObject

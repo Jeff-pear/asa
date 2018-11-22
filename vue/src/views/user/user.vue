@@ -10,13 +10,30 @@
     </div>
     <el-table :data="list" height="530" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
+      <!--<el-table-column type="expand">-->
+        <!--<template slot-scope="props">-->
+          <!--<el-form label-position="left" inline class="demo-table-expand">-->
+            <!--<el-form-item label="昵称">-->
+              <!--<span>{{ props.row.nickname }}</span>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="创建时间">-->
+              <!--<span>{{ props.row.createTime }}</span>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="最近修改时间">-->
+              <!--<span>{{ props.row.updateTime }}</span>-->
+            <!--</el-form-item>-->
+          <!--</el-form>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+
       <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="用户名" prop="username" ></el-table-column>
       <el-table-column align="center" label="昵称" prop="nickname" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="用户名" prop="username" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="邮箱" prop="email" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="角色" width="100">
         <template slot-scope="scope">
           <el-tag type="success" v-text="scope.row.roleName" v-if="scope.row.roleId===1"></el-tag>
@@ -25,16 +42,16 @@
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
-      <el-table-column align="center" label="是否激活"  width="170">
+      <el-table-column align="center" label="是否激活" >
         <template slot-scope="scope">
           <span v-if="scope.row.activeStatus == 1"><i class="el-icon-success"></i>&nbsp;激活</span>
           <span v-else><i class="el-icon-error"></i>&nbsp;未激活</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
+      <el-table-column align="center" label="管理" width="155" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "
+          <el-button type="primary" size="mini" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="danger" size="mini" icon="delete" v-if="scope.row.userId!=userId "
                      @click="removeUser(scope.$index)">删除
           </el-button>
         </template>
@@ -56,10 +73,15 @@
           <el-input type="text" v-model="tempUser.username">
           </el-input>
         </el-form-item>
+        <el-form-item label="email" required>
+          <el-input v-model="tempUser.email"/>
+        </el-form-item>
+
         <el-form-item label="密码" v-if="dialogStatus=='create'" required>
           <el-input type="password" v-model="tempUser.password">
           </el-input>
         </el-form-item>
+
         <el-form-item label="新密码" v-else>
           <el-input type="password" v-model="tempUser.password" placeholder="不填则表示不修改">
           </el-input>
@@ -87,6 +109,13 @@
     </el-dialog>
   </div>
 </template>
+<style>
+  .demo-table-expand label{width:100px;color:#99a9bf}
+  .demo-table-expand .el-form-item{margin-right:0;margin-bottom:0;width:50%}
+  .el-form--inline .el-form-item{
+    margin-right:0;margin-bottom:0;width:50%
+  }
+</style>
 <script>
   import {mapGetters} from 'vuex'
 
@@ -112,7 +141,8 @@
           password: '',
           nickname: '',
           roleId: '',
-          userId: ''
+          userId: '',
+          email: ''
         }
       }
     },
@@ -175,6 +205,7 @@
         this.tempUser.nickname = "";
         this.tempUser.roleId = "";
         this.tempUser.userId = "";
+        this.tempUser.email = "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
@@ -184,6 +215,7 @@
         this.tempUser.nickname = user.nickname;
         this.tempUser.roleId = user.roleId;
         this.tempUser.userId = user.userId;
+        this.tempUser.email = user.email;
         this.tempUser.deleteStatus = '1';
         this.tempUser.password = '';
         this.dialogStatus = "update"

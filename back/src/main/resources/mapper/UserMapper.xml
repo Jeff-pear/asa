@@ -20,6 +20,7 @@
         <result column="lastLoginTime" property="lastLoginTime"/>
         <result column="deleteStatus" property="deleteStatus"/>
         <result column="activeStatus" property="activeStatus"/>
+        <result column="email" property="email"/>
 
         <collection property="permissionList" ofType="String">
             <id column="permissionName" property="permissionName"/>
@@ -38,6 +39,7 @@
                      role_id                                 roleId,
                      delete_status                           deleteStatus,
                      active_status                           activeStatus,
+                     email                                   email,
                      DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
                      DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
                  FROM sys_user
@@ -60,10 +62,19 @@
         WHERE delete_status='1'
     </select>
 
+    <select id="getRolesWithRegister" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            id        roleId,
+            role_name roleName
+        FROM sys_role
+        WHERE delete_status='1'
+        AND register_show='1'
+    </select>
+
     <insert id="addUser" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO sys_user
-        (username, password, nickname, role_id) VALUES
-            (#{username}, #{password}, #{nickname}, #{roleId})
+        (username, password, nickname, role_id, email) VALUES
+            (#{username}, #{password}, #{nickname}, #{roleId}, #{email})
     </insert>
 
     <update id="updateUser">
@@ -72,6 +83,9 @@
         nickname = #{nickname}
         <if test="password !='' and password !=null">
             , password = #{password}
+        </if>
+        <if test="email !='' and email !=null">
+            , password = #{email}
         </if>
 
         , role_id = #{roleId}

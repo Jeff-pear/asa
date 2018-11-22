@@ -3,7 +3,13 @@
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left"
              label-width="0px"
              class="card-box login-form">
-      <h3 class="title">SIBS ASA</h3>
+      <div style="text-align:right;">
+        <lang-select class="set-language"/>
+      </div>
+
+      <h3 class="title">SIBS ASA{{ $t('login.title') }}</h3>
+
+
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user"/>
@@ -22,15 +28,17 @@
           登录
         </el-button>
       </el-form-item>
-      <div class="linkto">
-        <router-link to="/register">去注册</router-link>
+      <div class="registerBtn"><svg-icon icon-class="user"/>
+        <router-link to="/register"><a>去注册</a></router-link>
       </div>
     </el-form>
   </div>
 </template>
 <script>
+  import LangSelect from '@/components/LangSelect'
   export default {
     name: 'login',
+    components: { LangSelect },
     data() {
       return {
         loginForm: {
@@ -148,9 +156,9 @@
       right: 35px;
       bottom: 28px;
     }
-    .linkto{
+    .registerBtn{
+      text-align: right;
       color: #fff;
-      text-decoration: underline;
     }
   }
 </style>

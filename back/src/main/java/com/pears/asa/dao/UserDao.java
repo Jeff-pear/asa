@@ -34,6 +34,13 @@ public interface UserDao {
      * @return
      */
     List<JSONObject> getAllRoles();
+    /**
+     * 查询角色
+     * 在注册时候要使用此方法
+     *
+     * @return
+     */
+    List<JSONObject> getRolesWithRegister();
 
     /**
      * 校验用户名是否已存在

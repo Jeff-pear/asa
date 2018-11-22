@@ -5,7 +5,8 @@ const app = {
     sidebar: {
       opened: !+Cookies.get('sidebarStatus')
     },
-    visitedViews: []
+    visitedViews: [],
+    language: Cookies.get('language') || 'en',
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -15,6 +16,10 @@ const app = {
         Cookies.set('sidebarStatus', 0)
       }
       state.sidebar.opened = !state.sidebar.opened
+    },
+    SET_LANGUAGE: (state, language) => {
+      state.language = language
+      Cookies.set('language', language)
     },
     ADD_VISITED_VIEWS: (state, view) => {
       if (state.visitedViews.some(v => v.path === view.path)) return
@@ -37,6 +42,9 @@ const app = {
     },
     addVisitedViews({ commit }, view) {
       commit('ADD_VISITED_VIEWS', view)
+    },
+    setLanguage({ commit }, language) {
+      commit('SET_LANGUAGE', language)
     },
     delVisitedViews({ commit, state }, view) {
       return new Promise((resolve) => {

@@ -1,9 +1,12 @@
 <template>
-  <el-menu class="navbar" mode="horizontal">
+  <el-menu class="navbar right-menu" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+
     <breadcrumb></breadcrumb>
-    <el-dropdown class="avatar-container" trigger="click">
+    <el-dropdown class="avatar-container " trigger="click">
+
       <div class="avatar-wrapper">
+
         欢迎您：
         <span class="user-name" v-text="nickname"> </span>
 
@@ -21,6 +24,7 @@
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
+    <lang-select class="international right-menu-item"/>
   </el-menu>
 </template>
 
@@ -28,12 +32,14 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import LangSelect from '@/components/LangSelect'
 
 export default {
 
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    LangSelect,
   },
   computed: {
     ...mapGetters([
@@ -72,11 +78,19 @@ export default {
     top: 16px;
     color: red;
   }
+
+  .right-menu-item {
+    display: inline-block;
+    margin: 0 8px;
+    position: absolute;
+    right: 6px;
+  }
+
   .avatar-container {
     height: 50px;
     display: inline-block;
     position: absolute;
-    right: 35px;
+    right: 65px;
     .avatar-wrapper {
       cursor: pointer;
       margin-top: 0px;

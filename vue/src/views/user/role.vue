@@ -39,10 +39,10 @@
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('role:update') ||hasPerm('role:delete') ">
         <template slot-scope="scope">
           <div v-if="scope.row.roleName!='管理员'">
-            <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('role:update')">修改
+            <el-button type="primary" size="mini" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('role:update')">修改
             </el-button>
             <el-button v-if=" scope.row.users && scope.row.users.length===0 && hasPerm('role:delete')" type="danger"
-                       icon="delete"
+                       icon="delete" size="mini"
                        @click="removeRole(scope.$index)">
               删除
             </el-button>

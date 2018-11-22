@@ -48,6 +48,15 @@ public interface UserService {
     JSONObject listRole();
 
     /**
+     * 查询角色
+     * 在注册的时候要使用此方法
+     *
+     * @return
+     */
+
+    JSONObject getRolesWithRegister();
+
+    /**
      * 查询所有权限, 给角色分配权限时调用
      *
      * @return

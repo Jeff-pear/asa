@@ -3,10 +3,15 @@
     <sidebar class="sidebar-container"></sidebar>
     <div class="main-container">
       <navbar></navbar>
-      <app-main></app-main>
+      <div>
+        <app-main></app-main>
+      </div>
     </div>
+
   </div>
+
 </template>
+
 
 <script>
 import { Navbar, Sidebar, AppMain } from '@/views/layout/components'
