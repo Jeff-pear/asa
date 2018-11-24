@@ -1,104 +1,3 @@
-<template>
-  <div class="register-container">
-    <el-form autoComplete="on" :model="registerForm" :rules="registerRules" ref="registerForm" label-position="left"
-             label-width="0px"
-             class="card-box register-form">
-      <h3 class="title">Register SIBS ASA </h3>
-      <div class="loginBtn"><i class="el-icon-back"></i>
-        <router-link to="/login"><a>返回登陆</a></router-link>
-      </div>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item prop="userType">
-            <span class="svg-container">
-              <svg-icon icon-class="user_type"></svg-icon>
-            </span>
-            <el-select  v-model="registerForm.userType" placeholder="用户类型">
-              <el-option
-                v-for="item in roleList"
-                :key="item.roleId"
-                :label="item.roleName"
-                :value="item.roleId">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item prop="username">
-            <span class="svg-container svg-container_register">
-              <svg-icon icon-class="user"/>
-            </span>
-            <el-input v-model="registerForm.username" autoComplete="on" placeholder="登录名"/>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item prop="email">
-            <span class="svg-container svg-container_register">
-              <svg-icon icon-class="mail"/>
-            </span>
-            <el-input v-model="registerForm.email" autoComplete="on" placeholder="email"/>
-          </el-form-item>
-        </el-col>
-
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item prop="password">
-            <span class="svg-container">
-              <svg-icon icon-class="password"></svg-icon>
-            </span>
-            <el-input type="password" @keyup.enter.native="handleRegister" v-model="registerForm.password"
-                      autoComplete="off" placeholder="密码"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item prop="passwordConfirm">
-            <span class="svg-container">
-              <svg-icon icon-class="password"></svg-icon>
-            </span>
-            <el-input type="password" v-model="registerForm.passwordConfirm"
-                      autoComplete="off" placeholder="确认密码"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-
-
-      <!--<el-row :gutter="20">-->
-        <!---->
-        <!--<el-col :span="12">-->
-          <!--<el-form-item prop="class">-->
-            <!--<span class="svg-container svg-container_register">-->
-              <!--<svg-icon icon-class="class"/>-->
-            <!--</span>-->
-            <!--<el-select v-model="registerForm.class" multiple placeholder="授课年级">-->
-              <!--<el-option-->
-                <!--v-for="item in classTypeSelectArr"-->
-                <!--:key="item.value"-->
-                <!--:label="item.label"-->
-                <!--:value="item.value">-->
-              <!--</el-option>-->
-            <!--</el-select>-->
-          <!--</el-form-item>-->
-        <!--</el-col>-->
-      <!--</el-row>-->
-
-      <el-row>
-        <el-col :span="24">
-          <el-form-item>
-            <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleRegister">
-              注册
-            </el-button>
-          </el-form-item>
-        </el-col>
-
-      </el-row>
-
-    </el-form>
-  </div>
-</template>
 <style rel="stylesheet/scss" lang="scss">
   @import "../../styles/mixin.scss";
   $bg: #2d3a4b;
@@ -181,18 +80,121 @@
     }
   }
 </style>
+<template>
+  <div class="register-container">
+    <el-form autoComplete="on" :model="registerForm" :rules="registerRules" ref="registerForm" label-position="left"
+             label-width="0px"
+             class="card-box register-form">
+      <h3 class="title">Register SIBS ASA </h3>
+      <div class="loginBtn"><i class="el-icon-back"></i>
+        <router-link to="/login"><a>返回登陆</a></router-link>
+      </div>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item prop="roleId">
+            <span class="svg-container">
+              <svg-icon icon-class="user_type"></svg-icon>
+            </span>
+            <el-select @change="handleChange" v-model="registerForm.roleId" placeholder="用户类型">
+              <el-option
+                v-for="item in roleList"
+                :key="item.roleId"
+                :label="item.roleName"
+                :value="item.roleId">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item prop="username">
+            <span class="svg-container svg-container_register">
+              <svg-icon icon-class="user"/>
+            </span>
+            <el-input v-model="registerForm.username" autoComplete="on" placeholder="登录名"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password"></svg-icon>
+            </span>
+            <el-input type="password" @keyup.enter.native="handleRegister" v-model="registerForm.password"
+                      autoComplete="off" placeholder="密码"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item prop="passwordConfirm">
+            <span class="svg-container">
+              <svg-icon icon-class="password"></svg-icon>
+            </span>
+            <el-input type="password" v-model="registerForm.passwordConfirm"
+                      autoComplete="off" placeholder="确认密码"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item prop="nickname">
+            <span class="svg-container svg-container_register">
+              <svg-icon icon-class="id"/>
+            </span>
+            <el-input v-model="registerForm.nickname" autoComplete="on" placeholder="真实姓名"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-if="registerForm.curUserType!=1">
+          <el-form-item prop="email">
+            <span class="svg-container svg-container_register">
+              <svg-icon icon-class="mail"/>
+            </span>
+            <el-input v-model="registerForm.email" autoComplete="on" placeholder="email"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <!--<el-row :gutter="20">-->
+        <!---->
+        <!--<el-col :span="12">-->
+          <!--<el-form-item prop="class">-->
+            <!--<span class="svg-container svg-container_register">-->
+              <!--<svg-icon icon-class="class"/>-->
+            <!--</span>-->
+            <!--<el-select v-model="registerForm.class" multiple placeholder="授课年级">-->
+              <!--<el-option-->
+                <!--v-for="item in classTypeSelectArr"-->
+                <!--:key="item.value"-->
+                <!--:label="item.label"-->
+                <!--:value="item.value">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
+      <!--</el-row>-->
 
+      <el-row>
+        <el-col :span="24">
+          <el-form-item>
+            <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleRegister">
+              注册
+            </el-button>
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+
+    </el-form>
+  </div>
+</template>
 <script>
   export default {
     name: 'register',
+
     data() {
       var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
-          if (this.registerForm.password !== '') {
-            this.$refs.registerRules.validateField('password');
-          }
+
           callback();
         }
       };
@@ -205,72 +207,98 @@
           callback();
         }
       };
+
+      var validateEmail = (rule, value, callback) => {
+        this.api({
+          url: "/register/checkEmail",
+          method: "get",
+          params: {email: this.registerForm.email}
+        }).then(() => {
+          callback();
+        });
+      };
+      var validateUsername = (rule, value, callback) => {
+        this.api({
+          url: "/register/checkUsername",
+          method: "get",
+          params: {username: this.registerForm.username}
+        }).then(() => {
+          callback();
+      });
+      };
       return {
         roleList:[],
+
         registerForm: {
           username: '',
           password: '',
           passwordConfirm: '',
           email: '',
-          userType: '',
-          sexType: '',
-          age: '',
-          class: ''
+          roleId: '',
+          nickname: '',
+          curUserType: '',
+          // sexType: '',
+          // age: '',
+          // class: ''
         },
         registerRules: {
-          userType:[{required: true, trigger: 'blur', message: "请选择用户类型"}],
-          username: [{required: true, trigger: 'blur', message: "请输入用户名"}],
+          roleId:[{required: true, trigger: 'blur', message: "请选择用户类型"}],
+          username: [{required: true, trigger: 'blur', message: "请输入用户名"},
+            {validator: validateUsername, trigger: 'blur'}],
           sex: [{required: true, trigger: 'blur', message: "请选择性别"}],
           password: [{required: true, trigger: 'blur', message: "请输入密码"},{ validator: validatePass, trigger: 'blur' }],
-          email: [{required: true, trigger: 'blur', message: "请输入邮箱"}, { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }],
+          email: [{required: true, trigger: 'blur', message: "请输入邮箱"},
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] },
+            {validator: validateEmail, trigger: 'blur' }],
           passwordConfirm: [
             { validator: validatePass2, trigger: 'blur' }
           ],
           age: [{required: true, trigger: 'blur', message: "请输入年龄"}],
+          nickname: [{required: true, trigger: 'blur', message: "请输入真实姓名"}],
           class:[{required: true, trigger: 'blur', message: "请选择年级"}],
         },
         loading: false,
-        sexTypeSelectArr:[{
-          value: 'male',
-          label: '男'
-        }, {
-          value: 'female',
-          label: '女'
-        }],
-        classTypeSelectArr:[{
-          value: 'kg',
-          label: 'KG'
-        }, {
-          value: 'g1',
-          label: 'G1'
-        }, {
-          value: 'g2',
-          label: 'G2'
-        }, {
-          value: 'g3',
-          label: 'G3'
-        }, {
-          value: 'g4',
-          label: 'G4'
-        }, {
-          value: 'g5',
-          label: 'G5'
-        }, {
-          value: 'esl',
-          label: 'ESL'
-        }, {
-          value: 'hseng',
-          label: 'HS Eng'
-        }, {
-          value: 'hssc',
-          label: 'HS SC'
-        }, {
-          value: 'pe',
-          label: 'PE'
-        }, {
-          value: 'music',
-          label: 'Music'
-        }]
+        // sexTypeSelectArr:[{
+        //   value: 'male',
+        //   label: '男'
+        // }, {
+        //   value: 'female',
+        //   label: '女'
+        // }],
+        // classTypeSelectArr:[{
+        //   value: 'kg',
+        //   label: 'KG'
+        // }, {
+        //   value: 'g1',
+        //   label: 'G1'
+        // }, {
+        //   value: 'g2',
+        //   label: 'G2'
+        // }, {
+        //   value: 'g3',
+        //   label: 'G3'
+        // }, {
+        //   value: 'g4',
+        //   label: 'G4'
+        // }, {
+        //   value: 'g5',
+        //   label: 'G5'
+        // }, {
+        //   value: 'esl',
+        //   label: 'ESL'
+        // }, {
+        //   value: 'hseng',
+        //   label: 'HS Eng'
+        // }, {
+        //   value: 'hssc',
+        //   label: 'HS SC'
+        // }, {
+        //   value: 'pe',
+        //   label: 'PE'
+        // }, {
+        //   value: 'music',
+        //   label: 'Music'
+        // }]
 
       }
     },
@@ -278,20 +306,39 @@
       this.getRoleList();
     },
     methods: {
+      handleChange(value){
+        var resultArr = this.roleList.filter(function(i){if(i.roleId == value) return true;});
+        if(resultArr && resultArr.length>0){
+          this.registerForm.curUserType = resultArr[0].groupTag;
+        }
+      },
       handleRegister() {
         this.$refs.registerForm.validate(valid => {
           if (valid) {
             this.loading = true
-            this.$store.dispatch('Register', this.registerForm).then(data => {
-              this.loading = false
-              if ("success" === data.result) {
-                this.$router.push({path: '/'})
-              } else {
-                this.$message.error("账号/密码错误");
-              }
-            }).catch(() => {
-              this.loading = false
-            })
+              //创建用户
+              this.api({
+                url: "/register/create",
+                method: "post",
+                data: this.registerForm
+              }).then(() => {
+                var that = this;
+                var message = '注册成功！将要跳转到登录页';
+                if(that.registerForm.curUserType == '2'){
+                  message = '注册验证码已发送至邮箱，请激活！';
+                }
+                this.$message({
+                  showClose: true,
+                  type: 'success',
+                  message: message,
+                  duration: 2000,
+                  onClose: function(){
+                    that.$router.push('/login');
+                  }
+              });
+
+            });
+
           } else {
             return false
           }

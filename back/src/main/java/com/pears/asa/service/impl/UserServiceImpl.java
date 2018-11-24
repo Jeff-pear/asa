@@ -38,6 +38,11 @@ public class UserServiceImpl implements UserService {
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
+    @Override
+    public int countUserByCondition(JSONObject jsonObject) {
+        return userDao.countUserByCondition(jsonObject);
+    }
+
     /**
      * 添加用户
      *
@@ -148,6 +153,12 @@ public class UserServiceImpl implements UserService {
         return CommonUtil.successJson();
     }
 
+    @Override
+    public JSONObject updateUserByEmail(JSONObject jsonObject) {
+        userDao.updateUserByEmail(jsonObject);
+        return CommonUtil.successJson();
+    }
+
     /**
      * 修改角色名称
      *
@@ -156,8 +167,9 @@ public class UserServiceImpl implements UserService {
      */
     private void dealRoleName(JSONObject paramJson, JSONObject roleInfo) {
         String roleName = paramJson.getString("roleName");
-        if (!roleName.equals(roleInfo.getString("roleName"))) {
-            userDao.updateRoleName(paramJson);
+        String groupTag = paramJson.getString("groupTag");
+        if (!roleName.equals(roleInfo.getString("roleName")) || !groupTag.equals(roleInfo.getString("groupTag"))) {
+            userDao.updateRoleNameAndGroupTag(paramJson);
         }
     }
 

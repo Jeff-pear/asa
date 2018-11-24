@@ -17,6 +17,14 @@ public interface UserService {
     JSONObject listUser(JSONObject jsonObject);
 
     /**
+     * 通过条件查询用户数量
+     *
+     * @param jsonObject
+     * @return
+     */
+    int countUserByCondition(JSONObject jsonObject);
+
+    /**
      * 查询所有的角色
      * 在添加/修改用户的时候要使用此方法
      *
@@ -78,6 +86,16 @@ public interface UserService {
      * @return
      */
     JSONObject updateRole(JSONObject jsonObject);
+
+    /**
+     * 修改用户通过邮件
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject updateUserByEmail(JSONObject jsonObject);
+
+
 
     /**
      * 删除角色

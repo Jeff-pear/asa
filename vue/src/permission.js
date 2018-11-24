@@ -3,13 +3,13 @@ import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css' // Progress 进度条样式
 import {getToken} from '@/utils/auth' // 验权
-const whiteList = ['/login', '/404', '/register'] //白名单,不需要登录的路由
+const whiteList = ['/login', '/404', '/register', '/active'] //白名单,不需要登录的路由
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
     //如果已经登录
 
-    if (to.path === '/login' || to.path === 'register') {
+    if (to.path === '/login' || to.path.indexOf('register')>-1 ) {
       next({path: '/'})
       NProgress.done() // 结束Progress
     } else if (!store.getters.role) {

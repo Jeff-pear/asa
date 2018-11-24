@@ -3,6 +3,7 @@
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
     <breadcrumb></breadcrumb>
+    <marquee direction="left" class="right-menu-item2">当前选课周期：2018/12/24 -- 2018/12/25</marquee>
     <el-dropdown class="avatar-container " trigger="click">
 
       <div class="avatar-wrapper">
@@ -84,6 +85,13 @@ export default {
     margin: 0 8px;
     position: absolute;
     right: 6px;
+  }
+  .right-menu-item2 {
+    display: inline-block;
+    margin: 0 8px 0 590px;
+    position: absolute;
+    right: 250px;
+
   }
 
   .avatar-container {

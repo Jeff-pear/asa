@@ -35,7 +35,7 @@ public class UserRealm extends AuthorizingRealm {
         //查询用户的权限
         JSONObject permission = (JSONObject) session.getAttribute(Constants.SESSION_USER_PERMISSION);
         logger.info("permission的值为:" + permission);
-        logger.info("本用户权限为:" + permission.get("permissionList"));
+        //logger.info("本用户权限为:" + permission.get("permissionList"));
         //为当前用户设置角色和权限
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         authorizationInfo.addStringPermissions((Collection<String>) permission.get("permissionList"));

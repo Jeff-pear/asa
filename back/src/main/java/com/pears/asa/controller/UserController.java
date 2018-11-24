@@ -94,6 +94,7 @@ public class UserController {
      */
     @RequiresPermissions("role:update")
     @PostMapping("/updateRole")
+
     public JSONObject updateRole(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "roleId,roleName,permissions");
         return userService.updateRole(requestJson);

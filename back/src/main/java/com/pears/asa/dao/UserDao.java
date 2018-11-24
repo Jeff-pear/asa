@@ -20,6 +20,14 @@ public interface UserDao {
     int countUser(JSONObject jsonObject);
 
     /**
+     * 通过条件查询用户数量
+     *
+     * @param jsonObject
+     * @return
+     */
+    int countUserByCondition(JSONObject jsonObject);
+
+    /**
      * 查询用户列表
      *
      * @param jsonObject
@@ -67,6 +75,15 @@ public interface UserDao {
     int updateUser(JSONObject jsonObject);
 
     /**
+     * 修改用户通过email
+     *
+     * @param jsonObject
+     * @return
+     */
+    int updateUserByEmail(JSONObject jsonObject);
+
+
+    /**
      * 角色列表
      *
      * @return
@@ -112,7 +129,7 @@ public interface UserDao {
      * @param jsonObject
      * @return
      */
-    int updateRoleName(JSONObject jsonObject);
+    int updateRoleNameAndGroupTag(JSONObject jsonObject);
 
     /**
      * 查询某角色的全部数据
@@ -138,4 +155,22 @@ public interface UserDao {
      * @return
      */
     int removeRoleAllPermission(JSONObject jsonObject);
+
+    /**
+     * 注册用户
+     *
+     * @param jsonObject
+     * @return
+     */
+    int registerUser(JSONObject jsonObject);
+
+    /**
+     * 新增激活码
+     *
+     * @param jsonObject
+     * @return
+     */
+    int addActiveCode(JSONObject jsonObject);
+
+
 }

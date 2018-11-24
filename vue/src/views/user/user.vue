@@ -73,10 +73,9 @@
           <el-input type="text" v-model="tempUser.username">
           </el-input>
         </el-form-item>
-        <el-form-item label="email" required>
-          <el-input v-model="tempUser.email"/>
+        <el-form-item label="email" >
+          <el-input v-model="tempUser.email" :disabled="true"/>
         </el-form-item>
-
         <el-form-item label="密码" v-if="dialogStatus=='create'" required>
           <el-input type="password" v-model="tempUser.password">
           </el-input>
@@ -86,7 +85,7 @@
           <el-input type="password" v-model="tempUser.password" placeholder="不填则表示不修改">
           </el-input>
         </el-form-item>
-        <el-form-item label="角色" required>
+        <el-form-item label="角色" required style="width: 335px;">
           <el-select v-model="tempUser.roleId" placeholder="请选择">
             <el-option
               v-for="item in roles"
@@ -99,6 +98,10 @@
         <el-form-item label="昵称" required>
           <el-input type="text" v-model="tempUser.nickname">
           </el-input>
+        </el-form-item>
+        <el-form-item label="激活状态" required>
+          <el-radio v-model="tempUser.activeStatus" label="1">激活</el-radio>
+          <el-radio v-model="tempUser.activeStatus" label="0">未激活</el-radio>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -142,7 +145,8 @@
           nickname: '',
           roleId: '',
           userId: '',
-          email: ''
+          email: '',
+          activeStatus: ''
         }
       }
     },
@@ -217,6 +221,7 @@
         this.tempUser.userId = user.userId;
         this.tempUser.email = user.email;
         this.tempUser.deleteStatus = '1';
+        this.tempUser.activeStatus = user.activeStatus;
         this.tempUser.password = '';
         this.dialogStatus = "update"
         this.dialogFormVisible = true

@@ -16,6 +16,25 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="角色" prop="roleName" width="150"></el-table-column>
+      <el-table-column align="center" label="角色组" width="150">
+
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.groupTag == 1" type="success" >
+            <span >
+            学生</span>
+          </el-tag>
+          <el-tag v-else-if="scope.row.groupTag == 2" type="success" >
+            <span >
+            教师</span>
+          </el-tag>
+          <el-tag type="primary" v-else>
+            <span >
+            无</span>
+          </el-tag>
+
+        </template>
+
+      </el-table-column>
       <el-table-column align="center" label="用户">
         <template slot-scope="scope">
           <div v-for="user in scope.row.users">
@@ -56,6 +75,10 @@
         <el-form-item label="角色名称" required>
           <el-input type="text" v-model="tempRole.roleName" style="width: 250px;">
           </el-input>
+        </el-form-item>
+        <el-form-item label="组别" required>
+          <el-radio v-model="tempRole.groupTag" label="1">学生</el-radio>
+          <el-radio v-model="tempRole.groupTag" label="2">教师</el-radio>
         </el-form-item>
         <el-form-item label="菜单&权限" required>
           <div v-for=" (menu,_index) in allPermission" :key="menu.menuName">
@@ -100,6 +123,7 @@
         tempRole: {
           roleName: '',
           roleId: '',
+          groupTag: '',
           permissions: [],
         },
         adminName: '管理员'
@@ -140,12 +164,14 @@
         this.tempRole.roleId = '';
         this.tempRole.permissions = [];
         this.dialogStatus = "create"
+        this.tempRole.groupTag = '';
         this.dialogFormVisible = true
       },
       showUpdate($index) {
         let role = this.list[$index];
         this.tempRole.roleName = role.roleName;
         this.tempRole.roleId = role.roleId;
+        this.tempRole.groupTag = role.groupTag;
         this.tempRole.permissions = [];
         for (let i = 0; i < role.menus.length; i++) {
           let perm = role.menus[i].permissions;

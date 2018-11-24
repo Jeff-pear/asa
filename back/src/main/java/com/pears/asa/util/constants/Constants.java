@@ -15,4 +15,11 @@ public class Constants {
      */
     public static final String SESSION_USER_INFO = "userInfo";
     public static final String SESSION_USER_PERMISSION = "userPermission";
+
+    public static final String STUDENT_GROUP = "1";
+    public static final String TEACHER_GROUP = "2";
+
+    public static final String USER_ACTIVE = "1";
+    public static final String EMAIL_SENDER = "zhuliye@sibs.com.cn";
+
 }

@@ -9,6 +9,7 @@ Vue.use(Router)
 export const constantRouterMap = [
   {path: '/login', component: _import('login/index'), hidden: true},
   {path: '/register', component: _import('register/index'),hidden: true},
+  {path: '/active', component: _import('register/active'),hidden: true},
   {path: '/404', component: _import('404'), hidden: true},
   {
     path: '/',
@@ -22,7 +23,7 @@ export const constantRouterMap = [
   }
 ]
 export default new Router({
-  // mode: 'history', //后端支持可开
+   mode: 'history', //后端支持可开
   scrollBehavior: () => ({y: 0}),
   routes: constantRouterMap
 })
@@ -38,14 +39,14 @@ export const asyncRouterMap = [
         path: 'article',
         name: '课程',
         component: _import('article/article'),
-        meta: {title: '课程', icon: 'example'},
+        meta: {title: '课程', icon: 'course'},
         menu: 'article'
       },
       {
         path: 'article-student',
         name: '学生选课',
         component: _import('article-student/article'),
-        meta: {title: '学生选课', icon: 'example'},
+        meta: {title: '学生选课', icon: 'student'},
         menu: 'article-student'
       },
     ]
@@ -66,6 +67,25 @@ export const asyncRouterMap = [
         component: _import('user/role'),
         meta: {title: '权限管理', icon: 'password'},
         menu: 'role'
+      },
+    ]
+  },
+  {
+    path: '/sys',
+    component: Layout,
+    redirect: '/sys/',
+    name: '系统设置',
+    meta: {title: '系统设置', icon: 'system'},
+    children: [
+      {
+        path: 'period', name: '选课周期', component: _import('sys/period'), meta: {title: '选课周期', icon: 'peroid'}, menu: 'period'
+      },
+      {
+        path: 'email',
+        name: '邮件管理',
+        component: _import('sys/email'),
+        meta: {title: '邮件管理', icon: 'mail'},
+        menu: 'email'
       },
     ]
   },
