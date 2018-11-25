@@ -3,13 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.pears.asa.dao.SysDao">
 
-
-
     <select id="listPeriod" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
             id        id,
-            start_date startDate,
-            end_date   endDate,
+            DATE_FORMAT(start_date, '%Y.%m.%d') startDate,
+            DATE_FORMAT(end_date, '%Y.%m.%d')   endDate,
             comments   comments,
             status     status
         FROM course_period
@@ -30,7 +28,7 @@
         </if>
         )
         values
-        (#{startDate}, #{endDate},
+        (#{startDate}, #{endDate}
         <if test="comments !='' and comments !=null">
             ,#{comments}
         </if>

@@ -3,7 +3,7 @@
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
     <breadcrumb></breadcrumb>
-    <marquee direction="left" class="right-menu-item2">当前选课周期：2018/12/24 -- 2018/12/25</marquee>
+    <marquee direction="left" class="right-menu-item2">当前选课周期：{{period}}</marquee>
     <el-dropdown class="avatar-container " trigger="click">
 
       <div class="avatar-wrapper">
@@ -37,6 +37,21 @@ import LangSelect from '@/components/LangSelect'
 
 export default {
 
+
+  mounted () {
+    //VUE组件通信，监听事件发生(监听period.vue)
+    this.$bus.$on('change', ()=> {
+      this.loadData();
+    })},
+    created: function(){
+      this.listLoading = true;
+      this.loadData();
+    },
+  data() {
+    return {
+      period: ''
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
@@ -50,6 +65,17 @@ export default {
     ])
   },
   methods: {
+    loadData(){
+      this.api({
+        url: "/sys/listPeriod",
+        method: "get"
+      }).then(data => {
+        this.listLoading = false;
+      console.log("查看选课周期");
+      var obj = data.list[0];
+      this.period = obj['startDate']+" -- "+obj['endDate'];
+    });
+    },
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
     },

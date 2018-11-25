@@ -81,10 +81,10 @@
   }
 </style>
 <template>
-  <div class="register-container">
+  <div class="register-container" >
     <el-form autoComplete="on" :model="registerForm" :rules="registerRules" ref="registerForm" label-position="left"
              label-width="0px"
-             class="card-box register-form">
+             class="card-box register-form" >
       <h3 class="title">Register SIBS ASA </h3>
       <div class="loginBtn"><i class="el-icon-back"></i>
         <router-link to="/login"><a>返回登陆</a></router-link>
@@ -186,6 +186,8 @@
   </div>
 </template>
 <script>
+  import bgPic from '@/assets/common/star.jpeg'
+
   export default {
     name: 'register',
 
@@ -227,6 +229,7 @@
       });
       };
       return {
+        bgPic: bgPic + '?' + +new Date(),
         roleList:[],
 
         registerForm: {

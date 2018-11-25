@@ -1,5 +1,6 @@
 package com.pears.asa.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.dao.SysDao;
 import com.pears.asa.dao.UserDao;
@@ -46,7 +47,10 @@ public class SysServiceImpl implements SysService {
 
     @Override
     public JSONObject addPeriod(JSONObject jsonObject) {
-        return sysDao.addPeriod(jsonObject);
+        JSONArray arr = jsonObject.getJSONArray("datePeriod");
+        jsonObject.put("startDate",arr.get(0));
+        jsonObject.put("endDate",arr.get(1));
+        return CommonUtil.successJson(sysDao.addPeriod(jsonObject));
     }
 
     @Override

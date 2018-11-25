@@ -55,7 +55,7 @@ export const asyncRouterMap = [
     path: '/user',
     component: Layout,
     redirect: '/user/',
-    name: '',
+    name: '用户权限',
     meta: {title: '用户权限', icon: 'table'},
     children: [
       {
@@ -73,12 +73,16 @@ export const asyncRouterMap = [
   {
     path: '/sys',
     component: Layout,
-    redirect: '/sys/',
+    redirect: '/sys/period',
     name: '系统设置',
     meta: {title: '系统设置', icon: 'system'},
     children: [
       {
-        path: 'period', name: '选课周期', component: _import('sys/period'), meta: {title: '选课周期', icon: 'peroid'}, menu: 'period'
+        path: 'period',
+        name: '选课周期',
+        component: _import('sys/period'),
+        meta: {title: '选课周期', icon: 'peroid'},
+        menu: 'period'
       },
       {
         path: 'email',

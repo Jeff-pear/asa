@@ -40,7 +40,7 @@
     },
     methods: {
       activeUser() {
-        //查询列表
+
         this.listLoading = true;
         var code = window.location.search.split('code=')[1];
         this.api({

@@ -33,7 +33,7 @@ public interface SysDao {
      * @param jsonObject
      * @return
      */
-    JSONObject addPeriod(JSONObject jsonObject);
+    int addPeriod(JSONObject jsonObject);
 
     /**
      * 删除Period
