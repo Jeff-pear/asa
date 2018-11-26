@@ -15,7 +15,8 @@
       <el-submenu v-else :index="item.name||item.path" :key="item.name">
         <template slot="title">
           <svg-icon v-if="item.meta&&item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
-          <span v-if="item.meta&&item.meta.title">{{item.meta.title}}</span>
+          <span v-if="item.meta&&item.meta.title" :title="generateTitle(item.meta.title)">{{generateTitle(item.meta.title)}}</span>
+          <!--<item v-if="item.meta" :icon="item.meta.icon" :title="generateTitle(item.meta.title)" />-->
         </template>
 
         <template v-for="child in item.children" v-if="!child.hidden">
@@ -35,14 +36,18 @@
 </template>
 
 <script>
-export default {
-  name: 'SidebarItem',
-  props: {
-    routes: {
-      type: Array
+  import { generateTitle } from '@/utils/i18n'
+  export default {
+    name: 'SidebarItem',
+    props: {
+      routes: {
+        type: Array
+      }
+    },
+    methods: {
+      generateTitle
     }
   }
-}
 </script>
 <style lang="scss">
 

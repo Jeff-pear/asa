@@ -29,25 +29,25 @@ export default new Router({
 })
 export const asyncRouterMap = [
   {
-    path: '/system',
+    path: '/course',
     component: Layout,
-    redirect: '/system/article',
-    name: '功能模块',
-    meta: {title: '功能模块', icon: 'tree'},
+    redirect: '/course/teacher',
+    name: '课程管理',
+    meta: {title: 'courseManagement', icon: 'tree'},
     children: [
       {
-        path: 'article',
+        path: 'course-teacher',
         name: '课程',
-        component: _import('article/article'),
+        component: _import('course/teacher'),
         meta: {title: '课程', icon: 'course'},
-        menu: 'article'
+        menu: 'course-teacher'
       },
       {
-        path: 'article-student',
+        path: 'course-student',
         name: '学生选课',
-        component: _import('article-student/article'),
+        component: _import('course/student'),
         meta: {title: '学生选课', icon: 'student'},
-        menu: 'article-student'
+        menu: 'course-student'
       },
     ]
   },

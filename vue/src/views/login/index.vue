@@ -7,7 +7,7 @@
         <lang-select class="set-language"/>
       </div>
 
-      <h3 class="title">SIBS ASA{{ $t('login.title') }}</h3>
+      <h3 class="title">{{ $t('login.title') }}</h3>
 
 
       <el-form-item prop="username">
@@ -25,7 +25,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
-          登录
+          {{ $t('login.logIn') }}
         </el-button>
       </el-form-item>
       <div class="registerBtn"><svg-icon icon-class="user"/>

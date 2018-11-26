@@ -2,7 +2,7 @@
   <div class="period-container" >
     <el-form class="small-space" :model="tempPeriod" label-position="left" label-width="100px"
              style='width: 450px; margin-left:50px;'>
-      <el-form-item label="选课周期">
+      <el-form-item label="">
         <div class="block">
           <el-date-picker
             v-model="tempPeriod.datePeriod"

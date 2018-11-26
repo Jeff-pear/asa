@@ -1,5 +1,6 @@
 package com.pears.asa.util;
 
+import com.pears.asa.config.properties.EmailConfig;
 import com.pears.asa.util.model.MailVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,16 +14,16 @@ import java.util.Properties;
 public class EmailUtil {
     private static Logger logger = LoggerFactory.getLogger(EmailUtil.class);
 
-    public static void addSendMailTask(final MailVO bean){
+    public static void sendMailHtml(final MailVO bean, final EmailConfig emailConfig){
 
         try {
             logger.info(bean.toString());
 
             JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
             //设定mail server
-            senderImpl.setHost("smtp.263.net");
-            senderImpl.setUsername("zhuliye@sibs.com.cn") ;
-            senderImpl.setPassword("zhu1987831");
+            senderImpl.setHost(emailConfig.getHost());
+            senderImpl.setUsername(emailConfig.getUsername()) ;
+            senderImpl.setPassword(emailConfig.getPassword());
             MimeMessage mailMessage = senderImpl.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage, true, "UTF-8");
             //发送者

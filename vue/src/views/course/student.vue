@@ -14,7 +14,7 @@
           <span>{{scope.row.createTime}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="200" v-if="hasPerm('article:update')">
+      <el-table-column align="center" label="操作" width="200" v-if="hasPerm('course-student:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">选课</el-button>
         </template>
@@ -30,17 +30,17 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="tempArticle" label-position="left" label-width="60px"
+      <el-form class="small-space" :model="tempCourse" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
         <el-form-item label="文章">
-          <el-input type="text" v-model="tempArticle.content">
+          <el-input type="text" v-model="tempCourse.content">
           </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="success" @click="createArticle">创 建</el-button>
-        <el-button type="primary" v-else @click="updateArticle">修 改</el-button>
+        <el-button v-if="dialogStatus=='create'" type="success" @click="createCourse">创 建</el-button>
+        <el-button type="primary" v-else @click="updateCourse">修 改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -63,7 +63,7 @@
           update: '编辑',
           create: '创建文章'
         },
-        tempArticle: {
+        tempCourse: {
           id: "",
           content: ""
         }
@@ -75,12 +75,12 @@
     methods: {
       getList() {
         //查询列表
-        if (!this.hasPerm('article:list')) {
+        if (!this.hasPerm('course-student:list')) {
           return
         }
         this.listLoading = true;
         this.api({
-          url: "/article/listArticle",
+          url: "/course/listCourse",
           method: "get",
           params: this.listQuery
         }).then(data => {
@@ -105,34 +105,34 @@
       },
       showCreate() {
         //显示新增对话框
-        this.tempArticle.content = "";
+        this.tempCourse.content = "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
       showUpdate($index) {
         //显示修改对话框
-        this.tempArticle.id = this.list[$index].id;
-        this.tempArticle.content = this.list[$index].content;
+        this.tempCourse.id = this.list[$index].id;
+        this.tempCourse.content = this.list[$index].content;
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
-      createArticle() {
+      createCourse() {
         //保存新文章
         this.api({
-          url: "/article/addArticle",
+          url: "/course/addCourse",
           method: "post",
-          data: this.tempArticle
+          data: this.tempCourse
         }).then(() => {
           this.getList();
           this.dialogFormVisible = false
         })
       },
-      updateArticle() {
+      updateCourse() {
         //修改文章
         this.api({
-          url: "/article/updateArticle",
+          url: "/course/updateCourse",
           method: "post",
-          data: this.tempArticle
+          data: this.tempCourse
         }).then(() => {
           this.getList();
           this.dialogFormVisible = false

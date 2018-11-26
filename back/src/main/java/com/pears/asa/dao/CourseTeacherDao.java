@@ -6,17 +6,17 @@ import java.util.List;
 
 /**
  * @author: pears
- * @description: 文章Dao层
+ * @description: 课程Dao层
  * @date: 2017/10/24 16:06
  */
-public interface ArticleDao {
+public interface CourseTeacherDao {
     /**
      * 新增文章
      *
      * @param jsonObject
      * @return
      */
-    int addArticle(JSONObject jsonObject);
+    int addCourse(JSONObject jsonObject);
 
     /**
      * 统计文章总数
@@ -24,7 +24,7 @@ public interface ArticleDao {
      * @param jsonObject
      * @return
      */
-    int countArticle(JSONObject jsonObject);
+    int countCourse(JSONObject jsonObject);
 
     /**
      * 文章列表
@@ -32,7 +32,7 @@ public interface ArticleDao {
      * @param jsonObject
      * @return
      */
-    List<JSONObject> listArticle(JSONObject jsonObject);
+    List<JSONObject> listCourse(JSONObject jsonObject);
 
     /**
      * 更新文章
@@ -40,5 +40,5 @@ public interface ArticleDao {
      * @param jsonObject
      * @return
      */
-    int updateArticle(JSONObject jsonObject);
+    int updateCourse(JSONObject jsonObject);
 }

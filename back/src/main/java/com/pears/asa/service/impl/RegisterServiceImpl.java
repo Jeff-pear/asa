@@ -1,10 +1,9 @@
 package com.pears.asa.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.pears.asa.dao.SysDao;
+import com.pears.asa.config.properties.EmailConfig;
 import com.pears.asa.dao.UserDao;
 import com.pears.asa.service.RegisterService;
-import com.pears.asa.service.SysService;
 import com.pears.asa.util.CommonUtil;
 import com.pears.asa.util.EmailUtil;
 import com.pears.asa.util.StringTools;
@@ -13,11 +12,7 @@ import com.pears.asa.util.model.MailVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author: pears
@@ -28,6 +23,8 @@ import java.util.List;
 public class RegisterServiceImpl implements RegisterService {
     @Autowired
     private UserDao userDao;
+    @Autowired
+    EmailConfig emailConfig;
 
     private static Logger logger = LoggerFactory.getLogger(RegisterServiceImpl.class);
     /**
@@ -56,7 +53,7 @@ public class RegisterServiceImpl implements RegisterService {
         userDao.addActiveCode(jsonObjectActive);
 
         //String url = "<a href='http://localhost:8080/register/activeUser?code="+checkCode+"'>激活链接</a>";
-        String url = "<a href='http://localhost:9520/active?code="+checkCode+"'>激活链接</a>";
+        String url = "<a target='_blank' href='"+emailConfig.getUrlhost()+"/active?code="+checkCode+"'>激活链接</a>";
 
         StringBuffer sb = new StringBuffer();
         sb.append("<html><head></head><body><h1>亲爱的用户： 您好！</h1>")
@@ -64,7 +61,7 @@ public class RegisterServiceImpl implements RegisterService {
                 .append("<p style=''>"+url+"</p>");
         vo.setContent(sb.toString());
         EmailUtil e = new EmailUtil();
-        e.addSendMailTask(vo);
+        e.sendMailHtml(vo,emailConfig);
 
         return CommonUtil.successJson();
     }

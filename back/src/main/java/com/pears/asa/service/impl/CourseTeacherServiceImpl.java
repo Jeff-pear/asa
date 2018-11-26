@@ -1,8 +1,8 @@
 package com.pears.asa.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.pears.asa.dao.ArticleDao;
-import com.pears.asa.service.ArticleService;
+import com.pears.asa.dao.CourseTeacherDao;
+import com.pears.asa.service.CourseTeacherService;
 import com.pears.asa.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ import java.util.List;
  * @date: 2017/10/24 16:07
  */
 @Service
-public class ArticleServiceImpl implements ArticleService {
+public class CourseTeacherServiceImpl implements CourseTeacherService {
 
     @Autowired
-    private ArticleDao articleDao;
+    private CourseTeacherDao courseTeacherDao;
 
     /**
      * 新增文章
@@ -29,8 +29,8 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public JSONObject addArticle(JSONObject jsonObject) {
-        articleDao.addArticle(jsonObject);
+    public JSONObject addCourse(JSONObject jsonObject) {
+        courseTeacherDao.addCourse(jsonObject);
         return CommonUtil.successJson();
     }
 
@@ -41,10 +41,10 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    public JSONObject listArticle(JSONObject jsonObject) {
+    public JSONObject listCourse(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-        int count = articleDao.countArticle(jsonObject);
-        List<JSONObject> list = articleDao.listArticle(jsonObject);
+        int count = courseTeacherDao.countCourse(jsonObject);
+        List<JSONObject> list = courseTeacherDao.listCourse(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
@@ -56,8 +56,8 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public JSONObject updateArticle(JSONObject jsonObject) {
-        articleDao.updateArticle(jsonObject);
+    public JSONObject updateCourse(JSONObject jsonObject) {
+        courseTeacherDao.updateCourse(jsonObject);
         return CommonUtil.successJson();
     }
 }

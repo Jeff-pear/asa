@@ -32,5 +32,8 @@ export default {
     /*transform: translateX(50px);*/
     opacity: 0;
   }
+  .el-dialog{
+    width: 45%;
+  }
 
 </style>

@@ -6,14 +6,14 @@ import com.alibaba.fastjson.JSONObject;
  * @author: pears
  * @date: 2017/10/24 16:06
  */
-public interface ArticleService {
+public interface CourseTeacherService {
     /**
      * 新增文章
      *
      * @param jsonObject
      * @return
      */
-    JSONObject addArticle(JSONObject jsonObject);
+    JSONObject addCourse(JSONObject jsonObject);
 
     /**
      * 文章列表
@@ -21,7 +21,7 @@ public interface ArticleService {
      * @param jsonObject
      * @return
      */
-    JSONObject listArticle(JSONObject jsonObject);
+    JSONObject listCourse(JSONObject jsonObject);
 
     /**
      * 更新文章
@@ -29,5 +29,5 @@ public interface ArticleService {
      * @param jsonObject
      * @return
      */
-    JSONObject updateArticle(JSONObject jsonObject);
+    JSONObject updateCourse(JSONObject jsonObject);
 }
