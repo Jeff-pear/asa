@@ -31,7 +31,7 @@ export const asyncRouterMap = [
   {
     path: '/course',
     component: Layout,
-    redirect: '/course/teacher',
+    redirect: '/course/course-teacher',
     name: '课程管理',
     meta: {title: 'courseManagement', icon: 'tree'},
     children: [
@@ -39,14 +39,14 @@ export const asyncRouterMap = [
         path: 'course-teacher',
         name: '课程',
         component: _import('course/teacher'),
-        meta: {title: '课程', icon: 'course'},
+        meta: {title: 'course', icon: 'course'},
         menu: 'course-teacher'
       },
       {
         path: 'course-student',
         name: '学生选课',
         component: _import('course/student'),
-        meta: {title: '学生选课', icon: 'student'},
+        meta: {title: 'courseStudent', icon: 'student'},
         menu: 'course-student'
       },
     ]

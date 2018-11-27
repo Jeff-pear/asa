@@ -5,31 +5,118 @@
 
     <insert id="addCourse" parameterType="com.alibaba.fastjson.JSONObject">
         INSERT INTO course_teacher
-        (content) VALUES
-            ( #{content})
+        (content
+        <if test="brief !='' and brief !=null">
+            , brief
+        </if>
+        <if test="capacity !='' and capacity !=null">
+            , capacity
+        </if>
+        <if test="courseDate !='' and courseDate !=null">
+            , course_date
+        </if>
+        <if test="tuition !='' and tuition !=null">
+            , tuition
+        </if>
+        <if test="createUser !='' and createUser !=null">
+            , create_user
+        </if>
+        <if test="updateUser !='' and updateUser !=null">
+            , update_user
+        </if>
+        <if test="startDate !='' and startDate !=null">
+            , start_date
+        </if>
+        <if test="endDate !='' and endDate !=null">
+            , end_date
+        </if>
+        ) VALUES
+            ( #{content}
+        <if test="brief !='' and brief !=null">
+            , #{brief}
+        </if>
+        <if test="capacity !='' and capacity !=null">
+            , #{capacity}
+        </if>
+        <if test="courseDate !='' and courseDate !=null">
+            , #{courseDate}
+        </if>
+        <if test="tuition !='' and tuition !=null">
+            , #{tuition}
+        </if>
+        <if test="createUser !='' and createUser !=null">
+            , #{createUser}
+        </if>
+        <if test="updateUser !='' and updateUser !=null">
+            , #{updateUser}
+        </if>
+        <if test="startDate !='' and startDate !=null">
+            , #{startDate}
+        </if>
+        <if test="endDate !='' and endDate !=null">
+            , #{endDate}
+        </if>
+        )
     </insert>
 
     <select id="countCourse" resultType="Integer">
         SELECT count(0)
         FROM course_teacher w
         WHERE w.delete_status = '1'
+        <if test="content !='' and content !=null">
+            AND w.content like concat(concat('%',#{content}),'%')
+        </if>
     </select>
 
     <select id="listCourse" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
         w.id id,
         w.content content,
-          date_format(w.create_time, '%Y.%m.%d %T') createTime
+          date_format(w.create_time, '%Y.%m.%d %T') createTime,
+          date_format(w.update_time, '%Y.%m.%d %T') updateTime,
+
+          w.brief,
+          w.capacity,
+          w.course_date courseDate,
+          w.tuition,
+          w.create_user,
+          w.update_user
         FROM course_teacher w
         WHERE w.delete_status = '1'
+        <if test="content !='' and content !=null">
+            AND w.content like concat(concat('%',#{content}),'%')
+        </if>
               ORDER BY w.id DESC
         LIMIT #{offSet}, #{pageRow}
     </select>
 
     <update id="updateCourse" parameterType="com.alibaba.fastjson.JSONObject">
         UPDATE course_teacher
-           SET
-            content = #{content}
+           SET id = id
+        <if test="content !='' and content !=null">
+            , content = #{content}
+        </if>
+        <if test="brief !='' and brief !=null">
+            , brief = #{brief}
+        </if>
+        <if test="capacity !='' and capacity !=null">
+            , capacity = #{capacity}
+        </if>
+        <if test="courseDate !='' and courseDate !=null">
+            , course_date = #{courseDate}
+        </if>
+        <if test="tuition !='' and tuition !=null">
+            , tuition = #{tuition}
+        </if>
+        <if test="createUser !='' and createUser !=null">
+            , create_user = #{createUser}
+        </if>
+        <if test="updateUser !='' and updateUser !=null">
+            , update_user = #{updateUser}
+        </if>
+        <if test="deleteStatus !='' and deleteStatus !=null">
+            , delete_status = #{deleteStatus}
+        </if>
         WHERE id = #{id}
     </update>
 

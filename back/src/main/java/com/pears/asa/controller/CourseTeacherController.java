@@ -58,4 +58,20 @@ public class CourseTeacherController {
         CommonUtil.hasAllRequired(requestJson, "id,content");
         return courseTeacherService.updateCourse(requestJson);
     }
+    /**
+     * 删除课程
+     *
+     * @param requestJson
+     * @return
+     */
+    @RequiresPermissions("course-teacher:delete")
+    @PostMapping("/deleteCourse")
+    public JSONObject deleteCourse(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id");
+
+        JSONObject json = new JSONObject();
+        json.put("id",requestJson.getInteger("id"));
+        json.put("deleteStatus","2");
+        return courseTeacherService.updateCourse(json);
+    }
 }

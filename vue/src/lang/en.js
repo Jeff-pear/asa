@@ -1,7 +1,19 @@
 export default {
+  week: {
+    tue: 'Tue',
+    wed: 'Wed',
+    thu: 'Thu',
+  },
+  common:{
+    loading: 'Loading...',
+    checkAll: 'ALL',
+  deleteSuccess: 'Delete successfully'
+  },
   route: {
     dashboard: 'Dashboard',
     courseManagement: 'Course',
+    course: 'Course',
+    courseStudent: 'Student Course'
   },
   navbar: {
     logOut: 'Log Out',
@@ -21,7 +33,8 @@ export default {
     thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
   },
   period: {
-    navLabel: 'Course period'
+    navLabel: 'Course period',
+    formSelectPeriod: 'Course period'
   },
   documentation: {
     documentation: 'Documentation',

@@ -1,15 +1,24 @@
 export default {
+  week:{
+    tue: '周二',
+    wed: '周三',
+    thu: '周四',
+  },
+  common:{
+    loading: '加载中...',
+    checkAll: '全选',
+    deleteSuccess: '删除成功'
+  },
   route: {
     dashboard: '首页',
     courseManagement: '课程',
+    course: '课程',
+    courseStudent: '学生选课'
   },
   navbar: {
     logOut: '退出登录',
     dashboard: '首页',
-    github: '项目地址',
     screenfull: '全屏',
-    theme: '换肤',
-    size: '布局大小'
   },
   login: {
     title: 'SIBS ASA 系统登录',
@@ -19,6 +28,10 @@ export default {
     any: '随便填',
     thirdparty: '第三方登录',
     thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
+  },
+  period: {
+    navLabel: '选课周期',
+    formSelectPeriod: '选课周期'
   },
   documentation: {
     documentation: '文档',

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
+    <el-table :data="list" v-loading.body="listLoading" element-loading-text="" border fit
               highlight-current-row>
       <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
@@ -32,7 +32,7 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempCourse" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="文章">
+        <el-form-item label="课程">
           <el-input type="text" v-model="tempCourse.content">
           </el-input>
         </el-form-item>
@@ -61,7 +61,7 @@
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          create: '创建文章'
+          create: '创建课程'
         },
         tempCourse: {
           id: "",
@@ -80,7 +80,7 @@
         }
         this.listLoading = true;
         this.api({
-          url: "/course/listCourse",
+          url: "/course-student/listCourse",
           method: "get",
           params: this.listQuery
         }).then(data => {
@@ -117,9 +117,9 @@
         this.dialogFormVisible = true
       },
       createCourse() {
-        //保存新文章
+        //保存新课程
         this.api({
-          url: "/course/addCourse",
+          url: "/course-student/addCourse",
           method: "post",
           data: this.tempCourse
         }).then(() => {
@@ -128,9 +128,9 @@
         })
       },
       updateCourse() {
-        //修改文章
+        //修改课程
         this.api({
-          url: "/course/updateCourse",
+          url: "/course-student/updateCourse",
           method: "post",
           data: this.tempCourse
         }).then(() => {
