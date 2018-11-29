@@ -3,13 +3,29 @@
     <div class="filter-container">
       <el-form :model="listQuery" ref="listQuery">
           <el-form-item prop="content">
+
             <el-input class="filter-item" :placeholder="$t('table.title')" v-model="listQuery.content"
                       size="small" v-if="hasPerm('course-teacher:list')" ref="searchBtn" style="width: 200px;"
                       @keyup.enter.native="handleFilter" clearable/>
-            <el-button class="filter-item" type="primary" icon="el-icon-search" size="small" v-if="hasPerm('course-teacher:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
-            <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add')" @click="showCreate">添加
-            </el-button>
-            <el-button class="filter-item" size="small" style="margin-left: 0px;" @click="resetForm('listQuery')">重置</el-button>
+            <el-select size="small" class="filter-item" v-model="listQuery.grade" style="width: 200px;" multiple placeholder="请选择">
+              <el-option-group
+                v-for="group in options3"
+                :key="group.label"
+                :label="group.label">
+                <el-option
+                  v-for="item in group.options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-option-group>
+            </el-select>
+            <el-button class="filter-item" type="primary" icon="el-icon-search" style="margin-left: 10px;" size="small" v-if="hasPerm('course-teacher:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
+            <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add')" @click="showCreate">添加</el-button>
+            <el-button class="filter-item" type="primary" icon="el-icon-download" style="margin-left: 0px;" size="small" v-if="hasPerm('course-teacher:list')" @click="handleFilter">{{ $t('table.export') }}</el-button>
+            <el-checkbox style="margin-left: 0px;" v-model="listQuery.myself">只看自己</el-checkbox>
+            <!--<el-button class="filter-item" size="small" style="margin-left: 0px;" @click="resetForm('listQuery')">重置</el-button>-->
+
           </el-form-item>
       </el-form>
     </div>
@@ -59,7 +75,7 @@
             <div style="text-align: center; margin: 0">
               <el-button type="primary" size="mini" @click="deleteCourse(scope.row.id)">确定</el-button>
             </div>
-            <el-button type="danger" size="small" slot="reference">删除</el-button>
+            <el-button type="danger" size="small" v-if="hasPerm('course-teacher:delete')" slot="reference">删除</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -75,33 +91,72 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
-               style='width: 400px; margin-left:50px;'>
-        <el-form-item label="课程名">
-          <el-input type="text" v-model="tempCourse.content" clearable>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="学生数">
-          <el-input-number v-model="tempCourse.capacity"
-                           :min="1" :max="100" clearable>
-          </el-input-number>
-        </el-form-item>
-        <el-form-item label="学费">
-          <el-input type="text" v-model="tempCourse.tuition" clearable>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="课程时间">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="small" @change="handleCheckAllChange" border>{{$t('common.checkAll')}}</el-checkbox>
-          <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="checkedCourseDate" @change="handleCheckedCitiesChange" size="small">
-            <el-checkbox v-for="dateItem in courseDates" :label="dateItem" :key="dateItem" border>{{$t('week.'+dateItem)}}</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="简介">
-          <el-input type="textarea" :rows="5" v-model="tempCourse.brief"></el-input>
-        </el-form-item>
+      <el-row :gutter="24">
+          <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
+                   style='width: 400px; margin-left:50px;'>
+              <el-form-item label="课程名">
+                <el-input type="text" v-model="tempCourse.content" clearable>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="学生数">
+                <el-input-number v-model="tempCourse.capacity"
+                                 :min="1" :max="100" clearable>
+                </el-input-number>
+              </el-form-item>
+              <el-form-item label="课程时间">
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="small" @change="handleCheckAllChange" border>{{$t('common.checkAll')}}</el-checkbox>
+                <div style="margin: 15px 0;"></div>
+                <el-checkbox-group v-model="checkedCourseDate" @change="handleCheckedCitiesChange" size="small">
+                  <el-checkbox v-for="dateItem in courseDates" :label="dateItem" :key="dateItem" border>{{$t('week.'+dateItem)}}</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+              <el-form-item label="课程类型">
+                <el-radio v-model="tempCourse.type" size="small" label="1" border>中教</el-radio>
+                <el-radio v-model="tempCourse.type" size="small" label="2" border>外教</el-radio>
+                <el-radio v-model="tempCourse.type" size="small" label="3" border>外聘</el-radio>
+              </el-form-item>
+              <el-form-item label="授课年级">
+                <el-select v-model="tempCourse.grade" multiple placeholder="请选择">
+                  <el-option-group
+                    v-for="group in options3"
+                    :key="group.label"
+                    :label="group.label">
+                    <el-option
+                      v-for="item in group.options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-option-group>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="学费">
 
-      </el-form>
+                <el-row>
+                  <el-col :span="16">
+                    <el-input type="text" v-model="tempCourse.tuition" clearable>
+                    </el-input>
+                  </el-col>
+                  <el-col :span="7" :offset="1">
+
+                    <el-select v-model="tempCourse.value" placeholder="请选择">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+
+              </el-form-item>
+
+              <el-form-item label="简介">
+                <el-input type="textarea" :rows="5" v-model="tempCourse.brief"></el-input>
+              </el-form-item>
+          </el-form>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-if="dialogStatus=='create'" type="success" @click="createCourse">创 建</el-button>
@@ -127,7 +182,8 @@
         listQuery: {
           pageNum: 1,//页码
           pageRow: 50,//每页条数
-          content: ''
+          content: '',
+          myself: false
         },
         dialogStatus: 'create',
         dialogFormVisible: false,
@@ -140,13 +196,50 @@
           content: "",
           capacity: 25,
           tuition: "",
+          type: "",
+          grade:[],
           courseDate:{
             tue: false,
             wed: false,
             thu: false
           },
           brief: "",
-        }
+        },
+        options: [{
+          value: '1',
+          label: '/人'
+        }, {
+          value: '2',
+          label: '/课'
+        }, {
+          value: '3',
+          label: '/学期'
+        }],
+          options3: [{
+          label: '热门城市',
+          options: [{
+            value: 'Shanghai',
+            label: '上海'
+          }, {
+            value: 'Beijing',
+            label: '北京'
+          }]
+        }, {
+          label: '城市名',
+          options: [{
+            value: 'Chengdu',
+            label: '成都'
+          }, {
+            value: 'Shenzhen',
+            label: '深圳'
+          }, {
+            value: 'Guangzhou',
+            label: '广州'
+          }, {
+            value: 'Dalian',
+            label: '大连'
+          }]
+        }],
       }
     },
     created() {
@@ -155,6 +248,7 @@
     methods: {
       resetForm(formName) {
         this.$refs[formName].resetFields();
+        this.getList();
       },
       handleCheckAllChange(val) {
 
@@ -256,14 +350,16 @@
       },
       updateCourse() {
         //修改课程
-        this.api({
-          url: "/course-teacher/updateCourse",
-          method: "post",
-          data: this.tempCourse
-        }).then(() => {
-          this.getList();
+        if (this.active++ > 2) {
+          this.api({
+            url: "/course-teacher/updateCourse",
+            method: "post",
+            data: this.tempCourse
+          }).then(() => {
+            this.getList();
           this.dialogFormVisible = false
-        })
+        });
+        }
       },
       deleteCourse(tmpId) {
         //删除课程

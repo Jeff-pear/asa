@@ -96,10 +96,28 @@
         <if test="activeStatus !='' and activeStatus !=null">
             , active_status
         </if>
+        <if test="nicknameCn !='' and nicknameCn !=null">
+            , nickname_cn
+        </if>
+        <if test="phone !='' and phone !=null">
+            , phone
+        </if>
+        <if test="class !='' and class !=null">
+            , class
+        </if>
         ) VALUES
             (#{username}, #{password}, #{nickname}, #{roleId}, #{email}
         <if test="activeStatus !='' and activeStatus !=null">
             , #{activeStatus}
+        </if>
+        <if test="nicknameCn !='' and nicknameCn !=null">
+            , #{nicknameCn}
+        </if>
+        <if test="phone !='' and phone !=null">
+            , #{phone}
+        </if>
+        <if test="class !='' and class !=null">
+            , #{class}
         </if>
         )
     </insert>

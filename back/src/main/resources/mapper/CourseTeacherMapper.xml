@@ -74,7 +74,7 @@
         w.content content,
           date_format(w.create_time, '%Y.%m.%d %T') createTime,
           date_format(w.update_time, '%Y.%m.%d %T') updateTime,
-
+          u.nickname,
           w.brief,
           w.capacity,
           w.course_date courseDate,
@@ -82,6 +82,7 @@
           w.create_user,
           w.update_user
         FROM course_teacher w
+          LEFT JOIN sys_user u ON w.create_user = u.id
         WHERE w.delete_status = '1'
         <if test="content !='' and content !=null">
             AND w.content like concat(concat('%',#{content}),'%')

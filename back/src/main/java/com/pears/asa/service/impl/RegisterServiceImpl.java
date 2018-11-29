@@ -8,6 +8,7 @@ import com.pears.asa.util.CommonUtil;
 import com.pears.asa.util.EmailUtil;
 import com.pears.asa.util.StringTools;
 import com.pears.asa.util.constants.Constants;
+import com.pears.asa.util.constants.ErrorEnum;
 import com.pears.asa.util.model.MailVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,9 +62,10 @@ public class RegisterServiceImpl implements RegisterService {
                 .append("<p style=''>"+url+"</p>");
         vo.setContent(sb.toString());
         EmailUtil e = new EmailUtil();
-        e.sendMailHtml(vo,emailConfig);
-
-        return CommonUtil.successJson();
+        if(e.sendMailHtml(vo,emailConfig)){
+            return CommonUtil.successJson();
+        }else{
+            return CommonUtil.errorJson(ErrorEnum.E_00003);
+        }
     }
-
 }

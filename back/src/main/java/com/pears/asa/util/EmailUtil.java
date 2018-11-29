@@ -14,7 +14,7 @@ import java.util.Properties;
 public class EmailUtil {
     private static Logger logger = LoggerFactory.getLogger(EmailUtil.class);
 
-    public static void sendMailHtml(final MailVO bean, final EmailConfig emailConfig){
+    public static Boolean sendMailHtml(final MailVO bean, final EmailConfig emailConfig){
 
         try {
             logger.info(bean.toString());
@@ -30,6 +30,8 @@ public class EmailUtil {
             messageHelper.setFrom(bean.getFromUser());
             //接收者
             messageHelper.setTo(bean.getToUser());
+            //BCC
+            messageHelper.setBcc(emailConfig.getBccuser();
             //发送的标题
             messageHelper.setSubject(bean.getSubject());
             //发送的内容
@@ -41,8 +43,10 @@ public class EmailUtil {
 
             senderImpl.send(mailMessage);
             logger.info("邮件发送成功！");
+            return true;
         }catch (Exception e){
             logger.error(e.getMessage());
+            return false;
         }
     }
 }

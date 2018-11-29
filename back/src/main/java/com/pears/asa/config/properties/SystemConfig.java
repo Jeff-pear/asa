@@ -13,14 +13,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 //在springboot升级到2.x.x以后，不允许configuration的property用驼峰的命名方式，要用‘-’分割
-@ConfigurationProperties(prefix="email-config")
-@PropertySource("classpath:email.properties")
-public class EmailConfig {
-    private String host;
-    private String username;
-    private String password;
-    private String urlhost;
-    private String bccuser;
+@ConfigurationProperties(prefix="system-config")
+@PropertySource("classpath:system.properties")
+public class SystemConfig {
+    private String courseMminimumStudent;
 
 }
 

@@ -28,7 +28,6 @@ public class SysController {
      * @param request
      * @return
      */
-    @RequiresPermissions("sys:period")
     @GetMapping("/listPeriod")
     public JSONObject listPeriod(HttpServletRequest request) {
         return sysService.listPeriod(CommonUtil.request2Json(request));

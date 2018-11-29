@@ -78,6 +78,9 @@
       text-align: right;
       color: #fff;
     }
+    .el-steps--simple{
+      background: gray;
+    }
   }
 </style>
 <template>
@@ -86,6 +89,11 @@
              label-width="0px"
              class="card-box register-form" >
       <h3 class="title">Register SIBS ASA </h3>
+      <!--<el-steps :active="activeStep" finish-status="success" style="margin-bottom: 10px" simple>-->
+        <!--<el-step title="基本信息" icon="el-icon-edit"></el-step>-->
+        <!--<el-step title="个性信息" icon="el-icon-phone"></el-step>-->
+        <!--<el-step title="完成注册" icon="el-icon-success"></el-step>-->
+      <!--</el-steps>-->
       <div class="loginBtn"><i class="el-icon-back"></i>
         <router-link to="/login"><a>返回登陆</a></router-link>
       </div>
@@ -138,12 +146,12 @@
         <el-col :span="12">
           <el-form-item prop="nickname">
             <span class="svg-container svg-container_register">
-              <svg-icon icon-class="id"/>
+              <svg-icon icon-class="en"/>
             </span>
-            <el-input v-model="registerForm.nickname" autoComplete="on" placeholder="真实姓名"/>
+            <el-input v-model="registerForm.nickname" autoComplete="on" placeholder="英文姓名"/>
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-if="registerForm.curUserType!=1">
+        <el-col :span="12" >
           <el-form-item prop="email">
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="mail"/>
@@ -152,24 +160,44 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <!--<el-row :gutter="20">-->
-        <!---->
-        <!--<el-col :span="12">-->
-          <!--<el-form-item prop="class">-->
-            <!--<span class="svg-container svg-container_register">-->
-              <!--<svg-icon icon-class="class"/>-->
-            <!--</span>-->
-            <!--<el-select v-model="registerForm.class" multiple placeholder="授课年级">-->
-              <!--<el-option-->
-                <!--v-for="item in classTypeSelectArr"-->
-                <!--:key="item.value"-->
-                <!--:label="item.label"-->
-                <!--:value="item.value">-->
-              <!--</el-option>-->
-            <!--</el-select>-->
-          <!--</el-form-item>-->
-        <!--</el-col>-->
-      <!--</el-row>-->
+
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item prop="nicknameCn">
+            <span class="svg-container svg-container_register">
+              <svg-icon icon-class="cn"/>
+            </span>
+            <el-input v-model="registerForm.nicknameCn" autoComplete="on" placeholder="中文姓名"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item prop="phone">
+            <span class="svg-container svg-container_register">
+              <svg-icon icon-class="phone"/>
+            </span>
+            <el-input v-model="registerForm.phone" autoComplete="on" placeholder="电话"/>
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+      <el-row :gutter="20">
+
+        <el-col :span="12" v-if="registerForm.curUserType!='' && registerForm.curUserType==1">
+          <el-form-item prop="class">
+            <span class="svg-container svg-container_register">
+              <svg-icon icon-class="class"/>
+            </span>
+            <el-select v-model="registerForm.class" placeholder="年级">
+              <el-option
+                v-for="item in classTypeSelectArr"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
       <el-row>
         <el-col :span="24">
@@ -190,13 +218,11 @@
 
   export default {
     name: 'register',
-
     data() {
       var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
-
           callback();
         }
       };
@@ -211,13 +237,22 @@
       };
 
       var validateEmail = (rule, value, callback) => {
-        this.api({
-          url: "/register/checkEmail",
-          method: "get",
-          params: {email: this.registerForm.email}
-        }).then(() => {
+        if (this.registerForm.curUserType==2 ) {
+          if (value === '') {
+            callback(new Error('请输入邮箱'));
+          }else{
+            this.api({
+              url: "/register/checkEmail",
+              method: "get",
+              params: {email: this.registerForm.email}
+            }).then(() => {
+              callback();
+          });
+          }
+        }else{
           callback();
-        });
+        }
+
       };
       var validateUsername = (rule, value, callback) => {
         this.api({
@@ -231,7 +266,7 @@
       return {
         bgPic: bgPic + '?' + +new Date(),
         roleList:[],
-
+        activeStep:0,
         registerForm: {
           username: '',
           password: '',
@@ -240,9 +275,8 @@
           roleId: '',
           nickname: '',
           curUserType: '',
-          // sexType: '',
-          // age: '',
-          // class: ''
+          nicknameCn: '',
+          class: ''
         },
         registerRules: {
           roleId:[{required: true, trigger: 'blur', message: "请选择用户类型"}],
@@ -250,15 +284,15 @@
             {validator: validateUsername, trigger: 'blur'}],
           sex: [{required: true, trigger: 'blur', message: "请选择性别"}],
           password: [{required: true, trigger: 'blur', message: "请输入密码"},{ validator: validatePass, trigger: 'blur' }],
-          email: [{required: true, trigger: 'blur', message: "请输入邮箱"},
+          email: [
             { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] },
-            {validator: validateEmail, trigger: 'blur' }],
+            { validator: validateEmail, trigger: 'blur' }],
           passwordConfirm: [
             { validator: validatePass2, trigger: 'blur' }
           ],
           age: [{required: true, trigger: 'blur', message: "请输入年龄"}],
           nickname: [{required: true, trigger: 'blur', message: "请输入真实姓名"}],
-          class:[{required: true, trigger: 'blur', message: "请选择年级"}],
+          // class:[{required: true, trigger: 'blur', message: "请选择年级"}],
         },
         loading: false,
         // sexTypeSelectArr:[{
@@ -268,40 +302,40 @@
         //   value: 'female',
         //   label: '女'
         // }],
-        // classTypeSelectArr:[{
-        //   value: 'kg',
-        //   label: 'KG'
-        // }, {
-        //   value: 'g1',
-        //   label: 'G1'
-        // }, {
-        //   value: 'g2',
-        //   label: 'G2'
-        // }, {
-        //   value: 'g3',
-        //   label: 'G3'
-        // }, {
-        //   value: 'g4',
-        //   label: 'G4'
-        // }, {
-        //   value: 'g5',
-        //   label: 'G5'
-        // }, {
-        //   value: 'esl',
-        //   label: 'ESL'
-        // }, {
-        //   value: 'hseng',
-        //   label: 'HS Eng'
-        // }, {
-        //   value: 'hssc',
-        //   label: 'HS SC'
-        // }, {
-        //   value: 'pe',
-        //   label: 'PE'
-        // }, {
-        //   value: 'music',
-        //   label: 'Music'
-        // }]
+        classTypeSelectArr:[{
+          value: 'kg',
+          label: 'KG'
+        }, {
+          value: 'g1',
+          label: 'G1'
+        }, {
+          value: 'g2',
+          label: 'G2'
+        }, {
+          value: 'g3',
+          label: 'G3'
+        }, {
+          value: 'g4',
+          label: 'G4'
+        }, {
+          value: 'g5',
+          label: 'G5'
+        }, {
+          value: 'g6',
+          label: 'G6'
+        }, {
+          value: 'g7',
+          label: 'G7'
+        }, {
+          value: 'g8',
+          label: 'G8'
+        }, {
+          value: 'g9',
+          label: 'G9'
+        }, {
+          value: 'music',
+          label: 'Music'
+        }]
 
       }
     },
