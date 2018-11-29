@@ -2,10 +2,8 @@ spring:
   mail:
     default-encoding: UTF-8
     host: smtp.263.net
-    password: zhu1987831
     port: 25
     protocol: smtp
-    username: zhuliye@sibs.com.cn
 
   datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
