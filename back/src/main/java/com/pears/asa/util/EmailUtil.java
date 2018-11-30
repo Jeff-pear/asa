@@ -31,7 +31,7 @@ public class EmailUtil {
             //接收者
             messageHelper.setTo(bean.getToUser());
             //BCC
-            messageHelper.setBcc(emailConfig.getBccuser();
+            messageHelper.setBcc(emailConfig.getBccuser());
             //发送的标题
             messageHelper.setSubject(bean.getSubject());
             //发送的内容

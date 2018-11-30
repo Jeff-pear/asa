@@ -34,6 +34,18 @@ public class CourseTeacherController {
     }
 
     /**
+     * 查询我的课程列表
+     *
+     * @param request
+     * @return
+     */
+    @RequiresPermissions("course-teacher:list")
+    @GetMapping("/myListCourse")
+    public JSONObject listMyCourse(HttpServletRequest request) {
+        return courseTeacherService.listMyCourse(CommonUtil.request2Json(request));
+    }
+
+    /**
      * 新增课程
      *
      * @param requestJson

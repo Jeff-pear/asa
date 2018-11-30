@@ -88,7 +88,12 @@
     <el-form autoComplete="on" :model="registerForm" :rules="registerRules" ref="registerForm" label-position="left"
              label-width="0px"
              class="card-box register-form" >
-      <h3 class="title">Register SIBS ASA </h3>
+
+      <h3 class="title">Register SIBS ASA
+        <div style="text-align:right;">
+          <lang-select class="set-language"/>
+        </div>
+        </h3>
       <!--<el-steps :active="activeStep" finish-status="success" style="margin-bottom: 10px" simple>-->
         <!--<el-step title="基本信息" icon="el-icon-edit"></el-step>-->
         <!--<el-step title="个性信息" icon="el-icon-phone"></el-step>-->
@@ -214,10 +219,11 @@
   </div>
 </template>
 <script>
-  import bgPic from '@/assets/common/star.jpeg'
-
+  import bgPic from '@/assets/common/star.jpeg';
+  import LangSelect from '@/components/LangSelect';
   export default {
     name: 'register',
+    components: { LangSelect },
     data() {
       var validatePass = (rule, value, callback) => {
         if (value === '') {

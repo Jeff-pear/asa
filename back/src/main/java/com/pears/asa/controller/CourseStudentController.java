@@ -1,7 +1,7 @@
 package com.pears.asa.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.pears.asa.service.CourseTeacherService;
+import com.pears.asa.service.CourseStudentService;
 import com.pears.asa.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 public class CourseStudentController {
 
     @Autowired
-    private CourseTeacherService courseTeacherService;
+    private CourseStudentService courseStudentService;
 
     /**
-     * 查询文章列表
+     * 查询列表
      *
      * @param request
      * @return
@@ -30,24 +30,24 @@ public class CourseStudentController {
     @RequiresPermissions("course-student:list")
     @GetMapping("/listCourse")
     public JSONObject listCourse(HttpServletRequest request) {
-        return courseTeacherService.listCourse(CommonUtil.request2Json(request));
+        return courseStudentService.listCourse(CommonUtil.request2Json(request));
     }
 
     /**
-     * 新增文章
+     * 新增
      *
      * @param requestJson
      * @return
      */
-    @RequiresPermissions("course-student:add")
-    @PostMapping("/addCourse")
-    public JSONObject addCourse(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "content");
-        return courseTeacherService.addCourse(requestJson);
+    @RequiresPermissions("course-student:update")
+    @PostMapping("/pickCourse")
+    public JSONObject pickCourse(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "courseId");
+        return courseStudentService.selectCourse(requestJson);
     }
 
     /**
-     * 修改文章
+     * 修改
      *
      * @param requestJson
      * @return
@@ -55,7 +55,20 @@ public class CourseStudentController {
     @RequiresPermissions("course-student:update")
     @PostMapping("/updateCourse")
     public JSONObject updateCourse(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "id,content");
-        return courseTeacherService.updateCourse(requestJson);
+        CommonUtil.hasAllRequired(requestJson, "id,courseId");
+        return courseStudentService.updateCourse(requestJson);
+    }
+
+    /**
+     * 修改
+     *
+     * @param requestJson
+     * @return
+     */
+    @RequiresPermissions("course-student:update")
+    @PostMapping("/deleteCourse")
+    public JSONObject deleteCourse(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id");
+        return courseStudentService.updateCourse(requestJson);
     }
 }

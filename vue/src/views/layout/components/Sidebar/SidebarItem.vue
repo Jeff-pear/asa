@@ -2,7 +2,7 @@
   <div class="menu-wrapper">
     <div class="app-title">
       <img src="../../../../assets/login/logo.jpeg" class="logoImg"/>
-      <div class="appTitleText" >ASA选课</div>
+      <mallki class-name="mallki-text appTitleText" text="ASA选课"/>
     </div>
     <template v-for="item in routes" v-if="!item.hidden&&item.children">
       <router-link v-if="item.children.length===1 && !item.children[0].children" :to="item.path+'/'+item.children[0].path" :key="item.children[0].name">
@@ -35,9 +35,13 @@
 </template>
 
 <script>
-  import { generateTitle } from '@/utils/i18n'
+  import { generateTitle } from '@/utils/i18n';
+  import Mallki from '@/components/TextHoverEffect/Mallki';
   export default {
     name: 'SidebarItem',
+    components: {
+      Mallki,
+    },
     props: {
       routes: {
         type: Array
@@ -57,7 +61,7 @@
     background-color: white;
     display: inline-flex;
     .appTitleText{
-      margin-top: 12px;
+      margin-top: 13px;
     }
   }
 .logoImg{

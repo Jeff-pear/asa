@@ -4,16 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author: pears
- * @date: 2017/10/24 16:06
+ * @date: 2018/11/26 16:06
  */
-public interface CourseTeacherService {
+public interface CourseStudentService {
     /**
      * 新增文章
      *
      * @param jsonObject
      * @return
      */
-    JSONObject addCourse(JSONObject jsonObject);
+    JSONObject selectCourse(JSONObject jsonObject);
 
     /**
      * 文章列表
@@ -22,13 +22,6 @@ public interface CourseTeacherService {
      * @return
      */
     JSONObject listCourse(JSONObject jsonObject);
-    /**
-     * 文章列表
-     *
-     * @param jsonObject
-     * @return
-     */
-    JSONObject listMyCourse(JSONObject jsonObject);
 
     /**
      * 更新文章

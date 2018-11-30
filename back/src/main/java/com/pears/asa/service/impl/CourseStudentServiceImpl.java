@@ -3,9 +3,9 @@ package com.pears.asa.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.pears.asa.dao.CourseTeacherDao;
+import com.pears.asa.dao.CourseStudentDao;
 import com.pears.asa.dao.SysDao;
-import com.pears.asa.service.CourseTeacherService;
+import com.pears.asa.service.CourseStudentService;
 import com.pears.asa.util.CommonUtil;
 import com.pears.asa.util.constants.Constants;
 import org.apache.shiro.SecurityUtils;
@@ -13,7 +13,6 @@ import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,10 +24,10 @@ import java.util.List;
  * @date: 2017/10/24 16:07
  */
 @Service
-public class CourseTeacherServiceImpl implements CourseTeacherService {
+public class CourseStudentServiceImpl implements CourseStudentService {
 
     @Autowired
-    private CourseTeacherDao courseTeacherDao;
+    private CourseStudentDao courseStudentDao;
     @Autowired
     private SysDao sysDao;
 
@@ -40,20 +39,15 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public JSONObject addCourse(JSONObject jsonObject) {
+    public JSONObject selectCourse(JSONObject jsonObject) {
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
         jsonObject.put("updateUser",userInfo.getInteger("userId"));
         jsonObject.put("createUser",userInfo.getInteger("userId"));
 
-        StringToJsonArrayObj(jsonObject, "courseDate");
-        StringToJsonArrayObj(jsonObject, "grade");
-        List<JSONObject> listPeriod = sysDao.listPeriod(new JSONObject());
-        if(listPeriod.size()>0){
-            jsonObject.put("startDate",listPeriod.get(0).getString("startDate"));
-            jsonObject.put("endDate",listPeriod.get(0).getString("endDate"));
-        }
-        courseTeacherDao.addCourse(jsonObject);
+        jsonObject.put("selectUserId",userInfo.getInteger("userId"));
+
+        courseStudentDao.selectCourse(jsonObject);
         return CommonUtil.successJson();
     }
 
@@ -83,32 +77,14 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
      */
     @Override
     public JSONObject listCourse(JSONObject jsonObject) {
-        if(jsonObject.containsKey("studentCanPick") && jsonObject.getBoolean("studentCanPick")){
-            Session session = SecurityUtils.getSubject().getSession();
-            JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
-            jsonObject.put("studentCanPick",userInfo.getInteger("userId"));
-        }
         return getList(jsonObject);
     }
 
-    /**
-     * 我的课程列表
-     *
-     * @param jsonObject
-     * @return
-     */
-    @Override
-    public JSONObject listMyCourse(JSONObject jsonObject) {
-        Session session = SecurityUtils.getSubject().getSession();
-        JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
-        jsonObject.put("author",userInfo.getInteger("userId"));
-        return getList(jsonObject);
-    }
 
     private JSONObject getList(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-        int count = courseTeacherDao.countCourse(jsonObject);
-        List<JSONObject> list = courseTeacherDao.listCourse(jsonObject);
+        int count = courseStudentDao.countCourse(jsonObject);
+        List<JSONObject> list = courseStudentDao.listCourse(jsonObject);
         list.stream().forEach(p->{
             JSONObject courseDateObj = p.getJSONObject("courseDate");
             if(null!=courseDateObj){
@@ -136,7 +112,7 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
         jsonObject.put("updateUser",userInfo.getInteger("userId"));
-        courseTeacherDao.updateCourse(jsonObject);
+        courseStudentDao.updateCourse(jsonObject);
         return CommonUtil.successJson();
     }
 

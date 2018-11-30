@@ -30,6 +30,18 @@
         <if test="endDate !='' and endDate !=null">
             , end_date
         </if>
+        <if test="teacherType !='' and teacherType !=null">
+            , teacher_type
+        </if>
+        <if test="grade !='' and grade !=null">
+            , grade
+        </if>
+        <if test="tuitionType !='' and tuitionType !=null">
+            , tuition_type
+        </if>
+        <if test="finalTuition !='' and finalTuition !=null">
+            , final_tuition
+        </if>
         ) VALUES
             ( #{content}
         <if test="brief !='' and brief !=null">
@@ -56,6 +68,18 @@
         <if test="endDate !='' and endDate !=null">
             , #{endDate}
         </if>
+        <if test="teacherType !='' and teacherType !=null">
+            , #{teacherType}
+        </if>
+        <if test="grade !='' and grade !=null">
+            , #{grade}
+        </if>
+        <if test="tuitionType !='' and tuitionType !=null">
+            , #{tuitionType}
+        </if>
+        <if test="finalTuition !='' and finalTuition !=null">
+            , #{finalTuition}
+        </if>
         )
     </insert>
 
@@ -65,6 +89,12 @@
         WHERE w.delete_status = '1'
         <if test="content !='' and content !=null">
             AND w.content like concat(concat('%',#{content}),'%')
+        </if>
+        <if test="author !='' and author !=null">
+            AND w.create_user = #{author}
+        </if>
+        <if test="studentCanPick !='' and studentCanPick !=null">
+            and w.id not in (select course_id from course_student where select_user_id = #{studentCanPick})
         </if>
     </select>
 
@@ -80,14 +110,22 @@
           w.course_date courseDate,
           w.tuition,
           w.create_user,
-          w.update_user
+          w.update_user,
+          w.grade,
+          w.tuition_type tuitionType,
+          w.final_tuition finalTuition
         FROM course_teacher w
           LEFT JOIN sys_user u ON w.create_user = u.id
         WHERE w.delete_status = '1'
         <if test="content !='' and content !=null">
             AND w.content like concat(concat('%',#{content}),'%')
         </if>
-              ORDER BY w.id DESC
+        <if test="author !='' and author !=null">
+            AND w.create_user = #{author}
+        </if>
+        <if test="studentCanPick !='' and studentCanPick !=null">
+            and w.id not in (select course_id from course_student where select_user_id = #{studentCanPick})
+        </if>
         LIMIT #{offSet}, #{pageRow}
     </select>
 
@@ -117,6 +155,12 @@
         </if>
         <if test="deleteStatus !='' and deleteStatus !=null">
             , delete_status = #{deleteStatus}
+        </if>
+        <if test="teacherType !='' and teacherType !=null">
+            , teacher_type = #{teacherType}
+        </if>
+        <if test="grade !='' and grade !=null">
+            , grade = #{grade}
         </if>
         WHERE id = #{id}
     </update>

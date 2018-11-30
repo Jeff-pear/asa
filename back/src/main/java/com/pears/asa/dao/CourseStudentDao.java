@@ -1,19 +1,30 @@
-package com.pears.asa.service;
+package com.pears.asa.dao;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.List;
+
 /**
  * @author: pears
- * @date: 2017/10/24 16:06
+ * @description: 学生课程Dao层
+ * @date: 2018/11/29 16:06
  */
-public interface CourseTeacherService {
+public interface CourseStudentDao {
     /**
      * 新增文章
      *
      * @param jsonObject
      * @return
      */
-    JSONObject addCourse(JSONObject jsonObject);
+    int selectCourse(JSONObject jsonObject);
+
+    /**
+     * 统计文章总数
+     *
+     * @param jsonObject
+     * @return
+     */
+    int countCourse(JSONObject jsonObject);
 
     /**
      * 文章列表
@@ -21,14 +32,7 @@ public interface CourseTeacherService {
      * @param jsonObject
      * @return
      */
-    JSONObject listCourse(JSONObject jsonObject);
-    /**
-     * 文章列表
-     *
-     * @param jsonObject
-     * @return
-     */
-    JSONObject listMyCourse(JSONObject jsonObject);
+    List<JSONObject> listCourse(JSONObject jsonObject);
 
     /**
      * 更新文章
@@ -36,5 +40,5 @@ public interface CourseTeacherService {
      * @param jsonObject
      * @return
      */
-    JSONObject updateCourse(JSONObject jsonObject);
+    int updateCourse(JSONObject jsonObject);
 }

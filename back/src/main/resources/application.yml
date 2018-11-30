@@ -10,5 +10,10 @@ spring:
       url: jdbc:mysql://localhost:3307/asa_db?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
       username: root
       password: root
+  quartz:
+
+      wait-for-jobs-to-complete-on-shutdown: true
+      job-store-type: memory
+
 mybatis:
    mapperLocations: classpath:/mapper/*.xml

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pears.asa.dao.CourseStudentDao">
+
+    <insert id="selectCourse" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO course_student
+        (course_id, select_user_id
+        <if test="createDate !='' and createDate !=null">
+            , create_date
+        </if>
+
+        <if test="isPay !='' and isPay !=null">
+            , is_pay
+        </if>
+        <if test="payNum !='' and payNum !=null">
+            , pay_num
+        </if>
+        <if test="comment !='' and comment !=null">
+            , comment
+        </if>
+        ) VALUES
+            ( #{courseId}, #{selectUserId}
+
+        <if test="createDate !='' and createDate !=null">
+            , #{createDate}
+        </if>
+
+        <if test="isPay !='' and isPay !=null">
+            , #{isPay}
+        </if>
+        <if test="payNum !='' and payNum !=null">
+            , #{payNum}
+        </if>
+        <if test="comment !='' and comment !=null">
+            , #{comment}
+        </if>
+        )
+    </insert>
+
+    <select id="countCourse" resultType="Integer">
+        SELECT count(0)
+        FROM course_student w
+        WHERE w.delete_status = '1'
+        <if test="selectUserId !='' and selectUserId !=null">
+            AND w.select_user_id = #{selectUserId}
+        </if>
+    </select>
+
+    <select id="listCourse" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        w.id id,
+        w.course_id courseId,
+        w.select_user_id selectUserId,
+          date_format(w.create_date, '%Y.%m.%d %T') createDate,
+          date_format(w.update_date, '%Y.%m.%d %T') updateDate,
+
+        u.content content,
+        u.brief,
+        u.capacity,
+        u.course_date courseDate,
+        u.tuition,
+        s.nickname,
+        u.grade,
+        u.tuition_type tuitionType,
+        u.final_tuition finalTuition
+        FROM course_student w
+          LEFT JOIN course_teacher u ON w.course_id = u.id
+          LEFT JOIN sys_user s ON u.create_user = s.id
+        WHERE w.delete_status = '1'
+
+        <if test="selectUserId !='' and selectUserId !=null">
+            AND w.select_user_id = #{selectUserId}
+        </if>
+              ORDER BY w.id DESC
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <update id="updateCourse" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE course_teacher
+           SET id = id
+        <if test="content !='' and content !=null">
+            , content = #{content}
+        </if>
+        <if test="brief !='' and brief !=null">
+            , brief = #{brief}
+        </if>
+        <if test="capacity !='' and capacity !=null">
+            , capacity = #{capacity}
+        </if>
+        <if test="courseDate !='' and courseDate !=null">
+            , course_date = #{courseDate}
+        </if>
+        <if test="tuition !='' and tuition !=null">
+            , tuition = #{tuition}
+        </if>
+        <if test="createUser !='' and createUser !=null">
+            , create_user = #{createUser}
+        </if>
+        <if test="updateUser !='' and updateUser !=null">
+            , update_user = #{updateUser}
+        </if>
+        <if test="deleteStatus !='' and deleteStatus !=null">
+            , delete_status = #{deleteStatus}
+        </if>
+        <if test="teacherType !='' and teacherType !=null">
+            , teacher_type = #{teacherType}
+        </if>
+        <if test="grade !='' and grade !=null">
+            , grade = #{grade}
+        </if>
+        WHERE id = #{id}
+    </update>
+
+</mapper>
