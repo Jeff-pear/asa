@@ -190,7 +190,7 @@
     }
   }
 </script>
-<style>
+<style scoped>
   .el-input-number__increase{
     right: 11px;
   }

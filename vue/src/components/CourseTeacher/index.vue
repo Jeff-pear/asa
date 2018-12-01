@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="course-container">
     <div class="filter-container">
       <el-form :model="listQuery" ref="listQuery">
@@ -9,14 +9,14 @@
 
           <el-button class="filter-item" type="primary" icon="el-icon-search" style="margin-left: 10px;" size="small" v-if="hasPerm('course-teacher:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
           <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add') && mySelfList == 'true'" @click="showCreate">添加</el-button>
-          <el-button class="filter-item" type="primary" icon="el-icon-download" style="margin-left: 0px;" size="small" v-if="hasPerm('course-teacher:list')" @click="handleFilter">{{ $t('table.export') }}</el-button>
+          <el-button :loading="downloadLoading" style="margin-left: 0px;" icon="el-icon-download" type="primary" size="small" v-if="hasPerm('course-teacher:list')" @click="handleDownload">{{ $t('excel.export') }} Excel</el-button>
           <!--<el-button class="filter-item" size="small" style="margin-left: 0px;" @click="resetForm('listQuery')">重置</el-button>-->
 
         </el-form-item>
       </el-form>
     </div>
 
-    <el-table :data="list" height="530" v-loading.body="listLoading" border fit
+    <el-table ref="teacherTable" :data="list" height="530" v-loading.body="listLoading" border fit
               highlight-current-row>
       <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
@@ -49,10 +49,8 @@
           <span v-if="scope.row.courseDate.thu==true">{{$t('week.thu')}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="更新时间" width="170">
-        <template slot-scope="scope">
-          <span>{{scope.row.updateTime}}</span>
-        </template>
+      <el-table-column align="center" prop="updateTime" label="更新时间" width="170">
+
       </el-table-column>
       <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="200" v-if="hasPerm('course-teacher:update') && mySelfList == 'true'">
@@ -166,7 +164,7 @@
         courseDates: courseDateOptions,
         checkedCourseDate: [],
         isIndeterminate: true,
-
+        downloadLoading: false,
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
@@ -226,7 +224,6 @@
         this.getList();
       },
       handleCheckAllChange(val) {
-
         this.checkedCourseDate = val ? courseDateOptions : [];
         this.isIndeterminate = false;
       },
@@ -248,6 +245,50 @@
         this.listQuery.pageNum = 1;
         this.getList();
       },
+
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'courseDate') {
+          var resultStr = '';
+          if(v[j]['tue']){
+            resultStr+='Tue ';
+          }
+          if(v[j]['wed']){
+            resultStr+='Wed ';
+          }
+          if(v[j]['thu']){
+            resultStr+='Thu ';
+          }
+          return resultStr;
+        }else {
+          return v[j]
+        }
+      }))
+    },
+      handleDownload() {
+        this.downloadLoading = true
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = [];
+          const filterVal = []
+          const columns = this.$refs['teacherTable'].$refs.tableHeader.columns;
+          columns.forEach(function(i){
+            if(i['property']){
+              tHeader.push(i['label']);
+              filterVal.push(i['property']);
+            }
+          });
+          const list = this.list
+          const data = this.formatJson(filterVal, list)
+          excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+      },
       getList() {
         //查询列表
         if (!this.hasPerm('course-teacher:list')) {
@@ -260,9 +301,9 @@
           params: this.listQuery
         }).then(data => {
           this.listLoading = false;
-        this.list = data.list;
-        this.totalCount = data.totalCount;
-      });
+          this.list = data.list;
+          this.totalCount = data.totalCount;
+        });
       },
       handleSizeChange(val) {
         //改变每页数量
@@ -354,7 +395,7 @@
     }
   }
 </script>
-<style>
+<style scoped>
   .el-input-number__increase{
     right: 11px;
   }
