@@ -69,6 +69,7 @@ public class CourseStudentController {
     @PostMapping("/deleteCourse")
     public JSONObject deleteCourse(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id");
+        requestJson.put("deleteStatus","2");
         return courseStudentService.updateCourse(requestJson);
     }
 }

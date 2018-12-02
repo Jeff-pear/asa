@@ -31,6 +31,7 @@
     methods:{
       changeTabIndex: function(){
         this.activeTab = "second";
+        this.$refs['tabList.mySelect'].getList();
       },
       handleTabClick: function(tab,event){
         if(tab.index=="0"){

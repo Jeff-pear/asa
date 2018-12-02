@@ -9,7 +9,8 @@
             DATE_FORMAT(start_date, '%Y.%m.%d') startDate,
             DATE_FORMAT(end_date, '%Y.%m.%d')   endDate,
             comments   comments,
-            status     status
+            status     status,
+            CURRENT_DATE curDate
         FROM course_period
         WHERE status='0'
     </select>

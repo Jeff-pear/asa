@@ -45,6 +45,9 @@
         <if test="selectUserId !='' and selectUserId !=null">
             AND w.select_user_id = #{selectUserId}
         </if>
+        <if test="courseId !='' and courseId !=null">
+            AND w.course_id = #{courseId}
+        </if>
     </select>
 
     <select id="listCourse" resultType="com.alibaba.fastjson.JSONObject">
@@ -72,42 +75,21 @@
         <if test="selectUserId !='' and selectUserId !=null">
             AND w.select_user_id = #{selectUserId}
         </if>
+        <if test="courseId !='' and courseId !=null">
+            AND w.course_id = #{courseId}
+        </if>
               ORDER BY w.id DESC
         LIMIT #{offSet}, #{pageRow}
     </select>
 
     <update id="updateCourse" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE course_teacher
+        UPDATE course_student
            SET id = id
-        <if test="content !='' and content !=null">
-            , content = #{content}
-        </if>
-        <if test="brief !='' and brief !=null">
-            , brief = #{brief}
-        </if>
-        <if test="capacity !='' and capacity !=null">
-            , capacity = #{capacity}
-        </if>
-        <if test="courseDate !='' and courseDate !=null">
-            , course_date = #{courseDate}
-        </if>
-        <if test="tuition !='' and tuition !=null">
-            , tuition = #{tuition}
-        </if>
-        <if test="createUser !='' and createUser !=null">
-            , create_user = #{createUser}
-        </if>
-        <if test="updateUser !='' and updateUser !=null">
-            , update_user = #{updateUser}
+        <if test="comment !='' and comment !=null">
+            , comment = #{comment}
         </if>
         <if test="deleteStatus !='' and deleteStatus !=null">
             , delete_status = #{deleteStatus}
-        </if>
-        <if test="teacherType !='' and teacherType !=null">
-            , teacher_type = #{teacherType}
-        </if>
-        <if test="grade !='' and grade !=null">
-            , grade = #{grade}
         </if>
         WHERE id = #{id}
     </update>

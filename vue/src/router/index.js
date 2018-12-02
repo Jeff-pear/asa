@@ -91,6 +91,13 @@ export const asyncRouterMap = [
         meta: {title: '邮件管理', icon: 'mail'},
         menu: 'email'
       },
+      {
+        path: 'test',
+        name: '邮件管理1',
+        component: _import('sys/dropzone'),
+        meta: {title: '邮件管理1', icon: 'mail'},
+        menu: 'email1'
+      },
     ]
   },
 

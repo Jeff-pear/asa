@@ -11,7 +11,6 @@
           <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add') && mySelfList == 'true'" @click="showCreate">添加</el-button>
           <el-button :loading="downloadLoading" style="margin-left: 0px;" icon="el-icon-download" type="primary" size="small" v-if="hasPerm('course-teacher:list')" @click="handleDownload">{{ $t('excel.export') }} Excel</el-button>
           <!--<el-button class="filter-item" size="small" style="margin-left: 0px;" @click="resetForm('listQuery')">重置</el-button>-->
-
         </el-form-item>
       </el-form>
     </div>
@@ -40,13 +39,21 @@
       </el-table-column>
       <el-table-column align="center" prop="capacity" label="学生数" v-if="mySelfList=='false'" style="width: 60px;"></el-table-column>
 
-      <el-table-column align="center" prop="tuition" label="学费" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="学费" v-if="mySelfList=='true'" style="width: 60px;">
+        <template slot-scope="scope">
+          {{scope.row.tuition}} RMB
+          <span v-if="scope.row.tuitionSubType == '1'">(人)</span>
+          <span v-if="scope.row.tuitionSubType == '2'">(课)</span>
+          <span v-if="scope.row.tuitionSubType == '3'">(学期)</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="courseDate" label="课程时间" style="width: 60px;">
         <template slot-scope="scope">
           &nbsp;
-          <span v-if="scope.row.courseDate.tue==true">{{$t('week.tue')}}</span>&nbsp;
-          <span v-if="scope.row.courseDate.wed==true">{{$t('week.wed')}}</span>&nbsp;
-          <span v-if="scope.row.courseDate.thu==true">{{$t('week.thu')}}</span>
+          {{scope.row.courseDate}}
+          <!--<span v-if="scope.row.courseDate.tue==true">{{$t('week.tue')}}</span>&nbsp;-->
+          <!--<span v-if="scope.row.courseDate.wed==true">{{$t('week.wed')}}</span>&nbsp;-->
+          <!--<span v-if="scope.row.courseDate.thu==true">{{$t('week.thu')}}</span>-->
         </template>
       </el-table-column>
       <el-table-column align="center" prop="updateTime" label="更新时间" width="170">
@@ -56,7 +63,7 @@
       <el-table-column align="center" label="管理" width="200" v-if="hasPerm('course-teacher:update') && mySelfList == 'true'">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-popover
+          <el-popover :visible.sync="deleteAlertVisible"
             placement="top"
             trigger="click"
             width="160">
@@ -64,7 +71,7 @@
             <div style="text-align: center; margin: 0">
               <el-button type="primary" size="mini" @click="deleteCourse(scope.row.id)">确定</el-button>
             </div>
-            <el-button type="danger" size="small" v-if="hasPerm('course-teacher:delete')" slot="reference">删除</el-button>
+            <el-button type="danger" size="small" v-if="hasPerm('course-teacher:delete')" @click="deleteAlertVisible=true" slot="reference">删除</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -83,14 +90,13 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-row :gutter="24">
         <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
-                 style='width: 400px; margin-left:50px;'>
+                 style='width: 460px; margin-left:50px;'>
           <el-form-item label="课程名">
             <el-input type="text" v-model="tempCourse.content" clearable>
             </el-input>
           </el-form-item>
           <el-form-item label="学生数">
-            <el-input-number v-model="tempCourse.capacity"
-                             :min="1" :max="100" clearable>
+            <el-input-number v-model="tempCourse.capacity" :min="1" :max="100" clearable>
             </el-input-number>
           </el-form-item>
           <el-form-item label="课程时间">
@@ -100,42 +106,14 @@
               <el-checkbox v-for="dateItem in courseDates" :label="dateItem" :key="dateItem" border>{{$t('week.'+dateItem)}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="课程类型">
-            <el-radio v-model="tempCourse.teacherType" size="small" label="1" border>中教</el-radio>
-            <el-radio v-model="tempCourse.teacherType" size="small" label="2" border>外教</el-radio>
-            <el-radio v-model="tempCourse.teacherType" size="small" label="3" border>外聘</el-radio>
-          </el-form-item>
           <el-form-item label="授课年级">
-            <el-slider
-              v-model="tempCourse.grade"
-              range
-              show-stops
-              :format-tooltip="formatTooltip"
-              :max="9">
-            </el-slider>
+            <slider-with-labels v-bind:dataVal="tempCourse.grade" ref="grade"></slider-with-labels>
+          </el-form-item>
+          <el-form-item label="课程类型">
+            <course-type v-bind:dataVal="tempCourse.teacherType" ref="teacherType"></course-type>
           </el-form-item>
           <el-form-item label="学费">
-
-            <el-row>
-              <el-col :span="16">
-                <el-input type="text" v-model="tempCourse.tuition" clearable>
-                  <template slot="append">RMB</template>
-                </el-input>
-
-              </el-col>
-              <el-col :span="7" :offset="1">
-
-                <el-select v-model="tempCourse.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-col>
-            </el-row>
-
+            <tuition-com v-bind:dataTuition="tempCourse.tuition" v-bind:dataTuitionType="tempCourse.tuitionType" v-bind:dataTuitionSubType="tempCourse.tuitionSubType" ref="tuition" ></tuition-com>
           </el-form-item>
 
           <el-form-item label="简介">
@@ -153,10 +131,17 @@
 </template>
 
 <script>
+  import SliderWithLabels from './components/SliderWithLabels';
+  import TuitionCom from './components/TuitionComponent';
+  import CourseType from './components/CourseType';
   const courseDateOptions = ['tue', 'wed', 'thu'];
+  const courseDateVal = [1, 2, 4];
   export default {
     name: 'teacher-table',
     props:['listUrl','showMyBtn'],
+    components: {
+      SliderWithLabels,TuitionCom,CourseType,
+    },
     data() {
       return {
         mySelfList: this.$props['showMyBtn'],
@@ -167,6 +152,7 @@
         downloadLoading: false,
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
+        excelList: [],
         listLoading: false,//数据加载等待动画
         listQuery: {
           pageNum: 1,//页码
@@ -175,6 +161,7 @@
         },
         dialogStatus: 'create',
         dialogFormVisible: false,
+        deleteAlertVisible: false,
         textMap: {
           update: '编辑',
           create: '创建课程'
@@ -183,42 +170,19 @@
           id: "",
           content: "",
           capacity: 25,
-          tuition: "",
+          courseDateArr:[],
+          grade: [0,9],
           teacherType: "",
-          grade:[0, 9],
-          courseDate:{
-            tue: false,
-            wed: false,
-            thu: false
-          },
+          courseDate: 0,
           brief: "",
         },
-        options: [{
-          value: '1',
-          label: '/人'
-        }, {
-          value: '2',
-          label: '/课'
-        }, {
-          value: '3',
-          label: '/学期'
-        }],
+
       }
     },
     created() {
       this.getList();
     },
     methods: {
-      formatTooltip(val) {
-        let resultVal = '';
-        if(val == 0){
-          resultVal = 'KG'
-        }else{
-          resultVal = 'G'+String(val);
-        }
-
-        return resultVal;
-      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.getList();
@@ -226,19 +190,31 @@
       handleCheckAllChange(val) {
         this.checkedCourseDate = val ? courseDateOptions : [];
         this.isIndeterminate = false;
+        if(val){
+          this.tempCourse.courseDate = 7;
+          this.tempCourse.courseDateArr = ['tue','wed','thu'];
+        }else{
+          this.tempCourse.courseDate = 0;
+          this.tempCourse.courseDateArr = [];
+        }
       },
       handleCheckedCitiesChange(value) {
         var checkedCount = value.length;
         this.checkAll = checkedCount === this.courseDates.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.courseDates.length;
         let that = this;
-        that.tempCourse.courseDate = {
-          tue: false,
-          wed: false,
-          thu: false
-        }
-        this.checkedCourseDate.forEach(function(i){
-          that.tempCourse.courseDate[i] = true;
+        that.tempCourse.courseDate = 0;
+        this.tempCourse.courseDateArr = value;
+        value.forEach(function(i){
+          if(i == 'tue'){
+            that.tempCourse.courseDate = that.tempCourse.courseDate+1;
+          }
+          if(i == 'wed'){
+            that.tempCourse.courseDate = that.tempCourse.courseDate+2;
+          }
+          if(i == 'thu'){
+            that.tempCourse.courseDate = that.tempCourse.courseDate+4;
+          }
         });
       },
       handleFilter(){
@@ -248,46 +224,64 @@
 
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
-        if (j === 'courseDate') {
-          var resultStr = '';
-          if(v[j]['tue']){
-            resultStr+='Tue ';
-          }
-          if(v[j]['wed']){
-            resultStr+='Wed ';
-          }
-          if(v[j]['thu']){
-            resultStr+='Thu ';
-          }
-          return resultStr;
-        }else {
-          return v[j]
-        }
+        // if (j === 'courseDate') {
+        //   var resultStr = '';
+        //   if(v[j]['tue']){
+        //     resultStr+='Tue ';
+        //   }
+        //   if(v[j]['wed']){
+        //     resultStr+='Wed ';
+        //   }
+        //   if(v[j]['thu']){
+        //     resultStr+='Thu ';
+        //   }
+        //   return resultStr;
+        // }else {
+          return v[j];
+        //}
       }))
     },
       handleDownload() {
-        this.downloadLoading = true
-        import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = [];
-          const filterVal = []
-          const columns = this.$refs['teacherTable'].$refs.tableHeader.columns;
-          columns.forEach(function(i){
-            if(i['property']){
-              tHeader.push(i['label']);
-              filterVal.push(i['property']);
-            }
-          });
-          const list = this.list
-          const data = this.formatJson(filterVal, list)
-          excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth,
-          bookType: this.bookType
-        })
-        this.downloadLoading = false
-      })
+        this.downloadLoading = true;
+        if (!this.hasPerm('course-teacher:list')) {
+          return
+        }
+        this.api({
+          url: "/course-teacher/"+this.$props['listUrl'],
+          method: "get",
+          params:  {
+            content: this.listQuery.content
+          },
+        }).then(data => {
+
+          this.excelList = data.list;
+          this.totalCount = data.totalCount;
+
+          import('@/vendor/Export2Excel').then(excel => {
+            const tHeader = [];
+            const filterVal = []
+            const columns = this.$refs['teacherTable'].$refs.tableHeader.columns;
+            columns.forEach(function(i){
+              if(i['property']){
+                tHeader.push(i['label']);
+                filterVal.push(i['property']);
+              }
+            });
+            const list = this.excelList
+            const data = this.formatJson(filterVal, list)
+            excel.export_json_to_excel({
+              header: tHeader,
+              data,
+              filename: this.filename,
+              autoWidth: this.autoWidth,
+              bookType: this.bookType
+            })
+            this.downloadLoading = false
+          })
+
+        });
+
+
       },
       getList() {
         //查询列表
@@ -322,8 +316,8 @@
       showCreate() {
         //显示新增对话框
         this.tempCourse.content = "";
-        this.tempCourse.capadateItem = 25;
-        this.tempCourse.tuition = "";
+        this.tempCourse.capacity = 25;
+        //this.tempCourse.tuition = "";
         this.tempCourse.brief = "";
         this.tempCourse.grade = [0, 9];
         this.dialogStatus = "create";
@@ -335,27 +329,38 @@
       },
       showUpdate($index) {
         //显示修改对话框
-        this.tempCourse.id = this.list[$index].id;
-        this.tempCourse.content = this.list[$index].content;
-        this.tempCourse.capadateItem = this.list[$index].capadateItem;
-        this.tempCourse.tuition = this.list[$index].tuition;
-        this.tempCourse.brief = this.list[$index].brief;
-        this.tempCourse.grade = this.list[$index].grade;
-        this.tempCourse.courseDate = this.list[$index].courseDate;
+        this.tempCourse = this.list[$index];
         this.checkedCourseDate = [];
-        for(var i in this.tempCourse.courseDate){
-          if(this.tempCourse.courseDate[i]){
-            this.checkedCourseDate.push(i);
-          }
+        let arr = this.tempCourse.courseDate.split(',');
+        this.tempCourse.courseDateArr = arr;
+        for(var i in arr){
+            this.checkedCourseDate.push(arr[i]);
         }
+        this.tempCourse.courseDate = 0 ;
+        var that = this;
+        arr.forEach(function(i){
+          if(i == 'tue'){
+            that.tempCourse.courseDate = that.tempCourse.courseDate+1;
+          }
+          if(i == 'wed'){
+            that.tempCourse.courseDate = that.tempCourse.courseDate+2;
+          }
+          if(i == 'thu'){
+            that.tempCourse.courseDate = that.tempCourse.courseDate+4;
+          }
+        });
         if(this.checkedCourseDate.length == courseDateOptions.length){
           this.isIndeterminate = false;
           this.checkAll = true;
+          this.tempCourse.courseDate = 7;
         }
-        this.dialogStatus = "update"
-        this.dialogFormVisible = true
+        this.dialogStatus = "update";
+        this.dialogFormVisible = true;
       },
       createCourse() {
+        Object.assign(this.tempCourse, this.$refs['tuition']['tuition']);
+        this.tempCourse.teacherType = this.$refs['teacherType']['teacherType'];
+        this.tempCourse.grade = this.$refs['grade']['grade'];
         //保存新课程
         this.api({
           url: "/course-teacher/addCourse",
@@ -368,7 +373,9 @@
       },
       updateCourse() {
         //修改课程
-        if (this.active++ > 2) {
+        Object.assign(this.tempCourse, this.$refs['tuition']['tuition']);
+        this.tempCourse.teacherType = this.$refs['teacherType']['teacherType'];
+        this.tempCourse.grade = this.$refs['grade']['grade'];
           this.api({
             url: "/course-teacher/updateCourse",
             method: "post",
@@ -377,7 +384,7 @@
             this.getList();
           this.dialogFormVisible = false
         });
-        }
+
       },
       deleteCourse(tmpId) {
         //删除课程
@@ -386,21 +393,13 @@
           method: "post",
           data: {id: tmpId}
         }).then(() => {
-          //this.$refs['searchBtn'].focus();
+          this.$refs['searchBtn'].focus();
           this.$message.success(this.$t('common.deleteSuccess'));
-        this.getList();
-        this.dialogFormVisible = false;
+          this.getList();
+          this.dialogFormVisible = false;
+          this.deleteAlertVisible = false;
       })
       },
     }
   }
 </script>
-<style scoped>
-  .el-input-number__increase{
-    right: 11px;
-  }
-  .el-form-item__content .el-select, .el-form-item__content .el-input-number{
-    width:102%;
-  }
-</style>
-

@@ -3,11 +3,14 @@ package com.pears.asa.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pears.asa.dao.CourseStudentDao;
 import com.pears.asa.dao.CourseTeacherDao;
 import com.pears.asa.dao.SysDao;
+import com.pears.asa.service.CourseStudentService;
 import com.pears.asa.service.CourseTeacherService;
 import com.pears.asa.util.CommonUtil;
 import com.pears.asa.util.constants.Constants;
+import com.pears.asa.util.constants.ErrorEnum;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,9 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     private CourseTeacherDao courseTeacherDao;
     @Autowired
     private SysDao sysDao;
+    @Autowired
+    private CourseStudentDao courseStudentDao;
+
 
     /**
      * 新增课程
@@ -43,10 +49,9 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     public JSONObject addCourse(JSONObject jsonObject) {
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
+        if (checkCourseDate(jsonObject, userInfo)) return CommonUtil.errorJson(ErrorEnum.E_10004);
         jsonObject.put("updateUser",userInfo.getInteger("userId"));
         jsonObject.put("createUser",userInfo.getInteger("userId"));
-
-        StringToJsonArrayObj(jsonObject, "courseDate");
         StringToJsonArrayObj(jsonObject, "grade");
         List<JSONObject> listPeriod = sysDao.listPeriod(new JSONObject());
         if(listPeriod.size()>0){
@@ -55,6 +60,21 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         }
         courseTeacherDao.addCourse(jsonObject);
         return CommonUtil.successJson();
+    }
+
+    private boolean checkCourseDate(JSONObject jsonObject, JSONObject userInfo) {
+        List findInSetParams = (List<String>) jsonObject.get("courseDateArr");
+        if(findInSetParams.size()>0){
+            JSONObject jo = new JSONObject();
+            jo.put("courseDateArr", findInSetParams);
+            jo.put("author", userInfo.getInteger("userId"));
+            jo.put("idNotEqual", jsonObject.getInteger("idNotEqual"));
+            int count = courseTeacherDao.countCourse(jo);
+            if(count>0){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -110,10 +130,6 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         int count = courseTeacherDao.countCourse(jsonObject);
         List<JSONObject> list = courseTeacherDao.listCourse(jsonObject);
         list.stream().forEach(p->{
-            JSONObject courseDateObj = p.getJSONObject("courseDate");
-            if(null!=courseDateObj){
-                p.put("courseDate",courseDateObj);
-            }
             JSONArray gradeObj = p.getJSONArray("grade");
             if(null!=gradeObj){
                 p.put("grade",gradeObj);
@@ -131,13 +147,40 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject updateCourse(JSONObject jsonObject) {
-        StringToJsonArrayObj(jsonObject, "courseDate");
+        Session session = SecurityUtils.getSubject().getSession();
+        JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
+        jsonObject.put("idNotEqual",jsonObject.getInteger("id"));
+        if (checkCourseDate(jsonObject, userInfo)) return CommonUtil.errorJson(ErrorEnum.E_10004);
+        exeUpdateCourse(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+    /**
+     * 更新课程
+     *
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject deleteCourse(JSONObject jsonObject) {
+
+        JSONObject jo = new JSONObject();
+        jo.put("courseId",jsonObject.getInteger("id"));
+        int canDelete = courseStudentDao.countCourse(jo);
+        if(canDelete>0){
+            return CommonUtil.errorJson(ErrorEnum.E_10005);
+        }
+        exeUpdateCourse(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+    private void exeUpdateCourse(JSONObject jsonObject) {
         StringToJsonArrayObj(jsonObject, "grade");
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
         jsonObject.put("updateUser",userInfo.getInteger("userId"));
         courseTeacherDao.updateCourse(jsonObject);
-        return CommonUtil.successJson();
     }
 
 }

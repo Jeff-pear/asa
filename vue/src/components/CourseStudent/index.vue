@@ -37,9 +37,10 @@
       <el-table-column align="center" prop="courseDate" label="课程时间" style="width: 60px;">
         <template slot-scope="scope">
           &nbsp;
-          <span v-if="scope.row.courseDate.tue==true">{{$t('week.tue')}}</span>&nbsp;
-          <span v-if="scope.row.courseDate.wed==true">{{$t('week.wed')}}</span>&nbsp;
-          <span v-if="scope.row.courseDate.thu==true">{{$t('week.thu')}}</span>
+          {{scope.row.courseDate}}
+          <!--<span v-if="scope.row.courseDate.tue==true">{{$t('week.tue')}}</span>&nbsp;-->
+          <!--<span v-if="scope.row.courseDate.wed==true">{{$t('week.wed')}}</span>&nbsp;-->
+          <!--<span v-if="scope.row.courseDate.thu==true">{{$t('week.thu')}}</span>-->
         </template>
       </el-table-column>
       <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>

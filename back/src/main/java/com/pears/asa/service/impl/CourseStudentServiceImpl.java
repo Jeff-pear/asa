@@ -86,10 +86,6 @@ public class CourseStudentServiceImpl implements CourseStudentService {
         int count = courseStudentDao.countCourse(jsonObject);
         List<JSONObject> list = courseStudentDao.listCourse(jsonObject);
         list.stream().forEach(p->{
-            JSONObject courseDateObj = p.getJSONObject("courseDate");
-            if(null!=courseDateObj){
-                p.put("courseDate",courseDateObj);
-            }
             JSONArray gradeObj = p.getJSONArray("grade");
             if(null!=gradeObj){
                 p.put("grade",gradeObj);
