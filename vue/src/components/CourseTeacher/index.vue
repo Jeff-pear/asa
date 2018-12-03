@@ -119,6 +119,12 @@
           <el-form-item label="简介">
             <el-input type="textarea" :rows="5" v-model="tempCourse.brief"></el-input>
           </el-form-item>
+          <el-form-item label="附件">
+            <vue-dropzone id="dropzone"
+                          :options="dropZoneOptions"
+                          :duplicateCheck="true">
+            </vue-dropzone>
+          </el-form-item>
         </el-form>
       </el-row>
       <div slot="footer" class="dialog-footer">
@@ -134,16 +140,27 @@
   import SliderWithLabels from './components/SliderWithLabels';
   import TuitionCom from './components/TuitionComponent';
   import CourseType from './components/CourseType';
+  import vueDropzone from '../Dropzone';
   const courseDateOptions = ['tue', 'wed', 'thu'];
-  const courseDateVal = [1, 2, 4];
   export default {
     name: 'teacher-table',
     props:['listUrl','showMyBtn'],
     components: {
-      SliderWithLabels,TuitionCom,CourseType,
+      SliderWithLabels,TuitionCom,CourseType,vueDropzone,
     },
     data() {
       return {
+        dropZoneOptions: {
+          url: 'https://httpbin.org/post',
+          thumbnailWidth: 150,
+          maxFilesize: 0.5,
+          headers: { "My-Awesome-Header": "header value" },
+          addRemoveLinks: true,
+          autoProcessQueue: false,
+          accept(file, done) {
+            done();
+          },
+        },
         mySelfList: this.$props['showMyBtn'],
         checkAll: false,
         courseDates: courseDateOptions,
@@ -403,3 +420,23 @@
     }
   }
 </script>
+<style scoped>
+  .event-active {
+    font-weight: bold;
+    color: #78CB5B;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  .active {
+     color: #78CB5B;
+   }
+
+  .inactive {
+    color: #fff000;
+  }
+
+  .fa.fa-circle:before {
+    content: "\25C9";
+    /*color: #000;*/
+  }
+</style>

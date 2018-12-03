@@ -439,10 +439,11 @@
   background: #cccccc;
 }
 .vue-dropzone .dz-preview .dz-remove {
-  position: absolute;
+  position: relative;
   z-index: 30;
   color: white;
-  margin-left: 15px;
+  margin-left: 5px;
+  margin-right: 5px;
   padding: 10px;
   top: inherit;
   bottom: 15px;
