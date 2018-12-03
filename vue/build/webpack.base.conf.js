@@ -22,6 +22,7 @@ const createLintingRule = () => ({
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
+    "babel-polyfill":"babel-polyfill", //解决兼容性问题
     app: './src/main.js'
   },
   output: {
