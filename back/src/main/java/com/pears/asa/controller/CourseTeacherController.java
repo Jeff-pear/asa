@@ -44,7 +44,36 @@ public class CourseTeacherController {
     public JSONObject listMyCourse(HttpServletRequest request) {
         return courseTeacherService.listMyCourse(CommonUtil.request2Json(request));
     }
+    
+    /**
+     * 新增课程时，文件上传
+     *
+     * @param file
+     * @return
+     */
+    @RequiresPermissions("course-teacher:add")
+    @PostMapping("/uploadFile")
+    @ResponseBody
+    public JSONObject uploadFile(MultipartFile file) {
+        if (Objects.isNull(file) || file.isEmpty()) {
+            logger.error("文件为空");
+        }
 
+        try {
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(upLoad_Folder + file.getOriginalFilename());
+            //如果没有files文件夹，则创建
+            if (!Files.isWritable(path)) {
+                Files.createDirectories(Paths.get(upLoad_Folder));
+            }
+            //文件写入指定路径
+            Files.write(path, bytes);
+            logger.debug("文件写入成功...");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     /**
      * 新增课程
      *
