@@ -85,7 +85,7 @@ public class CourseTeacherController {
         }
         return null;
     }
-    /**
+   /**
      * 新增课程
      *
      * @param requestJson
@@ -94,11 +94,12 @@ public class CourseTeacherController {
     @RequiresPermissions("course-teacher:add")
     @PostMapping("/addCourse")
     public JSONObject addCourse(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "content,capacity,grade,courseDate,teacherType,tuitionType");
+        CommonUtil.hasAllRequired(requestJson, "content,capacity,courseDate");
         return courseTeacherService.addCourse(requestJson);
     }
 
-    /**
+
+    **
      * 修改课程
      *
      * @param requestJson
@@ -107,7 +108,13 @@ public class CourseTeacherController {
     @RequiresPermissions("course-teacher:update")
     @PostMapping("/updateCourse")
     public JSONObject updateCourse(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "id,content,capacity,grade,courseDate,teacherType,tuitionType");
+        CommonUtil.hasAllRequired(requestJson, "id, stepActive");
+        if(requestJson.getInteger("stepActive")==1){
+            CommonUtil.hasAllRequired(requestJson, "content,capacity,courseDate");
+        }else{
+            CommonUtil.hasAllRequired(requestJson, "grade,teacherType,tuitionType");
+        }
+
         return courseTeacherService.updateCourse(requestJson);
     }
     /**
