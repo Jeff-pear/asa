@@ -1,4 +1,9 @@
+prop:
+  upload-folder: files/
 spring:
+  http:
+    multipart:
+      max-file-size: 10MB
   mail:
     default-encoding: UTF-8
     host: smtp.263.net

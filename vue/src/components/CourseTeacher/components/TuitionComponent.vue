@@ -37,7 +37,7 @@
           },
               options: [{
                 value: '1',
-                label: '/人'
+                label: '/人/课'
               }, {
                 value: '2',
                 label: '/课'

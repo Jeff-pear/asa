@@ -4,10 +4,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.service.CourseTeacherService;
 import com.pears.asa.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 
 /**
  * @author: pears
@@ -17,9 +26,11 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/course-teacher")
 public class CourseTeacherController {
-
+    private static Logger logger = LoggerFactory.getLogger(CourseTeacherController.class);
     @Autowired
     private CourseTeacherService courseTeacherService;
+    @Value("${prop.upload-folder}")
+    private String upLoad_Folder;
 
     /**
      * 查询课程列表

@@ -88,49 +88,81 @@
     </el-pagination>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+
+      <el-steps :active="stepActive" finish-status="success" simple >
+        <el-step title="基本信息" ></el-step>
+        <el-step title="其他信息" ></el-step>
+        <el-step title="课程预览" ></el-step>
+      </el-steps>
+      <br/>
       <el-row :gutter="24">
         <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
                  style='width: 460px; margin-left:50px;'>
-          <el-form-item label="课程名">
-            <el-input type="text" v-model="tempCourse.content" clearable>
-            </el-input>
-          </el-form-item>
-          <el-form-item label="学生数">
-            <el-input-number v-model="tempCourse.capacity" :min="1" :max="100" clearable>
-            </el-input-number>
-          </el-form-item>
-          <el-form-item label="课程时间">
-            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="small" @change="handleCheckAllChange" border>{{$t('common.checkAll')}}</el-checkbox>
-            <div style="margin: 15px 0;"></div>
-            <el-checkbox-group v-model="checkedCourseDate" @change="handleCheckedCitiesChange" size="small">
-              <el-checkbox v-for="dateItem in courseDates" :label="dateItem" :key="dateItem" border>{{$t('week.'+dateItem)}}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="授课年级">
-            <slider-with-labels v-bind:dataVal="tempCourse.grade" ref="grade"></slider-with-labels>
-          </el-form-item>
-          <el-form-item label="课程类型">
-            <course-type v-bind:dataVal="tempCourse.teacherType" ref="teacherType"></course-type>
-          </el-form-item>
-          <el-form-item label="学费">
-            <tuition-com v-bind:dataTuition="tempCourse.tuition" v-bind:dataTuitionType="tempCourse.tuitionType" v-bind:dataTuitionSubType="tempCourse.tuitionSubType" ref="tuition" ></tuition-com>
-          </el-form-item>
+          <div v-if="stepActive==1">
+            <el-form-item label="课程名">
+              <el-input type="text" v-model="tempCourse.content" clearable>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="学生数">
+              <el-input-number v-model="tempCourse.capacity" :min="1" :max="100" clearable>
+              </el-input-number>
+            </el-form-item>
+            <el-form-item label="课程时间">
+              <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="small" @change="handleCheckAllChange" border>{{$t('common.checkAll')}}</el-checkbox>
+              <div style="margin: 15px 0;"></div>
+              <el-checkbox-group v-model="checkedCourseDate" @change="handleCheckedCitiesChange" size="small">
+                <el-checkbox v-for="dateItem in courseDates" :label="dateItem" :key="dateItem" border>{{$t('week.'+dateItem)}}</el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </div>
+          <div v-if="stepActive==2">
+            <el-form-item label="授课年级">
+              <slider-with-labels v-bind:dataVal="tempCourse.grade" ref="grade"></slider-with-labels>
+            </el-form-item>
+            <el-form-item label="课程类型">
+              <course-type v-bind:dataVal="tempCourse.teacherType" ref="teacherType"></course-type>
+            </el-form-item>
+            <el-form-item label="学费">
+              <tuition-com v-bind:dataTuition="tempCourse.tuition" v-bind:dataTuitionType="tempCourse.tuitionType" v-bind:dataTuitionSubType="tempCourse.tuitionSubType" ref="tuition" ></tuition-com>
+            </el-form-item>
 
-          <el-form-item label="简介">
-            <el-input type="textarea" :rows="5" v-model="tempCourse.brief"></el-input>
-          </el-form-item>
-          <el-form-item label="附件">
-            <vue-dropzone id="dropzone"
-                          :options="dropZoneOptions"
-                          :duplicateCheck="true">
-            </vue-dropzone>
-          </el-form-item>
+            <el-form-item label="简介">
+              <el-input type="textarea" :rows="5" v-model="tempCourse.brief"></el-input>
+            </el-form-item>
+            <el-form-item label="附件">
+              <el-upload
+                class="upload-demo"
+                drag
+                :limit="1"
+                ref="upload"
+                list-type="picture"
+                accept="image/jpeg,image/png,image/bmp"
+                :auto-upload="false"
+                action="/api/course-teacher/uploadFile"
+                >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <div class="el-upload__tip" slot="tip">
+                  <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                  <br/> 只能上传jpg/png文件，且不超过500kb</div>
+              </el-upload>
+            </el-form-item>
+          </div>
         </el-form>
       </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="success" @click="createCourse">创 建</el-button>
-        <el-button type="primary" v-else @click="updateCourse">修 改</el-button>
+
+          <el-button v-if="dialogStatus=='create'" type="success" @click="createCourse" v-if="stepActive==1">下一步</el-button>
+          <el-button type="primary" v-else @click="updateCourse" v-if="stepActive==1">下一步</el-button>
+
+          <el-button v-if="dialogStatus=='create'" type="success" @click="createCourse">创 建</el-button>
+          <el-button type="primary" v-else @click="updateCourse">修 改</el-button>
+
+          <el-button v-if="dialogStatus=='create'" type="success" @click="createCourse">创 建</el-button>
+          <el-button type="primary" v-else @click="updateCourse">修 改</el-button>
+
+
       </div>
     </el-dialog>
   </div>
@@ -140,13 +172,12 @@
   import SliderWithLabels from './components/SliderWithLabels';
   import TuitionCom from './components/TuitionComponent';
   import CourseType from './components/CourseType';
-  import vueDropzone from '../Dropzone';
   const courseDateOptions = ['tue', 'wed', 'thu'];
   export default {
     name: 'teacher-table',
     props:['listUrl','showMyBtn'],
     components: {
-      SliderWithLabels,TuitionCom,CourseType,vueDropzone,
+      SliderWithLabels,TuitionCom,CourseType,
     },
     data() {
       return {
@@ -163,6 +194,7 @@
         },
         mySelfList: this.$props['showMyBtn'],
         checkAll: false,
+        stepActive:1,
         courseDates: courseDateOptions,
         checkedCourseDate: [],
         isIndeterminate: true,
@@ -214,6 +246,9 @@
           this.tempCourse.courseDate = 0;
           this.tempCourse.courseDateArr = [];
         }
+      },
+      submitUpload() {
+        this.$refs.upload.submit();
       },
       handleCheckedCitiesChange(value) {
         var checkedCount = value.length;
