@@ -23,22 +23,20 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="content" label="课程名(详情)" style="width: 60px;">
-        <template v-if="scope.row.brief!=null" slot-scope="scope">
+        <template slot-scope="scope">
           {{scope.row.content}}
           <el-popover class="col-el-popover"
                       placement="top-start"
                       width="400"
                       trigger="click">
             {{scope.row.brief}}
-            <i slot="reference" class="el-icon-share" style="cursor: pointer;"></i>
+            <i slot="reference" class="el-icon-share" v-if="scope.row.brief!=null" style="cursor: pointer;"></i>
           </el-popover>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="capacity" label="已报名学生数" v-if="mySelfList=='true'" style="width: 60px;">
-
       </el-table-column>
       <el-table-column align="center" prop="capacity" label="学生数" v-if="mySelfList=='false'" style="width: 60px;"></el-table-column>
-
       <el-table-column align="center" label="学费" v-if="mySelfList=='true'" style="width: 60px;">
         <template slot-scope="scope">
           {{scope.row.tuition}} RMB
@@ -57,7 +55,6 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="updateTime" label="更新时间" width="170">
-
       </el-table-column>
       <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="200" v-if="hasPerm('course-teacher:update') && mySelfList == 'true'">
@@ -87,9 +84,8 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-
-      <el-steps :active="stepActive" finish-status="success" simple >
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :append-to-body="true">
+      <el-steps :active="tempCourse.stepActive" finish-status="success" simple >
         <el-step title="基本信息" ></el-step>
         <el-step title="其他信息" ></el-step>
         <el-step title="课程预览" ></el-step>
@@ -98,7 +94,7 @@
       <el-row :gutter="24">
         <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
                  style='width: 460px; margin-left:50px;'>
-          <div v-if="stepActive==1">
+          <div v-if="tempCourse.stepActive==1">
             <el-form-item label="课程名">
               <el-input type="text" v-model="tempCourse.content" clearable>
               </el-input>
@@ -115,7 +111,7 @@
               </el-checkbox-group>
             </el-form-item>
           </div>
-          <div v-if="stepActive==2">
+          <div v-if="tempCourse.stepActive==2">
             <el-form-item label="授课年级">
               <slider-with-labels v-bind:dataVal="tempCourse.grade" ref="grade"></slider-with-labels>
             </el-form-item>
@@ -147,22 +143,17 @@
                   <br/> 只能上传jpg/png文件，且不超过500kb</div>
               </el-upload>
             </el-form-item>
+            <div v-if="tempCourse.stepActive==3">
+              预览
+            </div>
           </div>
         </el-form>
       </el-row>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-
-          <el-button v-if="dialogStatus=='create'" type="success" @click="createCourse" v-if="stepActive==1">下一步</el-button>
-          <el-button type="primary" v-else @click="updateCourse" v-if="stepActive==1">下一步</el-button>
-
-          <el-button v-if="dialogStatus=='create'" type="success" @click="createCourse">创 建</el-button>
-          <el-button type="primary" v-else @click="updateCourse">修 改</el-button>
-
-          <el-button v-if="dialogStatus=='create'" type="success" @click="createCourse">创 建</el-button>
-          <el-button type="primary" v-else @click="updateCourse">修 改</el-button>
-
-
+        <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
+        <el-button type="success" @click="prevStep" v-if="tempCourse.stepActive!=1">上一步</el-button>
+        <el-button type="primary" @click="nextStep" v-if="tempCourse.stepActive!=3">下一步</el-button>
+        <el-button type="primary" @click="nextStep" v-if="tempCourse.stepActive==3">完成</el-button>
       </div>
     </el-dialog>
   </div>
@@ -181,20 +172,8 @@
     },
     data() {
       return {
-        dropZoneOptions: {
-          url: 'https://httpbin.org/post',
-          thumbnailWidth: 150,
-          maxFilesize: 0.5,
-          headers: { "My-Awesome-Header": "header value" },
-          addRemoveLinks: true,
-          autoProcessQueue: false,
-          accept(file, done) {
-            done();
-          },
-        },
         mySelfList: this.$props['showMyBtn'],
         checkAll: false,
-        stepActive:1,
         courseDates: courseDateOptions,
         checkedCourseDate: [],
         isIndeterminate: true,
@@ -217,6 +196,7 @@
         },
         tempCourse: {
           id: "",
+          stepActive:1,
           content: "",
           capacity: 25,
           courseDateArr:[],
@@ -232,6 +212,35 @@
       this.getList();
     },
     methods: {
+      resetTempCourse(){
+        this.tempCourse = {
+          id: "",
+          stepActive:1,
+          content: "",
+          capacity: 25,
+          courseDateArr:[],
+          grade: [0,9],
+          teacherType: "",
+          courseDate: 0,
+          brief: ""
+        };
+      },
+      nextStep(){
+        if(this.tempCourse.stepActive==1 ){
+          if(this.tempCourse.id==''){
+            this.createCourse();
+          }else{
+            this.updateCourse();
+          }
+        }else{
+          this.updateCourse();
+        }
+      },
+      prevStep(){
+        this.tempCourse.stepActive--;
+        this.dialogFormVisible = false;
+        this.dialogFormVisible = true;
+      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.getList();
@@ -330,10 +339,7 @@
             })
             this.downloadLoading = false
           })
-
         });
-
-
       },
       getList() {
         //查询列表
@@ -366,6 +372,9 @@
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
       showCreate() {
+        this.resetTempCourse();
+
+        this.tempCourse.stepActive = 1;
         //显示新增对话框
         this.tempCourse.content = "";
         this.tempCourse.capacity = 25;
@@ -377,11 +386,13 @@
         this.isIndeterminate = false;
         this.checkedCourseDate = [];
         this.checkAll = false;
-
+        this.courseDate = null;
       },
       showUpdate($index) {
+        this.resetTempCourse();
         //显示修改对话框
         this.tempCourse = this.list[$index];
+        this.tempCourse.stepActive = 1;
         this.checkedCourseDate = [];
         let arr = this.tempCourse.courseDate.split(',');
         this.tempCourse.courseDateArr = arr;
@@ -410,33 +421,45 @@
         this.dialogFormVisible = true;
       },
       createCourse() {
-        Object.assign(this.tempCourse, this.$refs['tuition']['tuition']);
-        this.tempCourse.teacherType = this.$refs['teacherType']['teacherType'];
-        this.tempCourse.grade = this.$refs['grade']['grade'];
+        if(this.tempCourse.courseDate == 0){
+          this.tempCourse.courseDate = null;
+        }
         //保存新课程
         this.api({
           url: "/course-teacher/addCourse",
           method: "post",
           data: this.tempCourse
-        }).then(() => {
+        }).then((result) => {
           this.getList();
-        this.dialogFormVisible = false
+          this.tempCourse.id = result.id;
+          this.tempCourse.stepActive++;
+        }).catch(v=>{
+          console.warn(v);
         });
       },
       updateCourse() {
         //修改课程
-        Object.assign(this.tempCourse, this.$refs['tuition']['tuition']);
-        this.tempCourse.teacherType = this.$refs['teacherType']['teacherType'];
-        this.tempCourse.grade = this.$refs['grade']['grade'];
+        if(this.tempCourse.stepActive == 2){
+          Object.assign(this.tempCourse, this.$refs['tuition']['tuition']);
+          this.tempCourse.teacherType = this.$refs['teacherType']['teacherType'];
+          this.tempCourse.grade = this.$refs['grade']['grade'];
+        }
           this.api({
             url: "/course-teacher/updateCourse",
             method: "post",
             data: this.tempCourse
           }).then(() => {
             this.getList();
-          this.dialogFormVisible = false
-        });
-
+            debugger;
+          //this.tempCourse.stepActive++;
+            if(this.tempCourse.stepActive==3){
+              this.dialogFormVisible = false
+            }else{
+              this.tempCourse.stepActive++;
+            }
+          }).catch(v=>{
+              console.warn(v);
+          });
       },
       deleteCourse(tmpId) {
         //删除课程
@@ -448,7 +471,6 @@
           this.$refs['searchBtn'].focus();
           this.$message.success(this.$t('common.deleteSuccess'));
           this.getList();
-          this.dialogFormVisible = false;
           this.deleteAlertVisible = false;
       })
       },
