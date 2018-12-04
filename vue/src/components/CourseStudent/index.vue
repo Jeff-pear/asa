@@ -33,7 +33,23 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="capacity" label="学生数" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="tuition" label="学费" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="grade" label="授课年级" style="width: 60px;">
+        <template slot-scope="scope">
+          {{formatGrade(scope.row.grade)}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="学费" style="width: 60px;">
+        <template slot-scope="scope" >
+          <div v-if="scope.row.tuitionType=='fee'">
+            {{scope.row.tuition}} RMB
+            <span v-if="scope.row.tuitionSubType == '1'">(人)</span>
+            <span v-if="scope.row.tuitionSubType == '2'">(课)</span>
+            <span v-if="scope.row.tuitionSubType == '3'">(学期)</span>
+          </div>
+          <div v-if="scope.row.tuitionType=='free'">免费</div>
+
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="courseDate" label="课程时间" style="width: 60px;">
         <template slot-scope="scope">
           &nbsp;
@@ -46,9 +62,9 @@
       <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="操作" width="200" v-if="hasPerm('course-student:update') ">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" size="small" v-if="isMySelect == 'false'" @click="showUpdate(scope.$index)">选课</el-button>
+          <el-button type="primary" icon="edit" size="small" v-if="isMySelect == 'false' " @click="showUpdate(scope.$index)">选课</el-button>
 
-          <el-popover v-if="isMySelect == 'true'"
+          <el-popover v-if="isMySelect == 'true' || isAdmin('管理员')"
             placement="top"
             trigger="click"
             width="160">
@@ -118,6 +134,20 @@
       this.getList();
     },
     methods: {
+      formatGrade(arrVal){
+        function formatSingle(val){
+          let resultVal = '';
+          if(val == 0){
+            resultVal = 'KG'
+          }else{
+            resultVal = 'G'+String(val);
+          }
+          return resultVal;
+        }
+        if(arrVal){
+          return formatSingle(arrVal[0]) +'--'+ formatSingle(arrVal[1]);
+        }
+      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.getList();
