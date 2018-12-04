@@ -19,6 +19,8 @@ export const constantRouterMap = [
     hidden: true,
     children: [{
       path: 'dashboard', component: _import('dashboard/index')
+    },{
+      path: 'profile', component: _import('user/profile')
     }]
   }
 ]

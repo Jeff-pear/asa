@@ -3,7 +3,7 @@
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
     <breadcrumb></breadcrumb>
-    <marquee direction="left" class="right-menu-item2">{{$t('period.navLabel')}}：{{period}}</marquee>
+    <marquee direction="left" onmouseover="this.stop()" onmouseout="this.start()" class="right-menu-item2">{{$t('period.navLabel')}}：{{period}}</marquee>
     <el-dropdown class="avatar-container " trigger="click">
 
       <div class="avatar-wrapper">
@@ -18,6 +18,11 @@
         <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
             Home
+          </el-dropdown-item>
+        </router-link>
+        <router-link class="inlineBlock" to="/profile">
+          <el-dropdown-item>
+            My Profile
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>

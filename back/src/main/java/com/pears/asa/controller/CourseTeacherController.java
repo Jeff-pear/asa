@@ -99,7 +99,7 @@ public class CourseTeacherController {
     }
 
 
-    **
+    /**
      * 修改课程
      *
      * @param requestJson
