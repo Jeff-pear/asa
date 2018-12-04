@@ -59,7 +59,7 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
             jsonObject.put("endDate",listPeriod.get(0).getString("endDate"));
         }
         courseTeacherDao.addCourse(jsonObject);
-        return CommonUtil.successJson();
+        return CommonUtil.successJson(jsonObject);
     }
 
     private boolean checkCourseDate(JSONObject jsonObject, JSONObject userInfo) {
