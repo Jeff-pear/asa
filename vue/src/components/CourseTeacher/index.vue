@@ -35,14 +35,36 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="capacity" label="已报名学生数" v-if="mySelfList=='true'" style="width: 60px;">
+        <template slot-scope="scope">
+          {{scope.row.capacity}}
+          <el-popover class="col-el-popover"
+                      placement="right"
+                      trigger="click">
+            <el-table :data="selectStudentData">
+              <el-table-column width="100" property="name" label="学生姓名"></el-table-column>
+              <el-table-column width="150" property="date" label="选课日期"></el-table-column>
+              <el-table-column width="300" property="address" label="是否缴费"></el-table-column>
+            </el-table>
+            <i slot="reference" class="el-icon-share" v-if="scope.row.brief!=null" style="cursor: pointer;"></i>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="grade" label="授课年级" style="width: 60px;">
+        <template slot-scope="scope">
+          {{formatGrade(scope.row.grade)}}
+        </template>
       </el-table-column>
       <el-table-column align="center" prop="capacity" label="学生数" v-if="mySelfList=='false'" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="学费" v-if="mySelfList=='true'" style="width: 60px;">
-        <template slot-scope="scope">
-          {{scope.row.tuition}} RMB
-          <span v-if="scope.row.tuitionSubType == '1'">(人)</span>
-          <span v-if="scope.row.tuitionSubType == '2'">(课)</span>
-          <span v-if="scope.row.tuitionSubType == '3'">(学期)</span>
+        <template slot-scope="scope" >
+          <div v-if="scope.row.tuitionType=='fee'">
+            {{scope.row.tuition}} RMB
+            <span v-if="scope.row.tuitionSubType == '1'">(人)</span>
+            <span v-if="scope.row.tuitionSubType == '2'">(课)</span>
+            <span v-if="scope.row.tuitionSubType == '3'">(学期)</span>
+          </div>
+          <div v-if="scope.row.tuitionType=='free'">免费</div>
+
         </template>
       </el-table-column>
       <el-table-column align="center" prop="courseDate" label="课程时间" style="width: 60px;">
@@ -57,7 +79,7 @@
       <el-table-column align="center" prop="updateTime" label="更新时间" width="170">
       </el-table-column>
       <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="管理" width="200" v-if="hasPerm('course-teacher:update') && mySelfList == 'true'">
+      <el-table-column align="center" label="管理" width="200" v-if="(hasPerm('course-teacher:update') && mySelfList == 'true') || isAdmin('管理员')">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
           <el-popover :visible.sync="deleteAlertVisible"
@@ -97,6 +119,10 @@
           <div v-if="tempCourse.stepActive==1">
             <el-form-item label="课程名">
               <el-input type="text" v-model="tempCourse.content" clearable>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="授课教师">
+              <el-input type="text" v-model="tempCourse.teacherName" clearable>
               </el-input>
             </el-form-item>
             <el-form-item label="学生数">
@@ -163,6 +189,7 @@
   import SliderWithLabels from './components/SliderWithLabels';
   import TuitionCom from './components/TuitionComponent';
   import CourseType from './components/CourseType';
+  import store from '../../store'
   const courseDateOptions = ['tue', 'wed', 'thu'];
   export default {
     name: 'teacher-table',
@@ -180,6 +207,7 @@
         downloadLoading: false,
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
+        selectStudentData:[],//表格的数据
         excelList: [],
         listLoading: false,//数据加载等待动画
         listQuery: {
@@ -196,6 +224,7 @@
         },
         tempCourse: {
           id: "",
+          teacherName: store.getters.nickname, //TODO：做成select
           stepActive:1,
           content: "",
           capacity: 25,
@@ -215,6 +244,7 @@
       resetTempCourse(){
         this.tempCourse = {
           id: "",
+          teacherName: store.getters.nickname,
           stepActive:1,
           content: "",
           capacity: 25,
@@ -234,6 +264,20 @@
           }
         }else{
           this.updateCourse();
+        }
+      },
+      formatGrade(arrVal){
+        function formatSingle(val){
+          let resultVal = '';
+          if(val == 0){
+            resultVal = 'KG'
+          }else{
+            resultVal = 'G'+String(val);
+          }
+          return resultVal;
+        }
+        if(arrVal){
+          return formatSingle(arrVal[0]) +'--'+ formatSingle(arrVal[1]);
         }
       },
       prevStep(){
@@ -314,10 +358,8 @@
             content: this.listQuery.content
           },
         }).then(data => {
-
           this.excelList = data.list;
           this.totalCount = data.totalCount;
-
           import('@/vendor/Export2Excel').then(excel => {
             const tHeader = [];
             const filterVal = []
@@ -331,13 +373,12 @@
             const list = this.excelList
             const data = this.formatJson(filterVal, list)
             excel.export_json_to_excel({
-              header: tHeader,
-              data,
+              header: tHeader,data,
               filename: this.filename,
               autoWidth: this.autoWidth,
               bookType: this.bookType
             })
-            this.downloadLoading = false
+            this.downloadLoading = false;
           })
         });
       },
@@ -434,6 +475,7 @@
           this.tempCourse.id = result.id;
           this.tempCourse.stepActive++;
         }).catch(v=>{
+          this.getList();
           console.warn(v);
         });
       },
@@ -450,7 +492,6 @@
             data: this.tempCourse
           }).then(() => {
             this.getList();
-            debugger;
           //this.tempCourse.stepActive++;
             if(this.tempCourse.stepActive==3){
               this.dialogFormVisible = false
@@ -458,6 +499,7 @@
               this.tempCourse.stepActive++;
             }
           }).catch(v=>{
+            this.getList();
               console.warn(v);
           });
       },
