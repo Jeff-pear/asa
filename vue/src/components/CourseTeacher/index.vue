@@ -8,7 +8,7 @@
                     @keyup.enter.native="handleFilter" clearable/>
 
           <el-button class="filter-item" type="primary" icon="el-icon-search" style="margin-left: 10px;" size="small" v-if="hasPerm('course-teacher:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
-          <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add') && mySelfList == 'true'" @click="showCreate">添加</el-button>
+          <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add') && mySelfList == 'true'" @click="showCreate">{{ $t('table.add') }}</el-button>
           <el-button :loading="downloadLoading" style="margin-left: 0px;" icon="el-icon-download" type="primary" size="small" v-if="hasPerm('course-teacher:list')" @click="handleDownload">{{ $t('excel.export') }} Excel</el-button>
           <!--<el-button class="filter-item" size="small" style="margin-left: 0px;" @click="resetForm('listQuery')">重置</el-button>-->
         </el-form-item>
@@ -17,12 +17,13 @@
 
     <el-table ref="teacherTable" :data="list" height="530" v-loading.body="listLoading" border fit
               highlight-current-row>
-      <el-table-column align="center" label="序号" width="80">
+      <el-table-column align="center" :label="$t('table.id')" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="content" label="课程名(详情)" style="width: 60px;">
+      <!--课程名-->
+      <el-table-column align="center" prop="content" :label="$t('teacher.courseName')" style="width: 60px;">
         <template slot-scope="scope">
           {{scope.row.content}}
           <el-popover class="col-el-popover"
@@ -34,7 +35,8 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="capacity" label="已报名学生数" v-if="mySelfList=='true'" style="width: 60px;">
+      <!--学生数-->
+      <el-table-column align="center" prop="capacity" :label="$t('teacher.studentNum')" v-if="mySelfList=='true'" style="width: 60px;">
         <template slot-scope="scope">
           {{scope.row.capacity}}
           <el-popover class="col-el-popover"
@@ -49,25 +51,29 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="grade" label="授课年级" style="width: 60px;">
+
+      <el-table-column align="center" prop="capacity" :label="$t('teacher.studentNum')" v-if="mySelfList=='false'" style="width: 60px;"></el-table-column>
+      <!--授课年级-->
+      <el-table-column align="center" prop="grade" :label="$t('teacher.grade')" style="width: 60px;">
         <template slot-scope="scope">
           {{formatGrade(scope.row.grade)}}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="capacity" label="学生数" v-if="mySelfList=='false'" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="学费" v-if="mySelfList=='true'" style="width: 60px;">
+      <!--学费-->
+      <el-table-column align="center" :label="$t('teacher.tuition')" v-if="mySelfList=='true'" style="width: 60px;">
         <template slot-scope="scope" >
           <div v-if="scope.row.tuitionType=='fee'">
             {{scope.row.tuition}} RMB
-            <span v-if="scope.row.tuitionSubType == '1'">(人)</span>
-            <span v-if="scope.row.tuitionSubType == '2'">(课)</span>
-            <span v-if="scope.row.tuitionSubType == '3'">(学期)</span>
+            <span v-if="scope.row.tuitionSubType == '1'">{{$t('teacher.tuitionOption1')}}</span>
+            <span v-if="scope.row.tuitionSubType == '2'">{{$t('teacher.tuitionOption2')}}</span>
+            <span v-if="scope.row.tuitionSubType == '3'">{{$t('teacher.tuitionOption3')}}</span>
           </div>
-          <div v-if="scope.row.tuitionType=='free'">免费</div>
+          <div v-if="scope.row.tuitionType=='free'">{{$t('teacher.tuitionFree')}}</div>
 
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="courseDate" label="课程时间" style="width: 60px;">
+      <!--课程时间-->
+      <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" style="width: 60px;">
         <template slot-scope="scope">
           &nbsp;
           {{scope.row.courseDate}}
@@ -76,21 +82,23 @@
           <!--<span v-if="scope.row.courseDate.thu==true">{{$t('week.thu')}}</span>-->
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="updateTime" label="更新时间" width="170">
+      <!--更新时间-->
+      <el-table-column align="center" prop="updateTime" :label="$t('teacher.updateDate')" width="170">
       </el-table-column>
-      <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="管理" width="200" v-if="(hasPerm('course-teacher:update') && mySelfList == 'true') || isAdmin('管理员')">
+      <!--教师-->
+      <el-table-column align="center" prop="nickname" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" :label="$t('table.manage')" width="200" v-if="(hasPerm('course-teacher:update') && mySelfList == 'true') || isAdmin('管理员')">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="primary" size="small" icon="edit" @click="showUpdate(scope.$index)">{{$t('table.edit')}}</el-button>
           <el-popover :visible.sync="deleteAlertVisible"
             placement="top"
             trigger="click"
             width="160">
-            <p>确定删除此课程吗？</p>
+            <p>{{$t('table.deleteConfirm')}}</p>
             <div style="text-align: center; margin: 0">
-              <el-button type="primary" size="mini" @click="deleteCourse(scope.row.id)">确定</el-button>
+              <el-button type="primary" size="mini" @click="deleteCourse(scope.row.id)">{{$t('table.confirm')}}</el-button>
             </div>
-            <el-button type="danger" size="small" v-if="hasPerm('course-teacher:delete')" @click="deleteAlertVisible=true" slot="reference">删除</el-button>
+            <el-button type="danger" size="small" v-if="hasPerm('course-teacher:delete')" @click="deleteAlertVisible=true" slot="reference">{{$t('table.delete')}}</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -108,28 +116,28 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :append-to-body="true">
       <el-steps :active="tempCourse.stepActive" finish-status="success" simple >
-        <el-step title="基本信息" ></el-step>
-        <el-step title="其他信息" ></el-step>
-        <el-step title="课程预览" ></el-step>
+        <el-step :title="$t('teacher.step1')" ></el-step>
+        <el-step :title="$t('teacher.step2')" ></el-step>
+        <el-step :title="$t('teacher.step3')" ></el-step>
       </el-steps>
       <br/>
       <el-row :gutter="24">
         <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
                  style='width: 460px; margin-left:50px;'>
           <div v-if="tempCourse.stepActive==1">
-            <el-form-item label="课程名">
+            <el-form-item :label="$t('teacher.courseNameNoDetail')">
               <el-input type="text" v-model="tempCourse.content" clearable>
               </el-input>
             </el-form-item>
-            <el-form-item label="授课教师">
+            <el-form-item :label="$t('teacher.teacherName')">
               <el-input type="text" v-model="tempCourse.teacherName" clearable>
               </el-input>
             </el-form-item>
-            <el-form-item label="学生数">
+            <el-form-item :label="$t('teacher.studentNum')">
               <el-input-number v-model="tempCourse.capacity" :min="1" :max="100" clearable>
               </el-input-number>
             </el-form-item>
-            <el-form-item label="课程时间">
+            <el-form-item :label="$t('teacher.courseDate')">
               <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="small" @change="handleCheckAllChange" border>{{$t('common.checkAll')}}</el-checkbox>
               <div style="margin: 15px 0;"></div>
               <el-checkbox-group v-model="checkedCourseDate" @change="handleCheckedCitiesChange" size="small">
@@ -138,35 +146,34 @@
             </el-form-item>
           </div>
           <div v-if="tempCourse.stepActive==2">
-            <el-form-item label="授课年级">
+            <el-form-item :label="$t('teacher.grade')">
               <slider-with-labels v-bind:dataVal="tempCourse.grade" ref="grade"></slider-with-labels>
             </el-form-item>
-            <el-form-item label="课程类型">
+            <el-form-item :label="$t('teacher.courseType')">
               <course-type v-bind:dataVal="tempCourse.teacherType" ref="teacherType"></course-type>
             </el-form-item>
-            <el-form-item label="学费">
+            <el-form-item :label="$t('teacher.tuition')">
               <tuition-com v-bind:dataTuition="tempCourse.tuition" v-bind:dataTuitionType="tempCourse.tuitionType" v-bind:dataTuitionSubType="tempCourse.tuitionSubType" ref="tuition" ></tuition-com>
             </el-form-item>
-
-            <el-form-item label="简介">
+            <el-form-item :label="$t('teacher.brief')">
               <el-input type="textarea" :rows="5" v-model="tempCourse.brief"></el-input>
             </el-form-item>
-            <el-form-item label="附件">
+            <el-form-item :label="$t('teacher.attachment')">
               <el-upload
                 class="upload-demo"
                 drag
                 :limit="1"
                 ref="upload"
                 list-type="picture"
-                accept="image/jpeg,image/png,image/bmp"
-                :auto-upload="false"
+                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                :auto-upload="true"
                 action="/api/course-teacher/uploadFile"
                 >
                 <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <div class="el-upload__text">{{$t('teacher.uploadTip1')}}<em>{{$t('teacher.uploadTip2')}}</em></div>
                 <div class="el-upload__tip" slot="tip">
-                  <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-                  <br/> 只能上传jpg/png文件，且不超过500kb</div>
+                  <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button><br/>-->
+                   {{$t('teacher.uploadTip3')}}</div>
               </el-upload>
             </el-form-item>
             <div v-if="tempCourse.stepActive==3">
@@ -177,9 +184,9 @@
       </el-row>
       <div slot="footer" class="dialog-footer">
         <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
-        <el-button type="success" @click="prevStep" v-if="tempCourse.stepActive!=1">上一步</el-button>
-        <el-button type="primary" @click="nextStep" v-if="tempCourse.stepActive!=3">下一步</el-button>
-        <el-button type="primary" @click="nextStep" v-if="tempCourse.stepActive==3">完成</el-button>
+        <el-button type="success" @click="prevStep" v-if="tempCourse.stepActive!=1">{{$t('teacher.prevStep')}}</el-button>
+        <el-button type="primary" @click="nextStep" v-if="tempCourse.stepActive!=3">{{$t('teacher.nextStep')}}</el-button>
+        <el-button type="primary" @click="nextStep" v-if="tempCourse.stepActive==3">{{$t('teacher.finishStep')}}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -529,11 +536,9 @@
   .active {
      color: #78CB5B;
    }
-
   .inactive {
     color: #fff000;
   }
-
   .fa.fa-circle:before {
     content: "\25C9";
     /*color: #000;*/
