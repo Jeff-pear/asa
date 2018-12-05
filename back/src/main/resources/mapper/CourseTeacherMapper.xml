@@ -201,4 +201,17 @@
         WHERE id = #{id}
     </update>
 
+    <select id="listAllTeacher" resultType="com.alibaba.fastjson.JSONObject">
+        select  sys_user.id,
+                sys_user.username,
+                sys_user.nickname,
+                sys_user.nickname_cn,
+                sys_user.phone
+        from sys_user
+          left join sys_role
+          on sys_user.role_id=sys_role.id
+            WHERE sys_role.group_tag = 2
+            and sys_user.delete_status = 1
+            and sys_user.active_status=1;
+    </select>
 </mapper>
