@@ -42,7 +42,7 @@
       activeUser() {
 
         this.listLoading = true;
-        var code = window.location.search.split('code=')[1];
+        var code = window.location.href.split('code=')[1];
         this.api({
           url: "/register/activeUser?code="+code,
           method: "get"
