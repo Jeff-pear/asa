@@ -175,6 +175,11 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         return CommonUtil.successJson();
     }
 
+    @Override
+    public JSONObject listAllTeacher(JSONObject jsonObject) {
+        return CommonUtil.successJson(courseTeacherDao.listAllTeacher(jsonObject));
+    }
+
     private void exeUpdateCourse(JSONObject jsonObject) {
         StringToJsonArrayObj(jsonObject, "grade");
         Session session = SecurityUtils.getSubject().getSession();

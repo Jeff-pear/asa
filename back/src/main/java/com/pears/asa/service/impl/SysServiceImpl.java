@@ -52,9 +52,25 @@ public class SysServiceImpl implements SysService {
 
     @Override
     public JSONObject addPeriod(JSONObject jsonObject) {
-        JSONArray arr = jsonObject.getJSONArray("datePeriod");
-        jsonObject.put("startDate",arr.get(0));
-        jsonObject.put("endDate",arr.get(1));
+        JSONArray arr = jsonObject.getJSONArray("teacherPeriod");
+        jsonObject.put("teacherPeriodStartDate",arr.get(0));
+        jsonObject.put("teacherPeriodEndDate",arr.get(1));
+
+        JSONArray arr2 = jsonObject.getJSONArray("studentPeriod");
+        jsonObject.put("studentPeriodStartDate",arr2.get(0));
+        jsonObject.put("studentPeriodEndDate",arr2.get(1));
+
+        JSONArray arr3 = jsonObject.getJSONArray("feePeriod");
+        jsonObject.put("feePeriodStartDate",arr3.get(0));
+        jsonObject.put("feePeriodEndDate",arr3.get(1));
+
+        JSONArray arr4 = jsonObject.getJSONArray("financePeriod");
+        jsonObject.put("financePeriodStartDate",arr4.get(0));
+        jsonObject.put("financePeriodEndDate",arr4.get(1));
+
+        jsonObject.put("delType",jsonObject.getString("type"));
+
+
         return CommonUtil.successJson(sysDao.addPeriod(jsonObject));
     }
 

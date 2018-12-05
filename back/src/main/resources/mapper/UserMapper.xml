@@ -25,6 +25,7 @@
         <id column="userId" property="userId"/>
         <result column="username" property="username"/>
         <result column="nickname" property="nickname"/>
+        <result column="nicknameCn" property="nicknameCn"/>
         <result column="roleId" property="roleId"/>
         <result column="roleName" property="roleName"/>
         <result column="createTime" property="createTime"/>
@@ -48,6 +49,7 @@
                      id                                      userId,
                      username                                username,
                      nickname                                nickname,
+                     nickname_cn                             nicknameCn,
                      role_id                                 roleId,
                      delete_status                           deleteStatus,
                      active_status                           activeStatus,
@@ -95,8 +97,8 @@
 
     <insert id="addUser" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO sys_user
-        (username, password, nickname, role_id) VALUES
-            (#{username}, #{password}, #{nickname}, #{roleId})
+        (username, password, nickname,nickname_cn, role_id) VALUES
+            (#{username}, #{password}, #{nickname}, #{nicknameCn}, #{roleId})
     </insert>
 
     <insert id="registerUser" useGeneratedKeys="true" keyProperty="userId">
@@ -136,6 +138,9 @@
         SET id=id
         <if test="nickname !='' and nickname !=null">
             nickname = #{nickname}
+        </if>
+        <if test="nicknameCn !='' and nicknameCn !=null">
+            nickname_cn = #{nicknameCn}
         </if>
         <if test="password !='' and password !=null">
             , password = #{password}

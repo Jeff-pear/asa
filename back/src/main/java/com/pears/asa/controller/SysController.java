@@ -42,7 +42,7 @@ public class SysController {
     @RequiresPermissions("sys:period")
     @PostMapping("/setPeriod")
     public JSONObject setPeriod(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "datePeriod");
+        CommonUtil.hasAllRequired(requestJson, "type,teacherPeriod,studentPeriod,feePeriod,financePeriod,noticeStartDate");
         sysService.deletePeriods();
         sysService.addPeriod(requestJson);
         return CommonUtil.successJson();

@@ -36,14 +36,14 @@ public class UserController {
     @RequiresPermissions("user:add")
     @PostMapping("/addUser")
     public JSONObject addUser(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "username, password, nickname, roleId, email");
+        CommonUtil.hasAllRequired(requestJson, "username, password, nickname, nicknameCn, roleId, email");
         return userService.addUser(requestJson);
     }
 
     @RequiresPermissions("user:update")
     @PostMapping("/updateUser")
     public JSONObject updateUser(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, " nickname,   roleId, deleteStatus, userId");
+        CommonUtil.hasAllRequired(requestJson, " nickname, roleId, deleteStatus, userId");
         return userService.updateUser(requestJson);
     }
 

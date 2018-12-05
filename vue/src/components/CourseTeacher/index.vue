@@ -130,8 +130,18 @@
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('teacher.teacherName')">
-              <el-input type="text" v-model="tempCourse.teacherName" clearable>
-              </el-input>
+              <!--<el-input type="text" v-model="tempCourse.teacherName" clearable>-->
+              <!--</el-input>-->
+
+              <el-select v-model="tempCourse.teacherName" placeholder="请选择">
+                <el-option
+                  v-for="item in allTeacher"
+                  :key="item.id"
+                  :label="item.nickname"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+
             </el-form-item>
             <el-form-item :label="$t('teacher.studentNum')">
               <el-input-number v-model="tempCourse.capacity" :min="1" :max="100" clearable>
@@ -215,6 +225,7 @@
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         selectStudentData:[],//表格的数据
+        allTeacher:[],
         excelList: [],
         listLoading: false,//数据加载等待动画
         listQuery: {
@@ -246,8 +257,18 @@
     },
     created() {
       this.getList();
+      this.listAllTeacher();
     },
     methods: {
+      listAllTeacher(){
+        this.api({
+          url: "/course-teacher/listAllTeacher",
+          method: "get",
+          params: {}
+        }).then(data => {
+          this.allTeacher = data
+        });
+      },
       resetTempCourse(){
         this.tempCourse = {
           id: "",

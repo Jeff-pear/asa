@@ -2,6 +2,8 @@ package com.pears.asa.service;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.List;
+
 /**
  * @author: pears
  * @date: 2017/10/24 16:06
@@ -44,4 +46,12 @@ public interface CourseTeacherService {
      * @return
      */
     JSONObject deleteCourse(JSONObject jsonObject);
+
+    /**
+     * 列表
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject listAllTeacher(JSONObject jsonObject);
 }

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -54,6 +55,18 @@ public class CourseTeacherController {
     @GetMapping("/myListCourse")
     public JSONObject listMyCourse(HttpServletRequest request) {
         return courseTeacherService.listMyCourse(CommonUtil.request2Json(request));
+    }
+
+    /**
+     * 查询所有教师
+     *
+     * @param request
+     * @return
+     */
+    @RequiresPermissions("course-teacher:update")
+    @GetMapping("/listAllTeacher")
+    public JSONObject listAllTeacher(HttpServletRequest request) {
+        return courseTeacherService.listAllTeacher(CommonUtil.request2Json(request));
     }
     
     /**

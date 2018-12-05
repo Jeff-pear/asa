@@ -6,8 +6,8 @@
     <select id="listPeriod" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
             id        id,
-            DATE_FORMAT(start_date, '%Y.%m.%d') startDate,
-            DATE_FORMAT(end_date, '%Y.%m.%d')   endDate,
+            DATE_FORMAT(pick_start_date, '%Y.%m.%d') startDate,
+            DATE_FORMAT(pick_end_date, '%Y.%m.%d')   endDate,
             comments   comments,
             status     status,
             CURRENT_DATE curDate
@@ -23,20 +23,41 @@
         WHERE active_code=#{activeCode}
     </select>
     <insert id="addPeriod" useGeneratedKeys="true" keyProperty="id">
-        insert into course_period (start_date, end_date
+        insert into course_period (
+            type
+            ,course_start_date,course_end_date
+            ,pick_start_date,pick_end_date
+            ,fee_start_date,fee_end_date
+            ,finance_start_date,finance_end_date
+            ,notice_start_date
         <if test="comments !='' and comments !=null">
             ,comments
         </if>
         )
         values
-        (#{startDate}, #{endDate}
+        (
+        #{type}
+        ,#{teacherPeriodStartDate},#{teacherPeriodEndDate}
+        ,#{studentPeriodStartDate},#{studentPeriodEndDate}
+        ,#{feePeriodStartDate},#{feePeriodEndDate}
+        ,#{financePeriodStartDate},#{financePeriodEndDate}
+        ,#{noticeStartDate}
         <if test="comments !='' and comments !=null">
             ,#{comments}
         </if>
         )
     </insert>
-    <delete id="deletePeriods">
-        delete from course_period
-    </delete>
+    <update id="deletePeriods">
+        update  course_period
+        set status = '1'
+        <if test="delType !='' and delType !=null">
+            , type = #{delType}
+        </if>
+        where 1=1
+        <if test="id !='' and id !=null">
+             and id = #{id}
+        </if>
+
+    </update>
 
 </mapper>

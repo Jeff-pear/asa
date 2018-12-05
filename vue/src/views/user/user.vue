@@ -32,7 +32,8 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="用户名" prop="username" ></el-table-column>
-      <el-table-column align="center" label="昵称" prop="nickname" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="英文名" prop="nickname" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="中文名" prop="nicknameCn" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="邮箱" prop="email" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="角色" width="100">
         <template slot-scope="scope">
@@ -44,8 +45,8 @@
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
       <el-table-column align="center" label="是否激活" >
         <template slot-scope="scope">
-          <span v-if="scope.row.activeStatus == 1"><i class="el-icon-success"></i>&nbsp;激活</span>
-          <span v-else><i class="el-icon-error"></i>&nbsp;未激活</span>
+          <el-tag type="success" v-if="scope.row.activeStatus == 1"><i class="el-icon-success"></i>&nbsp;激活</el-tag>
+          <el-tag type="danger" v-else><i class="el-icon-error"></i>&nbsp;无效</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="管理" width="155" v-if="hasPerm('user:update')">
@@ -74,7 +75,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="email" >
-          <el-input v-model="tempUser.email" :disabled="true"/>
+          <el-input v-model="tempUser.email" />
         </el-form-item>
         <el-form-item label="密码" v-if="dialogStatus=='create'" required>
           <el-input type="password" v-model="tempUser.password">
@@ -95,13 +96,17 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="昵称" required>
+        <el-form-item label="英文名" required>
           <el-input type="text" v-model="tempUser.nickname">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="中文名" required>
+          <el-input type="text" v-model="tempUser.nicknameCn">
           </el-input>
         </el-form-item>
         <el-form-item label="激活状态" required>
           <el-radio v-model="tempUser.activeStatus" label="1">激活</el-radio>
-          <el-radio v-model="tempUser.activeStatus" label="0">未激活</el-radio>
+          <el-radio v-model="tempUser.activeStatus" label="0">无效</el-radio>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -143,6 +148,7 @@
           username: '',
           password: '',
           nickname: '',
+          nicknameCn: '',
           roleId: '',
           userId: '',
           email: '',
@@ -207,6 +213,7 @@
         this.tempUser.username = "";
         this.tempUser.password = "";
         this.tempUser.nickname = "";
+        this.tempUser.nicknameCn = "";
         this.tempUser.roleId = "";
         this.tempUser.userId = "";
         this.tempUser.email = "";
@@ -217,6 +224,7 @@
         let user = this.list[$index];
         this.tempUser.username = user.username;
         this.tempUser.nickname = user.nickname;
+        this.tempUser.nicknameCn = user.nicknameCn;
         this.tempUser.roleId = user.roleId;
         this.tempUser.userId = user.userId;
         this.tempUser.email = user.email;
