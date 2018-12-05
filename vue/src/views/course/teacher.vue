@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-tabs v-model="activeTab" type="card" @tab-click="handleTabClick">
-      <el-tab-pane label="课程列表" name="first">
+      <el-tab-pane :label="$t('teacher.listCourse') " name="first">
         <teacher-table listUrl="listCourse" showMyBtn="false" ref="tabList.courseList"></teacher-table>
       </el-tab-pane>
-      <el-tab-pane label="我的课程" name="second">
+      <el-tab-pane :label="$t('teacher.myCourse') " name="second">
         <teacher-table listUrl="myListCourse" showMyBtn="true" ref="tabList.mySelect"></teacher-table>
       </el-tab-pane>
     </el-tabs>

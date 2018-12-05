@@ -4,7 +4,7 @@
              background-color="#304156" text-color="#fff" active-text-color="#409EFF">
       <sidebar-item :routes="permission_routers"></sidebar-item>
     </el-menu>
-    <el-footer class="footer-style"><div>@Copyright 2018</div></el-footer>
+    <el-footer class="footer-style"><div v-if="this.sidebar.opened">@Copyright 2018</div></el-footer>
   </scroll-bar>
 </template>
 <style>

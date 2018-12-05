@@ -1,23 +1,23 @@
 <template>
   <div class="profile-container" >
-    <el-form class="small-space" ref="profileForm" :model="tempProfile" :rules="profileRules" label-position="left" label-width="130px"
+    <el-form class="small-space" ref="profileForm" :model="tempProfile" :rules="profileRules" label-position="left" label-width="140px"
              style='width: 450px; margin-left:50px;'>
-      <el-form-item label="原密码" prop="password">
+      <el-form-item :label="$t('profile.oldPwd')" prop="password">
         <el-input type="password" @keyup.enter.native="handleRegister" v-model="tempProfile.password"
                   autoComplete="off" ></el-input>
 
       </el-form-item>
-      <el-form-item label="新密码" prop="newPassword">
+      <el-form-item :label="$t('profile.newPwd')" prop="newPassword">
         <el-input  type="password" v-model="tempProfile.newPassword" autocomplete="off">
         </el-input>
       </el-form-item>
-      <el-form-item label="确认新密码" prop="passwordConfirm">
+      <el-form-item :label="$t('profile.confirmPwd')" prop="passwordConfirm">
         <el-input  type="password" v-model="tempProfile.passwordConfirm" autocomplete="off">
         </el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer footer-left" >
-      <el-button type="success" :loading="loading" @click.native.prevent="handleRegister">确认</el-button>
+      <el-button type="success" :loading="loading" @click.native.prevent="handleRegister">{{$t('table.confirm')}}</el-button>
     </div>
   </div>
 </template>
@@ -48,7 +48,7 @@
             password: [{required: true, trigger: 'blur', message: "请输入密码"}],
             newPassword: [{required: true, trigger: 'blur', message: "请输入新密码"}],
             passwordConfirm: [
-              { validator: validatePass2, trigger: 'blur' }
+              {required: true, trigger: 'blur', message: "请输入密码"},{ validator: validatePass2, trigger: 'blur' }
             ],
 
           },

@@ -8,7 +8,7 @@
 
       <div class="avatar-wrapper">
 
-        欢迎您：
+        {{$t('navbar.welcome') }}：
         <span class="user-name" v-text="nickname"> </span>
 
         <!--<img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">-->
@@ -17,16 +17,16 @@
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
         <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
-            Home
+            {{$t('navbar.home') }}
           </el-dropdown-item>
         </router-link>
         <router-link class="inlineBlock" to="/profile">
           <el-dropdown-item>
-            My Profile
+            {{$t('navbar.profile') }}
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
-          <span @click="logout" style="display:block;">LogOut</span>
+          <span @click="logout" style="display:block;">{{$t('navbar.logOut') }}</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>

@@ -114,7 +114,7 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :append-to-body="true">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :before-close="handleClose">
       <el-steps :active="tempCourse.stepActive" finish-status="success" simple >
         <el-step :title="$t('teacher.step1')" ></el-step>
         <el-step :title="$t('teacher.step2')" ></el-step>
@@ -139,12 +139,15 @@
                   :key="item.id"
                   :label="item.nickname"
                   :value="item.id">
+
+                  <span style="float: left">En: {{ item.nickname }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">Zh: {{ item.nickname_cn }}</span>
                 </el-option>
               </el-select>
 
             </el-form-item>
             <el-form-item :label="$t('teacher.studentNum')">
-              <el-input-number v-model="tempCourse.capacity" :min="1" :max="100" clearable>
+              <el-input-number v-model="tempCourse.capacity" :min="1" :max="15" clearable>
               </el-input-number>
             </el-form-item>
             <el-form-item :label="$t('teacher.courseDate')">
@@ -186,9 +189,46 @@
                    {{$t('teacher.uploadTip3')}}</div>
               </el-upload>
             </el-form-item>
-            <div v-if="tempCourse.stepActive==3">
-              预览
-            </div>
+
+          </div>
+          <div v-if="tempCourse.stepActive==3">
+            <el-row>
+              {{$t('teacher.courseNameNoDetail') }}: {{tempCourse.content}}
+            </el-row>
+
+            <el-row>
+              {{$t('teacher.teacherName') }}: {{tempCourse.teacherName}}
+            </el-row>
+
+            <el-row>
+              {{$t('teacher.studentNum') }}: {{tempCourse.capacity}}
+            </el-row>
+
+            <el-row>
+              {{$t('teacher.courseDate') }}: {{tempCourse.capacity}}
+            </el-row>
+
+            <el-row>
+              {{$t('teacher.grade') }}: {{tempCourse.grade}}
+            </el-row>
+
+            <el-row>
+              {{$t('teacher.courseType') }}: {{tempCourse.teacherType}}
+            </el-row>
+
+            <el-row>
+              {{$t('teacher.tuition') }}:
+              <span v-if="tempCourse.tuitionType == 'free'">{{$t('teacher.tuitionFree') }}</span>
+              <span v-if="tempCourse.tuitionType == 'fee'">{{tempCourse.tuition}} {{tempCourse.tuitionSubType}} </span>
+            </el-row>
+
+            <el-row>
+              {{$t('teacher.brief') }}: {{tempCourse.brief}}
+            </el-row>
+
+            <el-row>
+              {{$t('teacher.attachment') }}: {{tempCourse.attachment}}
+            </el-row>
           </div>
         </el-form>
       </el-row>
@@ -245,7 +285,7 @@
           teacherName: store.getters.nickname, //TODO：做成select
           stepActive:1,
           content: "",
-          capacity: 25,
+          capacity: 15,
           courseDateArr:[],
           grade: [0,9],
           teacherType: "",
@@ -275,7 +315,7 @@
           teacherName: store.getters.nickname,
           stepActive:1,
           content: "",
-          capacity: 25,
+          capacity: 15,
           courseDateArr:[],
           grade: [0,9],
           teacherType: "",
@@ -446,7 +486,7 @@
         this.tempCourse.stepActive = 1;
         //显示新增对话框
         this.tempCourse.content = "";
-        this.tempCourse.capacity = 25;
+        this.tempCourse.capacity = 15;
         //this.tempCourse.tuition = "";
         this.tempCourse.brief = "";
         this.tempCourse.grade = [0, 9];
@@ -514,6 +554,10 @@
           this.tempCourse.teacherType = this.$refs['teacherType']['teacherType'];
           this.tempCourse.grade = this.$refs['grade']['grade'];
         }
+
+        if(this.tempCourse.stepActive == 3){
+
+        }
           this.api({
             url: "/course-teacher/updateCourse",
             method: "post",
@@ -544,6 +588,18 @@
           this.deleteAlertVisible = false;
       })
       },
+      handleClose(){
+        this.dialogFormVisible = false;
+        this.api({
+          url: "/course-teacher/"+this.$props['listUrl'],
+          method: "get",
+          params: this.listQuery
+        }).then(data => {
+
+          this.list = data.list;
+          this.totalCount = data.totalCount;
+        });
+      }
     }
   }
 </script>
@@ -563,5 +619,8 @@
   .fa.fa-circle:before {
     content: "\25C9";
     /*color: #000;*/
+  }
+  .el-form-item__content .el-select, .el-form-item__content .el-input-number{
+    width:102% !important;
   }
 </style>

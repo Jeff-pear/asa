@@ -2,7 +2,7 @@
   <div class="menu-wrapper">
     <div class="app-title">
       <img src="../../../../assets/login/logo.jpeg" class="logoImg"/>
-      <mallki class-name="mallki-text appTitleText" text="ASA选课"/>
+      <mallki class-name="mallki-text appTitleText" text=" A S A "/>
     </div>
     <template v-for="item in routes" v-if="!item.hidden&&item.children">
       <router-link v-if="item.children.length===1 && !item.children[0].children" :to="item.path+'/'+item.children[0].path" :key="item.children[0].name">
@@ -62,6 +62,8 @@
     display: inline-flex;
     .appTitleText{
       margin-top: 13px;
+      font-style: italic;
+      font-size: 26px;
     }
   }
 .logoImg{

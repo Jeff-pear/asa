@@ -89,7 +89,7 @@
     </el-pagination>
 
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :before-close="beforeClose()">
       <el-row :gutter="24">
 
       </el-row>
@@ -218,6 +218,9 @@
         this.dialogFormVisible = false;
       })
       },
+      beforeClose(){
+        console.log('close')
+      }
     }
   }
 </script>
@@ -226,7 +229,7 @@
     right: 11px;
   }
   .el-form-item__content .el-select, .el-form-item__content .el-input-number{
-    width:102%;
+    width:102% !important;
   }
 </style>
 

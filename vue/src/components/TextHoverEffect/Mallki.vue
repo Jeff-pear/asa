@@ -68,7 +68,7 @@ export default {
 
 .link--mallki span {
   position: absolute;
-  height: 50%;
+  height: 65%;
   width: 100%;
   left: 0;
   top: 0;

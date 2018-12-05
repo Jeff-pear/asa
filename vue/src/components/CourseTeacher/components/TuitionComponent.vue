@@ -1,8 +1,8 @@
 <template>
   <div>
   <el-row>
-    <el-radio v-model="tuition.tuitionType" v-bind:ref="tuition.tuitionType" label="fee">付费</el-radio>
-    <el-radio v-model="tuition.tuitionType" v-bind:ref="tuition.tuitionType" label="free">免费</el-radio>
+    <el-radio v-model="tuition.tuitionType" v-bind:ref="tuition.tuitionType" label="fee">{{$t('teacher.tuitionNotFree') }}</el-radio>
+    <el-radio v-model="tuition.tuitionType" v-bind:ref="tuition.tuitionType" label="free">{{$t('teacher.tuitionFree') }}</el-radio>
   </el-row>
   <el-row v-if="tuition.tuitionType == 'fee'">
     <el-col :span="16">

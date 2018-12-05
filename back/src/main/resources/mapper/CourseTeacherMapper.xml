@@ -210,7 +210,7 @@
         from sys_user
           left join sys_role
           on sys_user.role_id=sys_role.id
-            WHERE sys_role.group_tag = 2
+            WHERE (sys_role.group_tag = 2 or sys_role.group_tag = 0 or group_tag is null)
             and sys_user.delete_status = 1
             and sys_user.active_status=1;
     </select>

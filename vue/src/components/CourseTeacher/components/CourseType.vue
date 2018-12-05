@@ -1,8 +1,8 @@
 <template>
 <div>
-  <el-radio v-model="teacherType" size="small" label="0" border>中教</el-radio>
-  <el-radio v-model="teacherType" size="small" label="1" border>外教</el-radio>
-  <el-radio v-model="teacherType" size="small" label="2" border>外聘</el-radio>
+  <el-radio v-model="teacherType" size="small" label="0" border>{{$t('teacher.chineseTeacher') }}</el-radio>
+  <el-radio v-model="teacherType" size="small" label="1" border>{{$t('teacher.foreignTeacher') }}</el-radio>
+  <el-radio v-model="teacherType" size="small" label="2" border>{{$t('teacher.externalTeacher') }}</el-radio>
 </div>
 </template>
 

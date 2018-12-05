@@ -13,14 +13,15 @@
 
       <el-tag type="success">
         <template slot-scope="scope">
+          <div>
           {{myFromLabel}} -- {{myToLabel}}
+          </div>
         </template>
       </el-tag>
     </el-col>
   </el-row>
 
 </template>
-
 <script>
     export default {
         name: "SliderWithLabels",
@@ -34,6 +35,7 @@
         },
         methods:{
           changeVal(val){
+            debugger;
             this.myFromLabel = this.formatTooltip(val[0]);
             this.myToLabel = this.formatTooltip(val[1]);
           },

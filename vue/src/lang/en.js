@@ -6,6 +6,11 @@ export default {
   },
 
   teacher:{
+    listCourse: 'Course List',
+    myCourse: 'My Course',
+    chineseTeacher:'Chinese Teacher',
+    foreignTeacher:'Foreign Teacher',
+    externalTeacher:'External Teacher',
     courseName: 'Course Name(Detail)',
     studentNum: 'Student Num',
     grade: 'Grade',
@@ -13,6 +18,7 @@ export default {
     tuitionOption1: '(Person*Lesson)',
     tuitionOption2: '(Lesson)',
     tuitionOption3: '(Term)',
+    tuitionNotFree: 'Payment Required',
     tuitionFree: 'Free',
     courseDate: 'Course Date',
     updateDate: 'Update Time',
@@ -36,7 +42,8 @@ export default {
   common:{
     loading: 'Loading...',
     checkAll: 'ALL',
-    deleteSuccess: 'Delete successfully'
+    deleteSuccess: 'Delete successfully',
+    switchLanSuccess: 'Switch Language Success'
   },
   route: {
     dashboard: 'Dashboard',
@@ -45,12 +52,17 @@ export default {
     courseStudent: 'Student Course'
   },
   navbar: {
+    home: 'Home',
+    welcome: 'Welcome',
+    profile: 'My Profile',
     logOut: 'Log Out',
-    dashboard: 'Dashboard',
-    github: 'Github',
-    screenfull: 'Screenfull',
-    theme: 'Theme',
-    size: 'Global Size'
+    dashboard: 'Dashboard'
+
+  },
+  profile: {
+    oldPwd:'Old Password',
+    newPwd:'New Password',
+    confirmPwd:'Confirm Password'
   },
   login: {
     title: 'Login Form',

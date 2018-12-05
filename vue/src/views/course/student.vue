@@ -2,7 +2,7 @@
   <div class="app-container">
 
     <el-tabs v-model="activeTab" type="card" @tab-click="handleTabClick">
-      <el-tab-pane label="课程列表" name="first">
+      <el-tab-pane :label="$t('teacher.listCourse') " name="first">
         <student-table listUrl="/course-teacher/listCourse" v-on:changeTab="changeTabIndex" isMySelect="false" ref="tabList.courseList"></student-table>
       </el-tab-pane>
       <el-tab-pane label="已选课程" name="second">

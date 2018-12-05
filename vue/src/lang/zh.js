@@ -5,6 +5,11 @@ export default {
     thu: '周四',
   },
   teacher:{
+    listCourse: '课程列表',
+    myCourse: '我的课程',
+    chineseTeacher:'中教',
+    foreignTeacher:'外教',
+    externalTeacher:'外聘',
     courseName: '课程名(详情)',
     studentNum: '学生数',
     grade: '授课年级',
@@ -12,6 +17,7 @@ export default {
     tuitionOption1: '(人*课)',
     tuitionOption2: '(课)',
     tuitionOption3: '(学期)',
+    tuitionNotFree: '付费',
     tuitionFree: '免费',
     courseDate: '课程时间',
     updateDate: '更新时间',
@@ -36,7 +42,8 @@ export default {
   common:{
     loading: '加载中...',
     checkAll: '全选',
-    deleteSuccess: '删除成功'
+    deleteSuccess: '删除成功',
+    switchLanSuccess: '切换语言成功'
   },
   route: {
     dashboard: '首页',
@@ -45,8 +52,16 @@ export default {
     courseStudent: '学生选课'
   },
   navbar: {
+    home: '首页',
+    welcome: '欢迎您',
+    profile: '修改资料',
     logOut: '退出登录',
     dashboard: '首页',
+  },
+  profile: {
+    oldPwd:'原密码',
+    newPwd:'新密码',
+    confirmPwd:'确认密码'
   },
   login: {
     title: 'SIBS ASA 系统登录',
