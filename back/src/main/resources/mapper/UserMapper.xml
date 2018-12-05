@@ -52,17 +52,26 @@
                      delete_status                           deleteStatus,
                      active_status                           activeStatus,
                      email                                   email,
+                    password                                  password,
                      DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
                      DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
                  FROM sys_user
                  WHERE delete_status = '1'
                  ORDER BY id
-                 LIMIT #{offSet}, #{pageRow}
+                <if test="offSet !='' and offSet !=null and pageRow !='' and pageRow !=null">
+                    LIMIT #{offSet}, #{pageRow}
+                </if>
              ) u
             LEFT JOIN sys_role r ON r.id = u.roleId
             LEFT JOIN sys_role_permission rp ON rp.role_id = r.id
             LEFT JOIN sys_permission p ON p.id = rp.permission_id
-
+            where 1=1
+            <if test="curUserId !='' and curUserId !=null">
+                and u.userId = #{curUserId}
+            </if>
+            <if test="curPassword !='' and curPassword !=null">
+                and u.password = #{curPassword}
+            </if>
         ORDER BY u.userId
     </select>
 
@@ -124,7 +133,7 @@
 
     <update id="updateUser">
         UPDATE sys_user
-        SET
+        SET id=id
         <if test="nickname !='' and nickname !=null">
             nickname = #{nickname}
         </if>

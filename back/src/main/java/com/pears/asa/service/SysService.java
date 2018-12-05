@@ -39,4 +39,12 @@ public interface SysService {
      */
     void deletePeriods();
 
+    /**
+     * 设置密码
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject setPassword(JSONObject jsonObject);
+
 }

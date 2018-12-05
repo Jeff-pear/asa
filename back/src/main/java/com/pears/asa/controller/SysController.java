@@ -48,4 +48,18 @@ public class SysController {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 设置密码
+     *
+     * @param requestJson
+     * @return
+     */
+    @RequiresPermissions("sys:period")
+    @PostMapping("/setPassword")
+    public JSONObject setPassword(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "password,newPassword");
+        sysService.setPassword(requestJson);
+        return CommonUtil.successJson();
+    }
+
 }
