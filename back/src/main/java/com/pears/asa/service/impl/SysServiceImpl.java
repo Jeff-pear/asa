@@ -107,4 +107,9 @@ public class SysServiceImpl implements SysService {
         return CommonUtil.successJson();
     }
 
+    @Override
+    public void deleteAttachmentById(JSONObject jsonObject) {
+        sysDao.deleteAttachmentById(jsonObject);
+    }
+
 }

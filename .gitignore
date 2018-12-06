@@ -24,6 +24,7 @@ hs_err_pid*
 .idea
 node_modules/
 target/
+src/main/resources/email.properties
 *.iml
 package-lock.json
 /vue/dist

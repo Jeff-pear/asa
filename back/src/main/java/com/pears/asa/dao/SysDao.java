@@ -63,5 +63,10 @@ public interface SysDao {
      */
     int updateAttachmentBusinessById(JSONObject jsonObject);
 
+    /**
+     * 删除atta
+     *
+     */
+    void deleteAttachmentById(JSONObject jsonObject);
 
 }

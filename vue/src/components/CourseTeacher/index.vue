@@ -344,10 +344,22 @@
         this.fileList = [];
       },
       beforeFileRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
+        debugger;
+        this.api({
+          url: "/sys/deleteAttachment/",
+          method: "post",
+          data: {
+            id: file.url,
+            businessId: this.tempCourse.id
+          }
+        }).then(response  => {
+          this.$message.success("删除成功！");
+        }).catch(()=>{
+          this.$message.error("删除失败！");
+        });
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
       //download file
       downloadFromList(obj){
@@ -559,8 +571,7 @@
         this.resetTempCourse();
         //显示修改对话框
         this.tempCourse = this.list[$index];
-        debugger;
-        if(this.tempCourse.attachId!=''){
+        if(this.tempCourse.attachId && this.tempCourse.attachId!=''){
           this.fileList.push({name: this.tempCourse.originFileName, url: this.tempCourse.attachId})
         }
 

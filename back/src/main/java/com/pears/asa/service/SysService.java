@@ -69,4 +69,10 @@ public interface SysService {
      */
     JSONObject updateAttachmentBusinessById(JSONObject jsonObject);
 
+    /**
+     * 删除atta
+     *
+     */
+    void deleteAttachmentById(JSONObject jsonObject);
+
 }

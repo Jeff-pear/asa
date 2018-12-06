@@ -103,6 +103,7 @@ public class SysController {
                         os.write(buffer);
                         i = bis.read(buffer);
                     }
+                    return null;
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
@@ -133,6 +134,33 @@ public class SysController {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 删除附件
+     *
+     * @param requestJson
+     * @return
+     */
+    @PostMapping("/deleteAttachment")
+    public JSONObject deleteAttachment(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id,businessId");
+
+        List<JSONObject> list = sysService.listAttachment(requestJson);
+        if(list.size()>0){
+
+            sysService.deleteAttachmentById(requestJson);
+            Path path = Paths.get(upLoad_Folder+"/"+list.get(0).getString("location"));
+            File file = new File(path.toString());
+            if(file.exists()&&file.isFile())
+                file.delete();
+
+            return CommonUtil.successJson();
+        }else{
+            ErrorEnum err = ErrorEnum.E_10006;
+            err.setErrorMsg("文件删除失败！");
+            return CommonUtil.errorJson(err);
+        }
+
+    }
 
 
 }

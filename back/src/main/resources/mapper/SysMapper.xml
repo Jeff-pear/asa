@@ -84,5 +84,9 @@
         where 1=1
             and id = #{id}
     </update>
+    
+    <delete id="deleteAttachmentById">
+        delete from sys_attach where id = #{id}
+    </delete>
 
 </mapper>
