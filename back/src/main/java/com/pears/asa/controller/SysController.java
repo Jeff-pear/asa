@@ -3,6 +3,7 @@ package com.pears.asa.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.service.SysService;
 import com.pears.asa.util.CommonUtil;
+import com.pears.asa.util.constants.ErrorEnum;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +74,7 @@ public class SysController {
     }
 
     @RequestMapping(path = "/download/{id}", method = RequestMethod.GET)
-    public String downLoad(@PathVariable(name = "id") int id,
+    public JSONObject downLoad(@PathVariable(name = "id") int id,
                            HttpServletResponse response){
         JSONObject j = new JSONObject();
         j.put("id",id);
@@ -114,8 +115,9 @@ public class SysController {
                 }
             }
         }
-
-        return null;
+        ErrorEnum err = ErrorEnum.E_10006;
+        err.setErrorMsg("文件未找到！");
+        return CommonUtil.errorJson(err);
     }
 
     /**
