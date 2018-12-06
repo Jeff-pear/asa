@@ -85,6 +85,12 @@
       <!--更新时间-->
       <el-table-column align="center" prop="updateTime" :label="$t('teacher.updateDate')" width="170">
       </el-table-column>
+
+      <el-table-column align="center" prop="origin_fileName" label="附件" width="170">
+        <template slot-scope="scope">
+          <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row)">{{scope.row.originFileName}}</a>
+        </template>
+      </el-table-column>
       <!--教师-->
       <el-table-column align="center" prop="nickname" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
       <el-table-column align="center" :label="$t('table.manage')" width="200" v-if="(hasPerm('course-teacher:update') && mySelfList == 'true') || isAdmin('管理员')">
@@ -177,7 +183,13 @@
                 drag
                 :limit="1"
                 ref="upload"
-                list-type="picture"
+                :file-list="fileList"
+                :on-success="handleFileUploadSuccess"
+                :on-preview="previewUploadFile"
+                :on-exceed="handleExceed"
+                :on-remove="handleFileRemove"
+                :before-remove="beforeFileRemove"
+                list-type="text"
                 accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 :auto-upload="true"
                 action="/api/course-teacher/uploadFile"
@@ -264,6 +276,7 @@
         downloadLoading: false,
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
+        fileList: [],//上传文件list
         selectStudentData:[],//表格的数据
         allTeacher:[],
         excelList: [],
@@ -322,6 +335,48 @@
           courseDate: 0,
           brief: ""
         };
+      },
+      handleFileRemove(file, fileList) {
+        console.log(file, fileList);
+        this.fileList = [];
+      },
+      beforeFileRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${ file.name }？`);
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      },
+      //download file
+      downloadFromList(obj){
+        this.previewUploadFile({url:obj.attachId});
+      },
+      previewUploadFile(obj){
+        this.api({
+          url: "/sys/download/"+obj['url'],
+          method: "get",
+          responseType: 'blob'
+        }).then(response  => {
+          this.$message.success("下载成功！");
+        });
+      },
+      handleFileUploadSuccess(result){
+        this.fileList.push({
+          name:result.returnData.originFileName,
+          url: result.returnData.attachId
+        });
+        //update attachment table
+
+        this.api({
+          url: "/sys/updateAttachment/",
+          method: "post",
+          data: {
+            id: result.returnData.attachId,
+            businessId: this.tempCourse.id
+          }
+        }).then(response  => {
+          this.$message.success("下载成功！");
+      });
+
       },
       nextStep(){
         if(this.tempCourse.stepActive==1 ){
