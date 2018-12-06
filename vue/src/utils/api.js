@@ -7,6 +7,19 @@ const service = axios.create({
   baseURL: process.env.BASE_URL, // api的base_url
   timeout: 15000                  // 请求超时时间2
 })
+
+
+// download url
+const downloadUrl = url => {
+  let iframe = document.createElement('iframe')
+  iframe.style.display = 'none'
+  iframe.src = url
+  iframe.onload = function () {
+    document.body.removeChild(iframe)
+  }
+  document.body.appendChild(iframe)
+}
+
 // request拦截器
 service.interceptors.request.use(config => {
   return config
@@ -18,6 +31,16 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(
   response => {
+  // 处理download文件
+  if (response.headers && (response.headers['content-type'] === 'application/force-download' ||
+      response.headers['content-type'] === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      response.headers['content-type'] === 'application/msword' ||
+      response.headers['content-type'] === 'application/pdf')) {
+    downloadUrl(response.request.responseURL)
+    response.data='';
+    response.headers['content-type'] = 'text/json'
+    return response;
+  }
     const res = response.data;
     if (res.returnCode == '1000') {
       return res;
