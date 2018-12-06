@@ -304,6 +304,8 @@
           teacherType: "",
           courseDate: 0,
           brief: "",
+          originFileName:"",
+          attachId: ""
         },
 
       }
@@ -323,6 +325,7 @@
         });
       },
       resetTempCourse(){
+        this.fileList = [];
         this.tempCourse = {
           id: "",
           teacherName: store.getters.nickname,
@@ -354,7 +357,7 @@
         this.api({
           url: "/sys/download/"+obj['url'],
           method: "get",
-          responseType: 'blob'
+          // responseType: 'blob'
         }).then(response  => {
           this.$message.success("下载成功！");
         });
@@ -556,6 +559,11 @@
         this.resetTempCourse();
         //显示修改对话框
         this.tempCourse = this.list[$index];
+        debugger;
+        if(this.tempCourse.attachId!=''){
+          this.fileList.push({name: this.tempCourse.originFileName, url: this.tempCourse.attachId})
+        }
+
         this.tempCourse.stepActive = 1;
         this.checkedCourseDate = [];
         let arr = this.tempCourse.courseDate.split(',');
