@@ -26,3 +26,4 @@ node_modules/
 target/
 *.iml
 package-lock.json
+/vue/dist
