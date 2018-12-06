@@ -47,4 +47,26 @@ public interface SysService {
      */
     JSONObject setPassword(JSONObject jsonObject);
 
+    /**
+     * 添加附件
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject addAttachment(JSONObject jsonObject);
+
+    /**
+     * 查询attachment列表
+     *
+     * @param jsonObject
+     * @return
+     */
+    List<JSONObject> listAttachment(JSONObject jsonObject);
+
+    /**
+     * 更新attachment
+     *
+     */
+    JSONObject updateAttachmentBusinessById(JSONObject jsonObject);
+
 }
