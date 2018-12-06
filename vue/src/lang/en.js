@@ -73,6 +73,17 @@ export default {
     thirdparty: 'Or connect with',
     thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
   },
+  register:{
+    title: 'Register SIBS ASA',
+    backToLogin: 'Back to Login',
+    userType: 'User Type',
+    username: 'Username',
+    enName: 'English Name',
+    chName: 'Chinese Name',
+    phone: 'Phone',
+    grade: 'Grade',
+    confirm: 'Register'
+  },
   period: {
     navLabel: 'Course period',
     formSelectPeriod: 'Course period'

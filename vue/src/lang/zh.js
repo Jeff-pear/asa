@@ -69,6 +69,17 @@ export default {
     username: '账号',
     password: '密码',
   },
+  register:{
+    title: 'ASA 系统注册',
+    backToLogin: '返回登录',
+    userType: '用户类型',
+    username: '用户名',
+    enName: '英文姓名',
+    chName: '中文姓名',
+    phone: '电话',
+    grade: '年级',
+    confirm: '注册'
+  },
   period: {
     navLabel: '选课周期',
     formSelectPeriod: '选课周期'

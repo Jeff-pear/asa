@@ -8,7 +8,7 @@
              label-width="0px"
              class="card-box register-form" >
 
-      <h3 class="title">Register SIBS ASA
+      <h3 class="title">{{$t('register.title')}}
         <div style="text-align:right;">
           <lang-select class="set-language"/>
         </div>
@@ -19,7 +19,7 @@
         <!--<el-step title="完成注册" icon="el-icon-success"></el-step>-->
       <!--</el-steps>-->
       <div class="loginBtn"><i class="el-icon-back"></i>
-        <router-link to="/login"><a>返回登陆</a></router-link>
+        <router-link to="/login"><a>{{$t('register.backToLogin')}}</a></router-link>
       </div>
       <el-row :gutter="20">
         <el-col :span="12">
@@ -27,7 +27,7 @@
             <span class="svg-container">
               <svg-icon icon-class="user_type"></svg-icon>
             </span>
-            <el-select @change="handleChange" v-model="registerForm.roleId" placeholder="用户类型">
+            <el-select @change="handleChange" v-model="registerForm.roleId" :placeholder="$t('register.userType')">
               <el-option
                 v-for="item in roleList"
                 :key="item.roleId"
@@ -42,7 +42,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="user"/>
             </span>
-            <el-input v-model="registerForm.username" autoComplete="on" placeholder="登录名"/>
+            <el-input v-model="registerForm.username" autoComplete="on" :placeholder="$t('register.username')"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -53,7 +53,7 @@
               <svg-icon icon-class="password"></svg-icon>
             </span>
             <el-input type="password" @keyup.enter.native="handleRegister" v-model="registerForm.password"
-                      autoComplete="off" placeholder="密码"></el-input>
+                      autoComplete="off" :placeholder="$t('login.password')"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -62,7 +62,7 @@
               <svg-icon icon-class="password"></svg-icon>
             </span>
             <el-input type="password" v-model="registerForm.passwordConfirm"
-                      autoComplete="off" placeholder="确认密码"></el-input>
+                      autoComplete="off" :placeholder="$t('profile.confirmPwd')"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -72,7 +72,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="en"/>
             </span>
-            <el-input v-model="registerForm.nickname" autoComplete="on" placeholder="英文姓名"/>
+            <el-input v-model="registerForm.nickname" autoComplete="on" :placeholder="$t('register.enName')"/>
           </el-form-item>
         </el-col>
         <el-col :span="12" >
@@ -80,7 +80,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="mail"/>
             </span>
-            <el-input v-model="registerForm.email" autoComplete="on" placeholder="email"/>
+            <el-input v-model="registerForm.email" autoComplete="on" placeholder="Email"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -91,7 +91,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="cn"/>
             </span>
-            <el-input v-model="registerForm.nicknameCn" autoComplete="on" placeholder="中文姓名"/>
+            <el-input v-model="registerForm.nicknameCn" autoComplete="on" :placeholder="$t('register.chName')"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -99,7 +99,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="phone"/>
             </span>
-            <el-input v-model="registerForm.phone" autoComplete="on" placeholder="电话"/>
+            <el-input v-model="registerForm.phone" autoComplete="on" :placeholder="$t('register.phone')"/>
           </el-form-item>
         </el-col>
 
@@ -111,7 +111,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="class"/>
             </span>
-            <el-select v-model="registerForm.class" placeholder="年级">
+            <el-select v-model="registerForm.class" :placeholder="$t('register.grade')">
               <el-option
                 v-for="item in classTypeSelectArr"
                 :key="item.value"
@@ -127,7 +127,7 @@
         <el-col :span="24">
           <el-form-item>
             <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleRegister">
-              注册
+              {{$t('register.confirm')}}
             </el-button>
           </el-form-item>
         </el-col>
