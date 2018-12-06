@@ -5,20 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.dao.SysDao;
 import com.pears.asa.dao.UserDao;
 import com.pears.asa.service.SysService;
-import com.pears.asa.service.UserService;
 import com.pears.asa.util.CommonUtil;
 import com.pears.asa.util.constants.Constants;
-import com.pears.asa.util.constants.ErrorEnum;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author: pears
@@ -94,6 +88,23 @@ public class SysServiceImpl implements SysService {
         }
 
         return null;
+    }
+
+    @Override
+    public JSONObject addAttachment(JSONObject jsonObject) {
+        sysDao.addAttachment(jsonObject);
+        return jsonObject;
+    }
+
+    @Override
+    public List<JSONObject> listAttachment(JSONObject jsonObject) {
+        return sysDao.listAttachment(jsonObject);
+    }
+
+    @Override
+    public JSONObject updateAttachmentBusinessById(JSONObject jsonObject) {
+        sysDao.updateAttachmentBusinessById(jsonObject);
+        return CommonUtil.successJson();
     }
 
 }
