@@ -57,7 +57,32 @@
         <if test="id !='' and id !=null">
              and id = #{id}
         </if>
+    </update>
 
+
+    <insert id="addAttachment" useGeneratedKeys="true" keyProperty="id" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into sys_attach (
+        user_id, location, business_id, origin_fileName
+        )
+        values
+        (
+        #{userId},  #{location,jdbcType=VARCHAR},  #{businessId}, #{originFileName}
+        )
+    </insert>
+
+    <select id="listAttachment" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        id        id,
+        location,business_id,origin_fileName, DATE_FORMAT(create_date, '%Y.%m.%d') createDate
+        FROM sys_attach
+        WHERE id=#{id}
+    </select>
+
+    <update id="updateAttachmentBusinessById" >
+        update  sys_attach
+        set business_id = #{businessId}
+        where 1=1
+            and id = #{id}
     </update>
 
 </mapper>
