@@ -132,9 +132,12 @@
           w.tuition_type tuitionType,
           w.tuition_sub_type tuitionSubType,
           w.final_tuition finalTuition,
-          w.teacher_type teacherType
+          w.teacher_type teacherType,
+            sys_attach.origin_fileName originFileName,
+            sys_attach.id attachId
         FROM course_teacher w
           LEFT JOIN sys_user u ON w.create_user = u.id
+          left JOIN sys_attach on w.id= sys_attach.business_id
         WHERE w.delete_status = '1'
         <if test="content !='' and content !=null">
             AND w.content like concat(concat('%',#{content}),'%')
