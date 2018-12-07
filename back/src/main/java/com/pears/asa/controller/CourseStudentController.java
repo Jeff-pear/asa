@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: pears
- * @description: 课程相关Controller
+ * @description: 学生相关Controller
  * @date: 2018/11/26 16:04
  */
 @RestController
@@ -20,6 +20,7 @@ public class CourseStudentController {
 
     @Autowired
     private CourseStudentService courseStudentService;
+
 
     /**
      * 查询列表
@@ -71,5 +72,17 @@ public class CourseStudentController {
         CommonUtil.hasAllRequired(requestJson, "id");
         requestJson.put("deleteStatus","2");
         return courseStudentService.updateCourse(requestJson);
+    }
+
+    /**
+     * 查询学生列表4Teacher
+     *
+     * @param request
+     * @return
+     */
+    @RequiresPermissions("course-teacher:list")
+    @GetMapping("/listStudentDetail4Teacher")
+    public JSONObject listStudentDetail4Teacher(HttpServletRequest request) {
+        return courseStudentService.listStudentDetail4Teacher(CommonUtil.request2Json(request));
     }
 }
