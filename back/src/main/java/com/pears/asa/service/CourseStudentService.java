@@ -30,4 +30,13 @@ public interface CourseStudentService {
      * @return
      */
     JSONObject updateCourse(JSONObject jsonObject);
+
+    /**
+     * 学生列表
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject listStudentDetail4Teacher(JSONObject jsonObject);
+
 }
