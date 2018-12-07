@@ -5,6 +5,7 @@ export default {
     thu: '周四',
   },
   teacher:{
+    createCourse: '创建课程',
     listCourse: '课程列表',
     myCourse: '我的课程',
     chineseTeacher:'中教',
@@ -42,8 +43,14 @@ export default {
   common:{
     loading: '加载中...',
     checkAll: '全选',
+    pleaseSelect: '请选择',
     deleteSuccess: '删除成功',
-    switchLanSuccess: '切换语言成功'
+    deleteFail: '删除失败',
+    switchLanSuccess: '切换语言成功',
+    uploadSuccess: '上传成功',
+    downloadSuccess: '下载成功',
+    restrictionUpload: '当前限制选择 1 个文件'
+
   },
   route: {
     dashboard: '首页',
