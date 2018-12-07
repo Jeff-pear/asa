@@ -6,6 +6,7 @@ export default {
   },
 
   teacher:{
+    createCourse: 'Create Course',
     listCourse: 'Course List',
     myCourse: 'My Course',
     chineseTeacher:'Chinese Teacher',
@@ -42,8 +43,13 @@ export default {
   common:{
     loading: 'Loading...',
     checkAll: 'ALL',
+    pleaseSelect: 'Please Select',
     deleteSuccess: 'Delete successfully',
-    switchLanSuccess: 'Switch Language Success'
+    deleteFail: 'Delete fail!',
+    switchLanSuccess: 'Switch Language Success',
+    uploadSuccess: 'Upload Successfully!',
+    downloadSuccess: 'Download Successfully!',
+    restrictionUpload: 'Current restrictions on selecting one file'
   },
   route: {
     dashboard: 'Dashboard',
