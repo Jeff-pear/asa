@@ -5,13 +5,13 @@
     <el-radio v-model="tuition.tuitionType" v-bind:ref="tuition.tuitionType" label="free">{{$t('teacher.tuitionFree') }}</el-radio>
   </el-row>
   <el-row v-if="tuition.tuitionType == 'fee'">
-    <el-col :span="16">
+    <el-col :span="12">
       <el-input type="text" v-model="tuition.tuition" clearable>
         <template slot="append">RMB</template>
       </el-input>
     </el-col>
-    <el-col :span="7" :offset="1">
-      <el-select v-model="tuition.tuitionSubType" placeholder="请选择">
+    <el-col :span="11" :offset="1">
+      <el-select v-model="tuition.tuitionSubType" :placeholder="$t('common.pleaseSelect')">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -37,13 +37,13 @@
           },
               options: [{
                 value: '1',
-                label: '/人/课'
+                label: this.$t('teacher.tuitionOption1')
               }, {
                 value: '2',
-                label: '/课'
+                label: this.$t('teacher.tuitionOption2')
               }, {
                 value: '3',
-                label: '/学期'
+                label: this.$t('teacher.tuitionOption3')
               }],
             }
         }
