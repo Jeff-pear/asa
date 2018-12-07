@@ -122,7 +122,15 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
         jsonObject.put("author",userInfo.getInteger("userId"));
-        return getList(jsonObject);
+        JSONObject result = getList(jsonObject);
+        List<JSONObject>  list = (List<JSONObject> )result.getJSONObject("returnData").get("list");
+        list.stream().forEach(i->{
+            JSONObject j = new JSONObject();
+            j.put("courseId",i.get("id"));
+            int num = courseStudentDao.countStudentDetail4Teacher(j);
+            i.put("pickStudentNum",num);
+        });
+        return result;
     }
 
     private JSONObject getList(JSONObject jsonObject) {
