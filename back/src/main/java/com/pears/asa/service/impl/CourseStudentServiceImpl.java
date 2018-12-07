@@ -112,4 +112,12 @@ public class CourseStudentServiceImpl implements CourseStudentService {
         return CommonUtil.successJson();
     }
 
+    @Override
+    public JSONObject listStudentDetail4Teacher(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = courseStudentDao.countStudentDetail4Teacher(jsonObject);
+        List<JSONObject> list = courseStudentDao.listStudentDetail4Teacher(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
+    }
+
 }
