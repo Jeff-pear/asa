@@ -7,7 +7,7 @@
                     size="small" v-if="hasPerm('course-teacher:list')" ref="searchBtn" style="width: 200px;"
                     @keyup.enter.native="handleFilter" clearable/>
 
-          <el-select size="small" v-model="listQuery.grade" class="filter-item" style="width: 200px;" multiple :placeholder="$t('teacher.grade')" clearable>
+          <el-select size="small" v-model="listQuery.grade" class="filter-item" style="width: 200px;" :placeholder="$t('teacher.grade')" clearable>
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -47,16 +47,26 @@
       <!--学生数-->
       <el-table-column align="center" prop="capacity" :label="$t('teacher.studentNum')" v-if="mySelfList=='true'" style="width: 60px;">
         <template slot-scope="scope">
+          {{scope.row.pickStudentNum}}/
           {{scope.row.capacity}}
           <el-popover class="col-el-popover"
                       placement="right"
                       trigger="click">
             <el-table :data="selectStudentData">
-              <el-table-column width="100" property="name" label="学生姓名"></el-table-column>
-              <el-table-column width="150" property="date" label="选课日期"></el-table-column>
-              <el-table-column width="300" property="address" label="是否缴费"></el-table-column>
+              <el-table-column width="250" property="nickname" label="学生姓名">
+                <template slot-scope="scope2">
+                  {{scope2.row.nickname}}({{scope2.row.nickname_cn}})
+                </template>
+              </el-table-column>
+              <el-table-column width="150" property="course_date" label="选课日期"></el-table-column>
+              <el-table-column width="100" property="is_pay" label="是否缴费">
+                <template slot-scope="scope2">
+                  <span v-if="scope2.row.is_pay == '0'">未支付</span>
+                  <span v-if="scope2.row.is_pay == '1'">已支付</span>
+                </template>
+              </el-table-column>
             </el-table>
-            <i slot="reference" class="el-icon-share" v-if="scope.row.brief!=null" style="cursor: pointer;"></i>
+            <i slot="reference" class="el-icon-share" v-if="scope.row.brief!=null" style="cursor: pointer;" @click="showStudentList(scope.row.id)"></i>
           </el-popover>
         </template>
       </el-table-column>
@@ -373,6 +383,19 @@
           this.$message.success(this.$t('common.deleteSuccess'));
         }).catch(()=>{
           this.$message.error(this.$t('common.deleteFail'));
+        });
+      },
+
+      showStudentList(id){
+        this.selectStudentData = [];
+        this.api({
+          url: "/course-student/listStudentDetail4Teacher/",
+          method: "get",
+          params:  {
+            courseId: id
+          },
+        }).then(response  => {
+          this.selectStudentData = response.list;
         });
       },
       handleExceed(files, fileList) {
