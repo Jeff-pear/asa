@@ -147,18 +147,7 @@
             <el-form-item :label="$t('teacher.teacherName')">
               <!--<el-input type="text" v-model="tempCourse.teacherName" clearable>-->
               <!--</el-input>-->
-
-              <el-select v-model="tempCourse.teacherName" :placeholder="$t('common.pleaseSelect')">
-                <el-option
-                  v-for="item in allTeacher"
-                  :key="item.id"
-                  :label="item.nickname"
-                  :value="item.id">
-
-                  <span style="float: left">En: {{ item.nickname }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">Zh: {{ item.nickname_cn }}</span>
-                </el-option>
-              </el-select>
+              <teacher-name v-bind:dataVal="tempCourse.teacherName"></teacher-name>
 
             </el-form-item>
             <el-form-item :label="$t('teacher.studentNum')">
@@ -266,13 +255,14 @@
   import SliderWithLabels from './components/SliderWithLabels';
   import TuitionCom from './components/TuitionComponent';
   import CourseType from './components/CourseType';
+  import TeacherName from './components/TeacherName';
   import store from '../../store'
   const courseDateOptions = ['tue', 'wed', 'thu'];
   export default {
     name: 'teacher-table',
     props:['listUrl','showMyBtn'],
     components: {
-      SliderWithLabels,TuitionCom,CourseType,
+      SliderWithLabels,TuitionCom,CourseType,TeacherName
     },
     data() {
       return {
@@ -286,7 +276,6 @@
         list: [],//表格的数据
         fileList: [],//上传文件list
         selectStudentData:[],//表格的数据
-        allTeacher:[],
         excelList: [],
         options: [{
           value: '0',
@@ -334,7 +323,7 @@
         },
         tempCourse: {
           id: "",
-          teacherName: store.getters.nickname,
+          teacherName: '',
           stepActive:1,
           content: "",
           capacity: 15,
@@ -351,23 +340,13 @@
     },
     created() {
       this.getList();
-      this.listAllTeacher();
     },
     methods: {
-      listAllTeacher(){
-        this.api({
-          url: "/course-teacher/listAllTeacher",
-          method: "get",
-          params: {}
-        }).then(data => {
-          this.allTeacher = data
-        });
-      },
       resetTempCourse(){
         this.fileList = [];
         this.tempCourse = {
           id: "",
-          teacherName: store.getters.nickname,
+          teacherName: '',
           stepActive:1,
           content: "",
           capacity: 15,
@@ -622,6 +601,11 @@
         }
         this.tempCourse.courseDate = 0 ;
         var that = this;
+        // if(this.tempCourse.teacherName==undefined){
+        //
+        //   let userId = store.getters.userId;
+        //   this.tempCourse.teacherName = userId;
+        // }
         arr.forEach(function(i){
           if(i == 'tue'){
             that.tempCourse.courseDate = that.tempCourse.courseDate+1;
