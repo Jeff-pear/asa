@@ -41,4 +41,22 @@ public interface CourseStudentDao {
      * @return
      */
     int updateCourse(JSONObject jsonObject);
+
+    /**
+     * 学生列表
+     *
+     * @param jsonObject
+     * @return
+     */
+    List<JSONObject> listStudentDetail4Teacher(JSONObject jsonObject);
+
+    /**
+     * 统计文章总数
+     *
+     * @param jsonObject
+     * @return
+     */
+    int countStudentDetail4Teacher(JSONObject jsonObject);
+
+
 }
