@@ -60,6 +60,11 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="origin_fileName" label="附件" width="170">
+        <template slot-scope="scope">
+          <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row)">{{scope.row.originFileName}}</a>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="200" v-if="hasPerm('course-student:update') ">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" size="small" v-if="isMySelect == 'false' " @click="showUpdate(scope.$index)">选课</el-button>
@@ -134,6 +139,18 @@
       this.getList();
     },
     methods: {
+      downloadFromList(obj){
+        this.previewUploadFile({url:obj.attachId});
+      },
+      previewUploadFile(obj){
+        this.api({
+          url: "/sys/download/"+obj['url'],
+          method: "get",
+          // responseType: 'blob'
+        }).then(response  => {
+          this.$message.success("下载成功！");
+      });
+      },
       formatGrade(arrVal){
         function formatSingle(val){
           let resultVal = '';
