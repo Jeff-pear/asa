@@ -97,8 +97,23 @@
 
     <insert id="addUser" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO sys_user
-        (username, password, nickname,nickname_cn, role_id) VALUES
-            (#{username}, #{password}, #{nickname}, #{nicknameCn}, #{roleId})
+        (username, password, nickname,nickname_cn, role_id
+        <if test="email !='' and email !=null">
+            , email
+        </if>
+        <if test="activeStatus !='' and activeStatus !=null">
+            , active_status
+        </if>
+        ) VALUES
+            (#{username}, #{password}, #{nickname}, #{nicknameCn}, #{roleId}
+
+        <if test="email !='' and email !=null">
+            , #{email}
+        </if>
+        <if test="activeStatus !='' and activeStatus !=null">
+            , #{activeStatus}
+        </if>
+        )
     </insert>
 
     <insert id="registerUser" useGeneratedKeys="true" keyProperty="userId">
@@ -137,16 +152,16 @@
         UPDATE sys_user
         SET id=id
         <if test="nickname !='' and nickname !=null">
-            nickname = #{nickname}
+            ,nickname = #{nickname}
         </if>
         <if test="nicknameCn !='' and nicknameCn !=null">
-            nickname_cn = #{nicknameCn}
+            ,nickname_cn = #{nicknameCn}
         </if>
         <if test="password !='' and password !=null">
             , password = #{password}
         </if>
         <if test="email !='' and email !=null">
-            , password = #{email}
+            , email = #{email}
         </if>
         <if test="activeStatus !='' and activeStatus !=null">
             , active_status = #{activeStatus}
