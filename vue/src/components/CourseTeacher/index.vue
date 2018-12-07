@@ -7,6 +7,15 @@
                     size="small" v-if="hasPerm('course-teacher:list')" ref="searchBtn" style="width: 200px;"
                     @keyup.enter.native="handleFilter" clearable/>
 
+          <el-select size="small" v-model="listQuery.grade" class="filter-item" style="width: 200px;" multiple :placeholder="$t('teacher.grade')" clearable>
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+
           <el-button class="filter-item" type="primary" icon="el-icon-search" style="margin-left: 10px;" size="small" v-if="hasPerm('course-teacher:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
           <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add') && mySelfList == 'true'" @click="showCreate">{{ $t('table.add') }}</el-button>
           <el-button :loading="downloadLoading" style="margin-left: 0px;" icon="el-icon-download" type="primary" size="small" v-if="hasPerm('course-teacher:list')" @click="handleDownload">{{ $t('excel.export') }} Excel</el-button>
@@ -120,16 +129,16 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :before-close="handleClose">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" class="teacherCourseDialog" :before-close="handleClose">
       <el-steps :active="tempCourse.stepActive" finish-status="success" simple >
         <el-step :title="$t('teacher.step1')" ></el-step>
         <el-step :title="$t('teacher.step2')" ></el-step>
         <el-step :title="$t('teacher.step3')" ></el-step>
       </el-steps>
       <br/>
-      <el-row :gutter="24">
+
         <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
-                 style='width: 460px; margin-left:50px;'>
+                 style='width: 500px; margin-left:50px;'>
           <div v-if="tempCourse.stepActive==1">
             <el-form-item :label="$t('teacher.courseNameNoDetail')">
               <el-input type="text" v-model="tempCourse.content" clearable>
@@ -139,7 +148,7 @@
               <!--<el-input type="text" v-model="tempCourse.teacherName" clearable>-->
               <!--</el-input>-->
 
-              <el-select v-model="tempCourse.teacherName" placeholder="请选择">
+              <el-select v-model="tempCourse.teacherName" :placeholder="$t('common.pleaseSelect')">
                 <el-option
                   v-for="item in allTeacher"
                   :key="item.id"
@@ -243,7 +252,6 @@
             </el-row>
           </div>
         </el-form>
-      </el-row>
       <div slot="footer" class="dialog-footer">
         <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
         <el-button type="success" @click="prevStep" v-if="tempCourse.stepActive!=1">{{$t('teacher.prevStep')}}</el-button>
@@ -280,6 +288,37 @@
         selectStudentData:[],//表格的数据
         allTeacher:[],
         excelList: [],
+        options: [{
+          value: '0',
+          label: 'KG'
+        }, {
+          value: '1',
+          label: 'G1'
+        }, {
+          value: '2',
+          label: 'G2'
+        }, {
+          value: '3',
+          label: 'G3'
+        }, {
+          value: '4',
+          label: 'G4'
+        }, {
+          value: '5',
+          label: 'G5'
+        }, {
+          value: '6',
+          label: 'G6'
+        }, {
+          value: '7',
+          label: 'G7'
+        }, {
+          value: '8',
+          label: 'G8'
+        }, {
+          value: '9',
+          label: 'G9'
+        }],
         listLoading: false,//数据加载等待动画
         listQuery: {
           pageNum: 1,//页码
@@ -290,12 +329,12 @@
         dialogFormVisible: false,
         deleteAlertVisible: false,
         textMap: {
-          update: '编辑',
-          create: '创建课程'
+          update: this.$t('table.edit'),
+          create: this.$t('teacher.createCourse')
         },
         tempCourse: {
           id: "",
-          teacherName: store.getters.nickname, //TODO：做成select
+          teacherName: store.getters.nickname,
           stepActive:1,
           content: "",
           capacity: 15,
@@ -344,7 +383,6 @@
         this.fileList = [];
       },
       beforeFileRemove(file, fileList) {
-        debugger;
         this.api({
           url: "/sys/deleteAttachment/",
           method: "post",
@@ -353,13 +391,13 @@
             businessId: this.tempCourse.id
           }
         }).then(response  => {
-          this.$message.success("删除成功！");
+          this.$message.success(this.$t('common.deleteSuccess'));
         }).catch(()=>{
-          this.$message.error("删除失败！");
+          this.$message.error(this.$t('common.deleteFail'));
         });
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(this.$t('common.restrictionUpload'));
       },
       //download file
       downloadFromList(obj){
@@ -371,7 +409,7 @@
           method: "get",
           // responseType: 'blob'
         }).then(response  => {
-          this.$message.success("下载成功！");
+          this.$message.success(this.$t('common.downloadSuccess'));
         });
       },
       handleFileUploadSuccess(result){
@@ -389,7 +427,7 @@
             businessId: this.tempCourse.id
           }
         }).then(response  => {
-          this.$message.success("下载成功！");
+          this.$message.success(this.$t('common.uploadSuccess'));
       });
 
       },
@@ -694,7 +732,7 @@
     content: "\25C9";
     /*color: #000;*/
   }
-  .el-form-item__content .el-select, .el-form-item__content .el-input-number{
+  .teacherCourseDialog .el-form-item__content .el-select, .teacherCourseDialog .el-form-item__content .el-input-number{
     width:102% !important;
   }
 </style>
