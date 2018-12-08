@@ -19,6 +19,9 @@
         <if test="comment !='' and comment !=null">
             , comment
         </if>
+        <if test="courseDate !='' and courseDate !=null">
+            , course_date
+        </if>
         ) VALUES
             ( #{courseId}, #{selectUserId}
 
@@ -34,6 +37,9 @@
         </if>
         <if test="comment !='' and comment !=null">
             , #{comment}
+        </if>
+        <if test="courseDate !='' and courseDate !=null">
+            , #{courseDate}
         </if>
         )
     </insert>
@@ -61,7 +67,7 @@
         u.content content,
         u.brief,
         u.capacity,
-        u.course_date courseDate,
+        w.course_date courseDateStudent,
         u.tuition,
         s.nickname,
         u.grade,

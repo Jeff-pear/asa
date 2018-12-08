@@ -50,14 +50,9 @@
 
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="courseDate" label="课程时间" style="width: 60px;">
-        <template slot-scope="scope">
-          &nbsp;
-          {{scope.row.courseDate}}
-          <!--<span v-if="scope.row.courseDate.tue==true">{{$t('week.tue')}}</span>&nbsp;-->
-          <!--<span v-if="scope.row.courseDate.wed==true">{{$t('week.wed')}}</span>&nbsp;-->
-          <!--<span v-if="scope.row.courseDate.thu==true">{{$t('week.thu')}}</span>-->
-        </template>
+      <el-table-column align="center" prop="courseDateStudent" label="课程时间" v-if="isMySelect == 'true' " style="width: 60px;">
+      </el-table-column>
+      <el-table-column align="center" prop="courseDate" label="课程时间" v-if="isMySelect == 'false' " style="width: 60px;">
       </el-table-column>
       <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="origin_fileName" label="附件" width="170">
@@ -96,6 +91,18 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :before-close="beforeClose()">
       <el-row :gutter="24">
+        <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
+                 style='width: 500px; margin-left:50px;'>
+          <el-form-item :label="$t('teacher.courseDate')">
+            <course-date v-bind:dataVal="tempCourse.courseDate"
+                         v-bind:dataArr="tempCourse.courseDateArr"
+                         v-bind="$attrs" v-on="$listeners"
+                         v-bind:dataCheckAll="checkAll"
+                         v-bind:dataIsIndeterminate="isIndeterminate"
+                         v-on:changeCourseDate="changeCourseDate"
+                         ref="courseDate"></course-date>
+          </el-form-item>
+        </el-form>
 
       </el-row>
       <div slot="footer" class="dialog-footer">
@@ -107,10 +114,15 @@
 </template>
 
 <script>
+  import CourseDate from '../CourseTeacher/components/CourseDate';
+  import FileUploader from '../CourseTeacher/components/FileUploader';
   const courseDateOptions = ['tue', 'wed', 'thu'];
   export default {
     name: 'student-table',
     props:['listUrl','isMySelect'],
+    components: {
+     CourseDate,FileUploader
+    },
     data() {
       return {
         mySelfList: this.$props['isMySelect'],
@@ -130,8 +142,12 @@
           update: '编辑',
           create: '创建课程'
         },
+        checkAll: false,
+        isIndeterminate: true,
         tempCourse: {
           id: "",
+          courseDateArr:[],
+          courseDate: 0,
         }
       }
     },
@@ -139,6 +155,9 @@
       this.getList();
     },
     methods: {
+      changeCourseDate(val){
+        this.tempCourse.courseDateArr = val;
+      },
       downloadFromList(obj){
         this.previewUploadFile({url:obj.attachId});
       },
@@ -211,6 +230,9 @@
         this.dialogFormVisible = true
       },
       selectCourse(){
+        this.tempCourse.courseDate = this.$refs['courseDate']['courseDate'];
+        this.courseDateArr = this.$refs['courseDate']['courseDateArr'];
+
         //保存新课程
         this.api({
           url: "/course-student/pickCourse",

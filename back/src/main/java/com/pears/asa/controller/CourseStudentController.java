@@ -43,7 +43,7 @@ public class CourseStudentController {
     @RequiresPermissions("course-student:update")
     @PostMapping("/pickCourse")
     public JSONObject pickCourse(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "courseId");
+        CommonUtil.hasAllRequired(requestJson, "courseId,courseDate");
         return courseStudentService.selectCourse(requestJson);
     }
 
@@ -56,7 +56,7 @@ public class CourseStudentController {
     @RequiresPermissions("course-student:update")
     @PostMapping("/updateCourse")
     public JSONObject updateCourse(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "id,courseId");
+        CommonUtil.hasAllRequired(requestJson, "id,courseId,courseDate");
         return courseStudentService.updateCourse(requestJson);
     }
 

@@ -35,18 +35,18 @@
             tuition: this.$props['dataTuition'],
             tuitionSubType:this.$props['dataTuitionSubType']
           },
-              options: [{
-                value: '1',
-                label: this.$t('teacher.tuitionOption1')
-              }, {
-                value: '2',
-                label: this.$t('teacher.tuitionOption2')
-              }, {
-                value: '3',
-                label: this.$t('teacher.tuitionOption3')
-              }],
-            }
+          options: [{
+            value: '1',
+            label: this.$t('teacher.tuitionOption1')
+          }, {
+            value: '2',
+            label: this.$t('teacher.tuitionOption2')
+          }, {
+            value: '3',
+            label: this.$t('teacher.tuitionOption3')
+          }],
         }
+      }
     }
 </script>
 

@@ -49,7 +49,7 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     public JSONObject addCourse(JSONObject jsonObject) {
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
-        if (checkCourseDate(jsonObject, userInfo)) return CommonUtil.errorJson(ErrorEnum.E_10004);
+        if (checkCourseDate(jsonObject, jsonObject.getInteger("teacherName"))) return CommonUtil.errorJson(ErrorEnum.E_10004);
         jsonObject.put("updateUser",userInfo.getInteger("userId"));
         jsonObject.put("createUser",userInfo.getInteger("userId"));
         StringToJsonArrayObj(jsonObject, "grade");
@@ -62,12 +62,12 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         return CommonUtil.successJson(jsonObject);
     }
 
-    private boolean checkCourseDate(JSONObject jsonObject, JSONObject userInfo) {
+    private boolean checkCourseDate(JSONObject jsonObject, Integer teacherName) {
         List findInSetParams = (List<String>) jsonObject.get("courseDateArr");
         if(findInSetParams.size()>0){
             JSONObject jo = new JSONObject();
             jo.put("courseDateArr", findInSetParams);
-            jo.put("author", userInfo.getInteger("userId"));
+            jo.put("author", teacherName);
             jo.put("idNotEqual", jsonObject.getInteger("idNotEqual"));
             int count = courseTeacherDao.countCourse(jo);
             if(count>0){
@@ -158,7 +158,7 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
         jsonObject.put("idNotEqual",jsonObject.getInteger("id"));
-        if (checkCourseDate(jsonObject, userInfo)) return CommonUtil.errorJson(ErrorEnum.E_10004);
+        if (checkCourseDate(jsonObject, jsonObject.getInteger("teacherName"))) return CommonUtil.errorJson(ErrorEnum.E_10004);
         exeUpdateCourse(jsonObject);
         return CommonUtil.successJson();
     }

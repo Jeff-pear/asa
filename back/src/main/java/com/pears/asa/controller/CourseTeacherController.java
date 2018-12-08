@@ -130,7 +130,7 @@ public class CourseTeacherController {
     @RequiresPermissions("course-teacher:add")
     @PostMapping("/addCourse")
     public JSONObject addCourse(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "content,capacity,courseDate");
+        CommonUtil.hasAllRequired(requestJson, "content,teacherName,capacity,courseDate");
         return courseTeacherService.addCourse(requestJson);
     }
 
@@ -146,7 +146,7 @@ public class CourseTeacherController {
     public JSONObject updateCourse(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id, stepActive");
         if(requestJson.getInteger("stepActive")==1){
-            CommonUtil.hasAllRequired(requestJson, "content,capacity,courseDate");
+            CommonUtil.hasAllRequired(requestJson, "content,teacherName,capacity,courseDate");
         }else{
             CommonUtil.hasAllRequired(requestJson, "grade,teacherType,tuitionType");
         }

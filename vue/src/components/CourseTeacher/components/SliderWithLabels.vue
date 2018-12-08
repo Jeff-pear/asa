@@ -35,7 +35,6 @@
         },
         methods:{
           changeVal(val){
-            debugger;
             this.myFromLabel = this.formatTooltip(val[0]);
             this.myToLabel = this.formatTooltip(val[1]);
           },

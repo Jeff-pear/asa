@@ -7,14 +7,14 @@
                     size="small" v-if="hasPerm('course-teacher:list')" ref="searchBtn" style="width: 200px;"
                     @keyup.enter.native="handleFilter" clearable/>
 
-          <el-select size="small" v-model="listQuery.grade" class="filter-item" style="width: 200px;" :placeholder="$t('teacher.grade')" clearable>
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+          <!--<el-select size="small" v-model="listQuery.grade" class="filter-item" style="width: 200px;" :placeholder="$t('teacher.grade')" clearable>-->
+            <!--<el-option-->
+              <!--v-for="item in options"-->
+              <!--:key="item.value"-->
+              <!--:label="item.label"-->
+              <!--:value="item.value">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
 
           <el-button class="filter-item" type="primary" icon="el-icon-search" style="margin-left: 10px;" size="small" v-if="hasPerm('course-teacher:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
           <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add') && mySelfList == 'true'" @click="showCreate">{{ $t('table.add') }}</el-button>
@@ -112,6 +112,12 @@
       </el-table-column>
       <!--教师-->
       <el-table-column align="center" prop="nickname" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="status" :label="$t('table.status')" style="width: 60px;">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status == 'draft'" type="danger">{{$t('table.draft')}}</el-tag>
+          <el-tag v-if="scope.row.status == 'publish'" type="success">{{$t('table.publish')}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" :label="$t('table.manage')" width="200" v-if="(hasPerm('course-teacher:update') && mySelfList == 'true') || isAdmin('管理员')">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="edit" @click="showUpdate(scope.$index)">{{$t('table.edit')}}</el-button>
@@ -157,7 +163,7 @@
             <el-form-item :label="$t('teacher.teacherName')">
               <!--<el-input type="text" v-model="tempCourse.teacherName" clearable>-->
               <!--</el-input>-->
-              <teacher-name v-bind:dataVal="tempCourse.teacherName"></teacher-name>
+              <teacher-name v-bind:dataVal="tempCourse.teacherName" ref="teacherName"></teacher-name>
 
             </el-form-item>
             <el-form-item :label="$t('teacher.studentNum')">
@@ -165,11 +171,13 @@
               </el-input-number>
             </el-form-item>
             <el-form-item :label="$t('teacher.courseDate')">
-              <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="small" @change="handleCheckAllChange" border>{{$t('common.checkAll')}}</el-checkbox>
-              <div style="margin: 15px 0;"></div>
-              <el-checkbox-group v-model="checkedCourseDate" @change="handleCheckedCitiesChange" size="small">
-                <el-checkbox v-for="dateItem in courseDates" :label="dateItem" :key="dateItem" border>{{$t('week.'+dateItem)}}</el-checkbox>
-              </el-checkbox-group>
+              <course-date v-bind:dataVal="tempCourse.courseDate"
+                           v-bind:dataArr="tempCourse.courseDateArr"
+                           v-bind="$attrs" v-on="$listeners"
+                           v-bind:dataCheckAll="checkAll"
+                           v-bind:dataIsIndeterminate="isIndeterminate"
+                           v-on:changeCourseDate="changeCourseDate"
+                           ref="courseDate"></course-date>
             </el-form-item>
           </div>
           <div v-if="tempCourse.stepActive==2">
@@ -186,28 +194,7 @@
               <el-input type="textarea" :rows="5" v-model="tempCourse.brief"></el-input>
             </el-form-item>
             <el-form-item :label="$t('teacher.attachment')">
-              <el-upload
-                class="upload-demo"
-                drag
-                :limit="1"
-                ref="upload"
-                :file-list="fileList"
-                :on-success="handleFileUploadSuccess"
-                :on-preview="previewUploadFile"
-                :on-exceed="handleExceed"
-                :on-remove="handleFileRemove"
-                :before-remove="beforeFileRemove"
-                list-type="text"
-                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                :auto-upload="true"
-                action="/api/course-teacher/uploadFile"
-                >
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">{{$t('teacher.uploadTip1')}}<em>{{$t('teacher.uploadTip2')}}</em></div>
-                <div class="el-upload__tip" slot="tip">
-                  <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button><br/>-->
-                   {{$t('teacher.uploadTip3')}}</div>
-              </el-upload>
+              <file-uploader v-bind:dataVal="tempCourse.attachId" v-bind:fileListArr="fileList" v-bind:businessId="tempCourse.id"></file-uploader>
             </el-form-item>
 
           </div>
@@ -266,20 +253,19 @@
   import TuitionCom from './components/TuitionComponent';
   import CourseType from './components/CourseType';
   import TeacherName from './components/TeacherName';
+  import CourseDate from './components/CourseDate';
+  import FileUploader from './components/FileUploader';
   import store from '../../store'
-  const courseDateOptions = ['tue', 'wed', 'thu'];
   export default {
     name: 'teacher-table',
     props:['listUrl','showMyBtn'],
     components: {
-      SliderWithLabels,TuitionCom,CourseType,TeacherName
+      SliderWithLabels,TuitionCom,CourseType,TeacherName,CourseDate,FileUploader
     },
     data() {
       return {
         mySelfList: this.$props['showMyBtn'],
         checkAll: false,
-        courseDates: courseDateOptions,
-        checkedCourseDate: [],
         isIndeterminate: true,
         downloadLoading: false,
         totalCount: 0, //分页组件--数据总条数
@@ -342,6 +328,7 @@
           teacherType: "",
           courseDate: 0,
           brief: "",
+          status: 1,
           originFileName:"",
           attachId: ""
         },
@@ -359,6 +346,7 @@
           teacherName: '',
           stepActive:1,
           content: "",
+          status: 1,
           capacity: 15,
           courseDateArr:[],
           grade: [0,9],
@@ -367,25 +355,6 @@
           brief: ""
         };
       },
-      handleFileRemove(file, fileList) {
-        console.log(file, fileList);
-        this.fileList = [];
-      },
-      beforeFileRemove(file, fileList) {
-        this.api({
-          url: "/sys/deleteAttachment/",
-          method: "post",
-          data: {
-            id: file.url,
-            businessId: this.tempCourse.id
-          }
-        }).then(response  => {
-          this.$message.success(this.$t('common.deleteSuccess'));
-        }).catch(()=>{
-          this.$message.error(this.$t('common.deleteFail'));
-        });
-      },
-
       showStudentList(id){
         this.selectStudentData = [];
         this.api({
@@ -398,9 +367,7 @@
           this.selectStudentData = response.list;
         });
       },
-      handleExceed(files, fileList) {
-        this.$message.warning(this.$t('common.restrictionUpload'));
-      },
+
       //download file
       downloadFromList(obj){
         this.previewUploadFile({url:obj.attachId});
@@ -414,25 +381,7 @@
           this.$message.success(this.$t('common.downloadSuccess'));
         });
       },
-      handleFileUploadSuccess(result){
-        this.fileList.push({
-          name:result.returnData.originFileName,
-          url: result.returnData.attachId
-        });
-        //update attachment table
 
-        this.api({
-          url: "/sys/updateAttachment/",
-          method: "post",
-          data: {
-            id: result.returnData.attachId,
-            businessId: this.tempCourse.id
-          }
-        }).then(response  => {
-          this.$message.success(this.$t('common.uploadSuccess'));
-      });
-
-      },
       nextStep(){
         if(this.tempCourse.stepActive==1 ){
           if(this.tempCourse.id==''){
@@ -467,39 +416,7 @@
         this.$refs[formName].resetFields();
         this.getList();
       },
-      handleCheckAllChange(val) {
-        this.checkedCourseDate = val ? courseDateOptions : [];
-        this.isIndeterminate = false;
-        if(val){
-          this.tempCourse.courseDate = 7;
-          this.tempCourse.courseDateArr = ['tue','wed','thu'];
-        }else{
-          this.tempCourse.courseDate = 0;
-          this.tempCourse.courseDateArr = [];
-        }
-      },
-      submitUpload() {
-        this.$refs.upload.submit();
-      },
-      handleCheckedCitiesChange(value) {
-        var checkedCount = value.length;
-        this.checkAll = checkedCount === this.courseDates.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.courseDates.length;
-        let that = this;
-        that.tempCourse.courseDate = 0;
-        this.tempCourse.courseDateArr = value;
-        value.forEach(function(i){
-          if(i == 'tue'){
-            that.tempCourse.courseDate = that.tempCourse.courseDate+1;
-          }
-          if(i == 'wed'){
-            that.tempCourse.courseDate = that.tempCourse.courseDate+2;
-          }
-          if(i == 'thu'){
-            that.tempCourse.courseDate = that.tempCourse.courseDate+4;
-          }
-        });
-      },
+
       handleFilter(){
         this.listQuery.pageNum = 1;
         this.getList();
@@ -507,21 +424,7 @@
 
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
-        // if (j === 'courseDate') {
-        //   var resultStr = '';
-        //   if(v[j]['tue']){
-        //     resultStr+='Tue ';
-        //   }
-        //   if(v[j]['wed']){
-        //     resultStr+='Wed ';
-        //   }
-        //   if(v[j]['thu']){
-        //     resultStr+='Thu ';
-        //   }
-        //   return resultStr;
-        // }else {
           return v[j];
-        //}
       }))
     },
       handleDownload() {
@@ -603,9 +506,15 @@
         this.dialogStatus = "create";
         this.dialogFormVisible = true;
         this.isIndeterminate = false;
-        this.checkedCourseDate = [];
         this.checkAll = false;
-        this.courseDate = null;
+        this.tempCourse.courseDate = 0;
+        this.tempCourse.courseDateArr = [];
+        if(this.$refs['courseDate']){
+          this.$refs['courseDate']['courseDate'] = this.tempCourse.courseDate;
+          this.$refs['courseDate']['courseDateArr'] = this.tempCourse.courseDateArr;
+          this.$refs['courseDate']['checkAll'] = this.checkAll;
+          this.$refs['courseDate']['isIndeterminate'] = this.isIndeterminate;
+        }
       },
       showUpdate($index) {
         this.resetTempCourse();
@@ -614,22 +523,12 @@
         if(this.tempCourse.attachId && this.tempCourse.attachId!=''){
           this.fileList.push({name: this.tempCourse.originFileName, url: this.tempCourse.attachId})
         }
-
         this.tempCourse.stepActive = 1;
-        this.checkedCourseDate = [];
-        let arr = this.tempCourse.courseDate.split(',');
-        this.tempCourse.courseDateArr = arr;
-        for(var i in arr){
-            this.checkedCourseDate.push(arr[i]);
-        }
+
+        this.tempCourse.courseDateArr = this.tempCourse.courseDate.split(',');
         this.tempCourse.courseDate = 0 ;
         var that = this;
-        // if(this.tempCourse.teacherName==undefined){
-        //
-        //   let userId = store.getters.userId;
-        //   this.tempCourse.teacherName = userId;
-        // }
-        arr.forEach(function(i){
+        this.tempCourse.courseDateArr.forEach(function(i){
           if(i == 'tue'){
             that.tempCourse.courseDate = that.tempCourse.courseDate+1;
           }
@@ -640,18 +539,24 @@
             that.tempCourse.courseDate = that.tempCourse.courseDate+4;
           }
         });
-        if(this.checkedCourseDate.length == courseDateOptions.length){
+        if(this.tempCourse.courseDateArr.length == 3){
           this.isIndeterminate = false;
           this.checkAll = true;
           this.tempCourse.courseDate = 7;
         }
+        if(this.$refs['courseDate']){
+          this.$refs['courseDate']['courseDate'] = this.tempCourse.courseDate;
+          this.$refs['courseDate']['courseDateArr'] = this.tempCourse.courseDateArr;
+          this.$refs['courseDate']['checkAll'] = this.checkAll;
+          this.$refs['courseDate']['isIndeterminate'] = this.isIndeterminate;
+        }
         this.dialogStatus = "update";
         this.dialogFormVisible = true;
+
       },
       createCourse() {
-        if(this.tempCourse.courseDate == 0){
-          this.tempCourse.courseDate = null;
-        }
+        this.beforePersist();
+
         //保存新课程
         this.api({
           url: "/course-teacher/addCourse",
@@ -666,17 +571,29 @@
           console.warn(v);
         });
       },
-      updateCourse() {
-        //修改课程
+      changeCourseDate(val){
+        this.tempCourse.courseDateArr = val;
+      },
+      beforePersist(){
+        if(this.tempCourse.stepActive == 1){
+          this.tempCourse.courseDate = this.$refs['courseDate']['courseDate'];
+          this.courseDateArr = this.$refs['courseDate']['courseDateArr'];
+          this.tempCourse.teacherName = this.$refs['teacherName']['teacherName'];
+        }
         if(this.tempCourse.stepActive == 2){
           Object.assign(this.tempCourse, this.$refs['tuition']['tuition']);
           this.tempCourse.teacherType = this.$refs['teacherType']['teacherType'];
           this.tempCourse.grade = this.$refs['grade']['grade'];
         }
-
         if(this.tempCourse.stepActive == 3){
-
+          this.tempCourse.status = 2;
+        }else{
+          this.tempCourse.status = 1;
         }
+      },
+      updateCourse() {
+        //修改课程
+        this.beforePersist();
           this.api({
             url: "/course-teacher/updateCourse",
             method: "post",
