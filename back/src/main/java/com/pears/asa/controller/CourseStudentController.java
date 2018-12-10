@@ -2,6 +2,7 @@ package com.pears.asa.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.service.CourseStudentService;
+import com.pears.asa.service.CourseTeacherService;
 import com.pears.asa.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,21 @@ public class CourseStudentController {
 
     @Autowired
     private CourseStudentService courseStudentService;
+    @Autowired
+    private CourseTeacherService courseTeacherService;
 
+
+    /**
+     * 查询课程列表
+     *
+     * @param request
+     * @return
+     */
+    @RequiresPermissions("course-student:list")
+    @GetMapping("/listTeacherCourse")
+    public JSONObject listTeacherCourse(HttpServletRequest request) {
+        return courseTeacherService.listCourse(CommonUtil.request2Json(request));
+    }
 
     /**
      * 查询列表
