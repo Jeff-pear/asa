@@ -38,7 +38,9 @@ export default {
     nextStep: '下一步',
     finishStep: '完 成',
     price: '金额',
-    recommendBrand: '推荐品牌'
+    recommendBrand: '推荐品牌',
+    yes: '是',
+    no: '否'
 
   },
   common:{
@@ -115,6 +117,19 @@ export default {
     deleteConfirm: '确定删除此课程吗？',
     cancel: '取 消',
     confirm: '确 定'
+  },
+  validation: {
+    passwordRequire: '请输入密码',
+    passwordConfirmRequire: '请再次输入密码',
+    differentFor2Times: '两次输入密码不一致!',
+    emailRequire: '请输入邮箱',
+    userTypeRequire: '请选择用户类型',
+    userNameRequire: '请输入用户名',
+    sexRequire: '请选择性别',
+    emailReg: '请输入正确的邮箱地址',
+    phoneNeedNum: '手机必须为数字值',
+    nickNameRequire: '请输入英文名',
+    nickNameCnRequire: '请输入中文名',
   },
   excel: {
     export: '导出',
