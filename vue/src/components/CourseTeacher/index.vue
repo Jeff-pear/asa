@@ -95,7 +95,9 @@
       <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" style="width: 60px;">
         <template slot-scope="scope">
           &nbsp;
-          {{scope.row.courseDate}}
+          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
+          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('wed')>-1">{{$t('week.wed')}}</span>
+          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
           <!--<span v-if="scope.row.courseDate.tue==true">{{$t('week.tue')}}</span>&nbsp;-->
           <!--<span v-if="scope.row.courseDate.wed==true">{{$t('week.wed')}}</span>&nbsp;-->
           <!--<span v-if="scope.row.courseDate.thu==true">{{$t('week.thu')}}</span>-->
@@ -105,7 +107,7 @@
       <el-table-column align="center" prop="updateTime" :label="$t('teacher.updateDate')" width="170">
       </el-table-column>
 
-      <el-table-column align="center" prop="origin_fileName" label="附件" width="170">
+      <el-table-column align="center" prop="origin_fileName" :label="$t('teacher.attachment')" width="170">
         <template slot-scope="scope">
           <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row)">{{scope.row.originFileName}}</a>
         </template>
@@ -488,13 +490,18 @@
         if (!this.hasPerm('course-teacher:list')) {
           return
         }
-        this.listLoading = true;
+        if(!this.dialogFormVisible){
+          this.listLoading = true;
+        }
+
         this.api({
           url: "/course-teacher/"+this.$props['listUrl'],
           method: "get",
           params: this.listQuery
         }).then(data => {
-          this.listLoading = false;
+          if(!this.dialogFormVisible){
+            this.listLoading = false;
+          }
           this.list = data.list;
           this.totalCount = data.totalCount;
         });
