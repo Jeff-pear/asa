@@ -33,11 +33,11 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="capacity" label="学生数" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="grade" label="授课年级" style="width: 60px;">
-        <template slot-scope="scope">
-          {{formatGrade(scope.row.grade)}}
-        </template>
-      </el-table-column>
+      <!--<el-table-column align="center" prop="grade" label="授课年级" style="width: 60px;">-->
+        <!--<template slot-scope="scope">-->
+          <!--{{formatGrade(scope.row.grade)}}-->
+        <!--</template>-->
+      <!--</el-table-column>-->
       <el-table-column align="center" label="学费" style="width: 60px;">
         <template slot-scope="scope" >
           <div v-if="scope.row.tuitionType=='fee'">
