@@ -1,4 +1,4 @@
 <template>
-  <div>开发中...</div>
+  <div style="padding: 20px;">建设中...</div>
 
 </template>

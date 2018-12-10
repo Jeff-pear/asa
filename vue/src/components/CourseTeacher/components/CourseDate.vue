@@ -1,31 +1,31 @@
 <template>
   <div>
-    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="small" @change="handleCheckAllChange" border>{{$t('common.checkAll')}}</el-checkbox>
+    <el-checkbox :indeterminate="isIndeterminate" v-if="this.role == 'teacher'" v-model="checkAll" size="small" @change="handleCheckAllChange" border>{{$t('common.checkAll')}}</el-checkbox>
     <div style="margin: 15px 0;"></div>
     <el-checkbox-group v-model="courseDateArr" @change="handleCheckedCitiesChange" size="small">
-      <el-checkbox v-for="dateItem in courseDates" :label="dateItem" :key="dateItem" border>{{$t('week.'+dateItem)}}</el-checkbox>
+      <el-checkbox v-for="dateItem in courseDates" :label="dateItem.label" :key="dateItem.label" border v-if="!dateItem.disabled">{{$t('week.'+dateItem.label)}}</el-checkbox>
     </el-checkbox-group>
   </div>
 </template>
 
 <script>
-  const courseDateOptions = ['tue', 'wed', 'thu'];
+
     export default {
       name: "course-date",
-      props:['dataVal','dataArr','dataCheckArr','dataCheckAll','dataIsIndeterminate'],
+      props:['dataVal','dataArr','dataCheckArr','dataCheckAll','dataIsIndeterminate','courseDateOptions','role'],
       data() {
         return {
           checkAll: this.dataCheckAll,
           isIndeterminate: this.dataIsIndeterminate,
           courseDate: this.dataVal,
           courseDateArr:this.dataArr,
-          courseDates: courseDateOptions,
+          courseDates: this.courseDateOptions,
         }
       },
       methods:{
         handleCheckAllChange(val) {
-          this.$emit('changeCourseDate',value);
-          this.courseDateArr = val ? courseDateOptions : [];
+          //this.$emit('changeCourseDate',value);
+          this.courseDateArr = val ? this.courseDateOptions : [];
           this.isIndeterminate = false;
           if(val){
             this.courseDate = 7;

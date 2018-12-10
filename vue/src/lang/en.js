@@ -38,6 +38,8 @@ export default {
     prevStep: 'Previous',
     nextStep: 'Next',
     finishStep: 'Finish',
+    price: 'Price',
+    recommendBrand: 'Recommend Brand'
 
   },
   common:{
@@ -55,7 +57,8 @@ export default {
     dashboard: 'Dashboard',
     courseManagement: 'Course',
     course: 'Course',
-    courseStudent: 'Student Course'
+    courseStudent: 'Student Course',
+    courseFinance: 'Finance Management'
   },
   navbar: {
     home: 'Home',

@@ -27,6 +27,10 @@
             <span >
             教师</span>
           </el-tag>
+          <el-tag v-else-if="scope.row.groupTag == 3" type="success" >
+            <span >
+            财务</span>
+          </el-tag>
           <el-tag type="primary" v-else>
             <span >
             无</span>
@@ -79,6 +83,7 @@
         <el-form-item label="组别" required>
           <el-radio v-model="tempRole.groupTag" label="1">学生</el-radio>
           <el-radio v-model="tempRole.groupTag" label="2">教师</el-radio>
+          <el-radio v-model="tempRole.groupTag" label="3">财务</el-radio>
         </el-form-item>
         <el-form-item label="菜单&权限" required>
           <div v-for=" (menu,_index) in allPermission" :key="menu.menuName">

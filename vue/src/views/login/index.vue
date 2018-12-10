@@ -31,6 +31,15 @@
       <div class="registerBtn"><svg-icon icon-class="user"/>
         <router-link to="/register"><a>去注册</a></router-link>
       </div>
+
+      <div class="tips">
+        <span style="margin-right:18px;">{{ $t('login.username') }} : admin</span>
+        <span>{{ $t('login.password') }} : 123456</span>
+      </div>
+      <div class="tips">
+        <span style="margin-right:18px;">{{ $t('login.username') }} : test</span>
+        <span>{{ $t('login.password') }} : 123456</span>
+      </div>
     </el-form>
   </div>
 </template>

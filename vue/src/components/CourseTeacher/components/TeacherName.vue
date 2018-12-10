@@ -19,7 +19,7 @@
       props:['dataVal'],
       data() {
         return {
-          teacherName: this.$props['dataVal'] || store.getters.userId,
+          teacherName: this.dataVal || store.getters.userId,
           allTeacher:[],
         }
       },

@@ -8,6 +8,8 @@
         <result column="nickname" property="nickname"/>
         <result column="roleId" property="roleId"/>
         <result column="roleName" property="roleName"/>
+        <result column="groupTag" property="groupTag"/>
+        <result column="grade" property="grade"/>
         <collection property="menuList" ofType="String">
             <id column="menuCode" property="menuCode"/>
         </collection>
@@ -19,8 +21,10 @@
         SELECT
         u.id userId,
         u.nickname nickname,
+        u.grade grade,
         u.role_id roleId,
         r.role_name roleName,
+        r.group_tag groupTag,
         p.menu_code menuCode,
         p.permission_code permissionCode
         FROM sys_user u

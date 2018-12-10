@@ -37,7 +37,8 @@ export default {
     prevStep: '上一步',
     nextStep: '下一步',
     finishStep: '完 成',
-
+    price: '金额',
+    recommendBrand: '推荐品牌'
 
   },
   common:{
@@ -56,7 +57,8 @@ export default {
     dashboard: '首页',
     courseManagement: '课程',
     course: '课程',
-    courseStudent: '学生选课'
+    courseStudent: '学生选课',
+    courseFinance: '财务管理'
   },
   navbar: {
     home: '首页',

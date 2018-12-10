@@ -118,7 +118,9 @@
             </foreach>
             )
         </if>
-
+        <if test="studentGradeFilter !='' and studentGradeFilter != null">
+            AND w.grade like concat(concat('%',#{studentGradeFilter}),'%')
+        </if>
     </select>
 
     <select id="listCourse" resultType="com.alibaba.fastjson.JSONObject">
@@ -128,6 +130,7 @@
           date_format(w.create_time, '%Y.%m.%d %T') createTime,
           date_format(w.update_time, '%Y.%m.%d %T') updateTime,
           u.nickname,
+          u.id teacherName,
           w.brief,
           w.capacity,
           w.course_date courseDate,
@@ -140,6 +143,8 @@
           w.final_tuition finalTuition,
           w.teacher_type teacherType,
           w.status status,
+        w.need_training_aid needTrainingAid,
+        w.phone,w.price,w.recommend_brand recommendBrand,
             sys_attach.origin_fileName originFileName,
             sys_attach.id attachId
         FROM course_teacher w
@@ -157,6 +162,9 @@
         </if>
         <if test="studentCanPick !='' and studentCanPick !=null">
             and w.status = 2 and w.id not in (select course_id from course_student where select_user_id = #{studentCanPick} and delete_status = '1' )
+        </if>
+        <if test="studentGradeFilter !='' and studentGradeFilter != null">
+            AND w.grade like concat(concat('%',#{studentGradeFilter}),'%')
         </if>
         <if test="offSet !='' and offSet !=null and pageRow !='' and pageRow !=null">
             LIMIT #{offSet}, #{pageRow}
@@ -212,6 +220,19 @@
         </if>
         <if test="teacherName !='' and teacherName !=null">
             , teacher_name = #{teacherName}
+        </if>
+
+        <if test="needTrainingAid !='' and needTrainingAid !=null">
+            , need_training_aid = #{needTrainingAid}
+        </if>
+        <if test="phone !='' and phone !=null">
+            , phone = #{phone}
+        </if>
+        <if test="price !='' and price !=null">
+            , price = #{price}
+        </if>
+        <if test="recommendBrand !='' and recommendBrand !=null">
+            , recommend_brand = #{recommendBrand}
         </if>
         WHERE id = #{id}
     </update>

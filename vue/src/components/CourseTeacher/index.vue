@@ -173,11 +173,17 @@
             <el-form-item :label="$t('teacher.courseDate')">
               <course-date v-bind:dataVal="tempCourse.courseDate"
                            v-bind:dataArr="tempCourse.courseDateArr"
-                           v-bind="$attrs" v-on="$listeners"
+                           v-bind="$attrs"
+                           v-on="$listeners"
+                           role="teacher"
                            v-bind:dataCheckAll="checkAll"
                            v-bind:dataIsIndeterminate="isIndeterminate"
                            v-on:changeCourseDate="changeCourseDate"
+                           v-bind:courseDateOptions="courseDateOptionsInside"
                            ref="courseDate"></course-date>
+            </el-form-item>
+            <el-form-item :label="$t('teacher.brief')">
+              <el-input type="textarea" :rows="5" v-model="tempCourse.brief"></el-input>
             </el-form-item>
           </div>
           <div v-if="tempCourse.stepActive==2">
@@ -185,13 +191,16 @@
               <slider-with-labels v-bind:dataVal="tempCourse.grade" ref="grade"></slider-with-labels>
             </el-form-item>
             <el-form-item :label="$t('teacher.courseType')">
-              <course-type v-bind:dataVal="tempCourse.teacherType" ref="teacherType"></course-type>
+              <course-type v-bind:dataVal="tempCourse.teacherType"
+
+                           v-bind:dataNeedTrainingAid="tempCourse.needTrainingAid"
+                           v-bind:dataPhone="tempCourse.phone"
+                           v-bind:dataPrice="tempCourse.price"
+                           v-bind:dataRecommendBrand="tempCourse.recommendBrand"
+                           ref="teacherType"></course-type>
             </el-form-item>
             <el-form-item :label="$t('teacher.tuition')">
               <tuition-com v-bind:dataTuition="tempCourse.tuition" v-bind:dataTuitionType="tempCourse.tuitionType" v-bind:dataTuitionSubType="tempCourse.tuitionSubType" ref="tuition" ></tuition-com>
-            </el-form-item>
-            <el-form-item :label="$t('teacher.brief')">
-              <el-input type="textarea" :rows="5" v-model="tempCourse.brief"></el-input>
             </el-form-item>
             <el-form-item :label="$t('teacher.attachment')">
               <file-uploader v-bind:dataVal="tempCourse.attachId" v-bind:fileListArr="fileList" v-bind:businessId="tempCourse.id"></file-uploader>
@@ -256,6 +265,7 @@
   import CourseDate from './components/CourseDate';
   import FileUploader from './components/FileUploader';
   import store from '../../store'
+
   export default {
     name: 'teacher-table',
     props:['listUrl','showMyBtn'],
@@ -263,6 +273,7 @@
       SliderWithLabels,TuitionCom,CourseType,TeacherName,CourseDate,FileUploader
     },
     data() {
+
       return {
         mySelfList: this.$props['showMyBtn'],
         checkAll: false,
@@ -273,6 +284,7 @@
         fileList: [],//上传文件list
         selectStudentData:[],//表格的数据
         excelList: [],
+        courseDateOptionsInside : [{label: 'tue',disabled: false}, {label:'wed',disabled: false}, {label:'thu',disabled: false}],
         options: [{
           value: '0',
           label: 'KG'
@@ -330,7 +342,11 @@
           brief: "",
           status: 1,
           originFileName:"",
-          attachId: ""
+          attachId: "",
+          needTrainingAid: 1,
+          phone: '',
+          price: 0,
+          recommendBrand: '',
         },
 
       }
@@ -352,7 +368,11 @@
           grade: [0,9],
           teacherType: "",
           courseDate: 0,
-          brief: ""
+          brief: "",
+          needTrainingAid: 1,
+          phone: '',
+          price: 0,
+          recommendBrand: '',
         };
       },
       showStudentList(id){
@@ -515,11 +535,17 @@
           this.$refs['courseDate']['checkAll'] = this.checkAll;
           this.$refs['courseDate']['isIndeterminate'] = this.isIndeterminate;
         }
+        if(this.$refs['teacherName']){
+          this.$refs['teacherName']['teacherName'] = undefined;
+        }
       },
       showUpdate($index) {
+        debugger;
         this.resetTempCourse();
         //显示修改对话框
+
         this.tempCourse = this.list[$index];
+
         if(this.tempCourse.attachId && this.tempCourse.attachId!=''){
           this.fileList.push({name: this.tempCourse.originFileName, url: this.tempCourse.attachId})
         }
@@ -550,6 +576,18 @@
           this.$refs['courseDate']['checkAll'] = this.checkAll;
           this.$refs['courseDate']['isIndeterminate'] = this.isIndeterminate;
         }
+        if(this.$refs['teacherName']){
+          this.$refs['teacherName']['teacherName'] = this.tempCourse.teacherName;
+        }else{
+          if(this.tempCourse['needTrainingAid']==undefined){
+            this.tempCourse.needTrainingAid = 1;
+          }
+        }
+        //
+        // if(this.$refs['teacherType']){
+        //   this.$refs['teacherType']['needTrainingAid'] = this.tempCourse.needTrainingAid;
+        // }
+
         this.dialogStatus = "update";
         this.dialogFormVisible = true;
 
@@ -583,6 +621,12 @@
         if(this.tempCourse.stepActive == 2){
           Object.assign(this.tempCourse, this.$refs['tuition']['tuition']);
           this.tempCourse.teacherType = this.$refs['teacherType']['teacherType'];
+
+          this.tempCourse.needTrainingAid = this.$refs['teacherType']['needTrainingAid'];
+          this.tempCourse.phone = this.$refs['teacherType']['phone'];
+          this.tempCourse.price = this.$refs['teacherType']['price'];
+          this.tempCourse.recommendBrand = this.$refs['teacherType']['recommendBrand'];
+
           this.tempCourse.grade = this.$refs['grade']['grade'];
         }
         if(this.tempCourse.stepActive == 3){

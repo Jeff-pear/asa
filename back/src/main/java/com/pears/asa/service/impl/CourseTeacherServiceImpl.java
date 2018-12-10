@@ -89,7 +89,12 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
                 jsonString = JSON.toJSONString((LinkedHashMap<String, String>) jsonObject.get(key));
             }
             if(jsonObject.get(key) instanceof List ){
-                jsonString = JSON.toJSONString((ArrayList) jsonObject.get(key));
+                ArrayList<Integer> list = (ArrayList) jsonObject.get(key);
+                List<Integer> resultList = new ArrayList<Integer>();
+                for(int i = list.get(0); i < (list.get(1)+1); i++){
+                    resultList.add(i);
+                }
+                jsonString = JSON.toJSONString(resultList);
             }
             jsonObject.put(key, jsonString);
         }
@@ -103,12 +108,12 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
      */
     @Override
     public JSONObject listCourse(JSONObject jsonObject) {
+        Session session = SecurityUtils.getSubject().getSession();
         if(jsonObject.containsKey("studentCanPick") && jsonObject.getBoolean("studentCanPick")){
-            Session session = SecurityUtils.getSubject().getSession();
             JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
             jsonObject.put("studentCanPick",userInfo.getInteger("userId"));
         }
-        return getList(jsonObject);
+        return getList(jsonObject,session);
     }
 
     /**
@@ -122,7 +127,7 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
         jsonObject.put("author",userInfo.getInteger("userId"));
-        JSONObject result = getList(jsonObject);
+        JSONObject result = getList(jsonObject,session);
         List<JSONObject>  list = (List<JSONObject> )result.getJSONObject("returnData").get("list");
         list.stream().forEach(i->{
             JSONObject j = new JSONObject();
@@ -133,14 +138,26 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         return result;
     }
 
-    private JSONObject getList(JSONObject jsonObject) {
+    private JSONObject getList(JSONObject jsonObject,Session session) {
         CommonUtil.fillPageParam(jsonObject);
+        JSONObject userPermission = (JSONObject) session.getAttribute("userPermission");
+        //学生查自己能看到的课程
+        if(userPermission.getString("groupTag")!=null
+                && userPermission.getString("groupTag").equalsIgnoreCase("1")
+                && userPermission.getString("grade")!=null){
+            //jsonObject
+            jsonObject.put("studentGradeFilter",userPermission.getString("grade"));
+
+        }
         int count = courseTeacherDao.countCourse(jsonObject);
         List<JSONObject> list = courseTeacherDao.listCourse(jsonObject);
         list.stream().forEach(p->{
             JSONArray gradeObj = p.getJSONArray("grade");
             if(null!=gradeObj){
-                p.put("grade",gradeObj);
+                JSONArray gr = new JSONArray();
+                gr.add(gradeObj.get(0));
+                gr.add(gradeObj.get(gradeObj.size()-1));
+                p.put("grade",gr);
             }
         });
         return CommonUtil.successPage(jsonObject, list, count);
@@ -193,6 +210,7 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
         jsonObject.put("updateUser",userInfo.getInteger("userId"));
+
         courseTeacherDao.updateCourse(jsonObject);
     }
 
