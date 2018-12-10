@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form :model="listQuery" ref="listQuery">
         <el-form-item prop="content">
-          <el-input class="filter-item" :placeholder="$t('table.title')" v-model="listQuery.content"
+          <el-input class="filter-item" :placeholder="$t('teacher.courseNameNoDetail')" v-model="listQuery.content"
                     size="small" v-if="hasPerm('course-student:list')" ref="searchBtn" style="width: 200px;"
                     @keyup.enter.native="handleFilter" clearable/>
           <el-button class="filter-item" type="primary" icon="el-icon-search" size="small" v-if="hasPerm('course-student:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
@@ -15,12 +15,12 @@
 
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="" border fit
               highlight-current-row>
-      <el-table-column align="center" label="序号" width="80">
+      <el-table-column align="center" :label="$t('table.id')" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="content" label="课程名(详情)" style="width: 60px;">
+      <el-table-column align="center" prop="content" :label="$t('teacher.courseName')" style="width: 60px;">
         <template v-if="scope.row.brief!=null" slot-scope="scope">
           {{scope.row.content}}
           <el-popover class="col-el-popover"
@@ -32,25 +32,25 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="capacity" label="学生数" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="capacity" :label="$t('teacher.studentNum')" style="width: 60px;"></el-table-column>
       <!--<el-table-column align="center" prop="grade" label="授课年级" style="width: 60px;">-->
         <!--<template slot-scope="scope">-->
           <!--{{formatGrade(scope.row.grade)}}-->
         <!--</template>-->
       <!--</el-table-column>-->
-      <el-table-column align="center" label="学费" style="width: 60px;">
+      <el-table-column align="center" :label="$t('teacher.tuition')" style="width: 60px;">
         <template slot-scope="scope" >
           <div v-if="scope.row.tuitionType=='fee'">
             {{scope.row.tuition}} RMB
-            <span v-if="scope.row.tuitionSubType == '1'">(人)</span>
-            <span v-if="scope.row.tuitionSubType == '2'">(课)</span>
-            <span v-if="scope.row.tuitionSubType == '3'">(学期)</span>
+            <span v-if="scope.row.tuitionSubType == '1'">{{$t('teacher.tuitionOption1')}}</span>
+            <span v-if="scope.row.tuitionSubType == '2'">{{$t('teacher.tuitionOption2')}}</span>
+            <span v-if="scope.row.tuitionSubType == '3'">{{$t('teacher.tuitionOption3')}}</span>
           </div>
-          <div v-if="scope.row.tuitionType=='free'">免费</div>
+          <div v-if="scope.row.tuitionType=='free'">{{$t('teacher.tuitionFree')}}</div>
 
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="courseDateStudent" label="课程时间" v-if="isMySelect == 'true' " style="width: 60px;">
+      <el-table-column align="center" prop="courseDateStudent" :label="$t('teacher.courseDate')" v-if="isMySelect == 'true' " style="width: 60px;">
         <template slot-scope="scope">
           &nbsp;
           <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('tue')>-1">{{$t('week.tue')}}</span>
@@ -58,7 +58,7 @@
           <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('thu')>-1">{{$t('week.thu')}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="courseDate" label="课程时间" v-if="isMySelect == 'false' " style="width: 60px;">
+      <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" v-if="isMySelect == 'false' " style="width: 60px;">
         <template slot-scope="scope">
           &nbsp;
           <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
@@ -66,25 +66,25 @@
           <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="origin_fileName" label="附件" width="170">
+      <el-table-column align="center" prop="nickname" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="origin_fileName" :label="$t('teacher.attachment')" width="170">
         <template slot-scope="scope">
           <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row)">{{scope.row.originFileName}}</a>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="200" v-if="hasPerm('course-student:update') ">
+      <el-table-column align="center" :label="$t('table.manage')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && getPeriod('canPick'))">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" size="small" v-if="isMySelect == 'false' " @click="showUpdate(scope.$index)">选课</el-button>
+          <el-button type="primary" icon="edit" size="small" v-if="isMySelect == 'false' " @click="showUpdate(scope.$index)">{{$t('student.pickCourse')}}</el-button>
 
-          <el-popover v-if="isMySelect == 'true' || isAdmin('管理员')"
+          <el-popover v-if="isMySelect == 'true' || getGroupTag() == '-1'"
             placement="top"
             trigger="click"
             width="160">
-            <p>确定撤销选中此课程吗？</p>
+            <p>{{$t('table.deleteConfirm')}}</p>
             <div style="text-align: center; margin: 0">
-              <el-button type="primary" size="mini" @click="deleteMyCourse(scope.row.id)">确定</el-button>
+              <el-button type="primary" size="mini" @click="deleteMyCourse(scope.row.id)">{{$t('table.confirm')}}</el-button>
             </div>
-            <el-button type="danger" icon="edit" size="small" slot="reference">撤销</el-button>
+            <el-button type="danger" icon="edit" size="small" slot="reference" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && getPeriod('canPick'))">{{$t('student.revoke')}}</el-button>
           </el-popover>
 
         </template>
@@ -122,8 +122,8 @@
 
       </el-row>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="success" v-bind:disabled="selectBtnDisabled" @click="selectCourse">选 择</el-button>
+        <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
+        <el-button type="success" v-bind:disabled="selectBtnDisabled" @click="selectCourse">{{$t('student.select')}}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -155,8 +155,8 @@
         dialogStatus: 'create',
         dialogFormVisible: false,
         textMap: {
-          update: '编辑',
-          create: '创建课程'
+          update: this.$t('student.pickCourse'),
+          create: this.$t('teacher.createCourse')
         },
         checkAll: false,
         isIndeterminate: true,
@@ -246,7 +246,6 @@
       },
       showUpdate($index) {
         //显示修改对话框
-        debugger;
         this.tempCourse = this.list[$index];
         this.tempCourse.courseId = this.list[$index].id;
         if(this.$refs['courseDate']){
