@@ -103,14 +103,14 @@
     <select id="countStudentDetail4Teacher" resultType="Integer">
         select count(0) from course_student
         LEFT JOIN course_teacher on course_student.course_id = course_teacher.id
-        where course_teacher.id = #{courseId}
+        where course_teacher.id = #{courseId} and course_student.delete_status = '1'
     </select>
 
     <select id="listStudentDetail4Teacher" resultType="com.alibaba.fastjson.JSONObject">
         select sys_user.nickname,sys_user.nickname_cn,course_student.is_pay,course_student.course_date from course_student
           LEFT JOIN course_teacher on course_student.course_id = course_teacher.id
           LEFT JOIN sys_user on sys_user.id=course_student.select_user_id
-        where course_teacher.id = #{courseId}
+        where course_teacher.id = #{courseId} and course_student.delete_status = '1'
         order by course_student.update_date asc
 
     </select>
