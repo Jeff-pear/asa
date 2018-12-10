@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form :model="listQuery" ref="listQuery">
         <el-form-item prop="content">
-          <el-input class="filter-item" :placeholder="$t('table.title')" v-model="listQuery.content"
+          <el-input class="filter-item" :placeholder="$t('teacher.courseNameNoDetail')" v-model="listQuery.content"
                     size="small" v-if="hasPerm('course-teacher:list')" ref="searchBtn" style="width: 200px;"
                     @keyup.enter.native="handleFilter" clearable/>
 
@@ -120,7 +120,7 @@
           <el-tag v-if="scope.row.status == 'publish'" type="success">{{$t('table.publish')}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" :label="$t('table.manage')" width="200" v-if="(hasPerm('course-teacher:update') && mySelfList == 'true') || isAdmin('管理员')">
+      <el-table-column align="center" :label="$t('table.manage')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-teacher:update') && mySelfList == 'true' && getPeriod('canTeacher') )">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="edit" @click="showUpdate(scope.$index)">{{$t('table.edit')}}</el-button>
           <el-popover :visible.sync="deleteAlertVisible"
@@ -131,7 +131,7 @@
             <div style="text-align: center; margin: 0">
               <el-button type="primary" size="mini" @click="deleteCourse(scope.row.id)">{{$t('table.confirm')}}</el-button>
             </div>
-            <el-button type="danger" size="small" v-if="hasPerm('course-teacher:delete')" @click="deleteAlertVisible=true" slot="reference">{{$t('table.delete')}}</el-button>
+            <el-button type="danger" size="small" v-if="hasPerm('course-teacher:delete') " @click="deleteAlertVisible=true" slot="reference">{{$t('table.delete')}}</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -547,7 +547,6 @@
         }
       },
       showUpdate($index) {
-        debugger;
         this.resetTempCourse();
         //显示修改对话框
 
