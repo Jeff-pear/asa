@@ -8,6 +8,20 @@
             id        id,
             DATE_FORMAT(pick_start_date, '%Y.%m.%d') startDate,
             DATE_FORMAT(pick_end_date, '%Y.%m.%d')   endDate,
+
+            pick_start_date pickStartDate,
+            pick_end_date pickEndDate,
+
+            course_start_date teacherStartDate,
+            course_end_date   teacherEndDate,
+
+            fee_start_date feeStartDate,
+            fee_end_date  feeEndDate,
+
+            finance_start_date financeStartDate,
+            finance_end_date  financeEndDate,
+
+            notice_start_date noticeStartDate,
             comments   comments,
             status     status,
             CURRENT_DATE curDate
@@ -62,11 +76,11 @@
 
     <insert id="addAttachment" useGeneratedKeys="true" keyProperty="id" parameterType="com.alibaba.fastjson.JSONObject">
         insert into sys_attach (
-        user_id, location, business_id, origin_fileName
+        user_id, location, business_id, origin_fileName,type
         )
         values
         (
-        #{userId},  #{location,jdbcType=VARCHAR},  #{businessId}, #{originFileName}
+        #{userId},  #{location,jdbcType=VARCHAR},  #{businessId}, #{originFileName}, #{type}
         )
     </insert>
 
