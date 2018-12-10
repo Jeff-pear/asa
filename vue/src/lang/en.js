@@ -39,7 +39,9 @@ export default {
     nextStep: 'Next',
     finishStep: 'Finish',
     price: 'Price',
-    recommendBrand: 'Recommend Brand'
+    recommendBrand: 'Recommend Brand',
+    yes: 'Yes',
+    no: 'No'
 
   },
   common:{
@@ -74,7 +76,7 @@ export default {
     confirmPwd:'Confirm Password'
   },
   login: {
-    title: 'Login Form',
+    title: 'ASA User Login',
     logIn: 'Log in',
     username: 'Username',
     password: 'Password',
@@ -83,7 +85,7 @@ export default {
     thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
   },
   register:{
-    title: 'Register SIBS ASA',
+    title: 'Register User for ASA',
     backToLogin: 'Back to Login',
     userType: 'User Type',
     username: 'Username',
@@ -116,6 +118,19 @@ export default {
     deleteConfirm: 'To confirm the deletion ?',
     cancel: 'Cancel',
     confirm: 'Confirm'
+  },
+  validation: {
+    passwordRequire: 'Please enter the password',
+    passwordConfirmRequire: 'Please enter the password again',
+    differentFor2Times: 'Two inconsistent passwords!',
+    emailRequire: 'Please enter the email',
+    userTypeRequire: 'Please select the user type',
+    userNameRequire: 'Please enter the username',
+    sexRequire: 'Please select the sex',
+    emailReg: 'Incorrect mailbox address',
+    phoneNeedNum: 'Phone must be number',
+    nickNameRequire: 'Please enter the English full Name',
+    nickNameCnRequire: '请输入中文名',
   },
   excel: {
     export: 'Export',
