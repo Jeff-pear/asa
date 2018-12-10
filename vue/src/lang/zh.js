@@ -39,9 +39,16 @@ export default {
     finishStep: '完 成',
     price: '金额',
     recommendBrand: '推荐品牌',
+    needSelfMaterial: '需要自备教具',
     yes: '是',
     no: '否'
 
+  },
+  student:{
+    selectedCourse: '已选课程',
+    pickCourse: '选课',
+    revoke: '撤销',
+    select: '选 择',
   },
   common:{
     loading: '加载中...',
