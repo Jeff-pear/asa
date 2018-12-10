@@ -108,6 +108,7 @@ public class CourseTeacherController {
             Session session = SecurityUtils.getSubject().getSession();
             JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
             int userId = userInfo.getInteger("userId");
+            result.put("type","course-teacher");
             result.put("userId",userId);
             result.put("originFileName",file.getOriginalFilename());
             result = sysService.addAttachment(result);
