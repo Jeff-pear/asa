@@ -33,11 +33,15 @@
       </div>
 
       <div class="tips">
-        <span style="margin-right:18px;">{{ $t('login.username') }} : admin</span>
+        <span style="margin-right:36px;">{{ $t('login.username') }} : admin</span>
         <span>{{ $t('login.password') }} : 123456</span>
       </div>
       <div class="tips">
-        <span style="margin-right:18px;">{{ $t('login.username') }} : test</span>
+        <span style="margin-right:51px;">{{ $t('login.username') }} : test</span>
+        <span>{{ $t('login.password') }} : 123456</span>
+      </div>
+      <div class="tips">
+        <span style="margin-right:18px;">{{ $t('login.username') }} : xiaoming</span>
         <span>{{ $t('login.password') }} : 123456</span>
       </div>
     </el-form>
