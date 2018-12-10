@@ -5,7 +5,7 @@
   <el-radio v-model="teacherType" size="small" label="2" border>{{$t('teacher.externalTeacher') }}</el-radio>
   <br/>
   <div style="margin-top: 15px;padding-left: 10px;" class="demo-input-suffix" v-if="teacherType==2">
-    <el-form-item label="需要自备教具">
+    <el-form-item :label="$t('teacher.needSelfMaterial')">
       <el-radio v-model="needTrainingAid" size="small" label="1" >{{$t('teacher.yes')}}</el-radio>
       <el-radio v-model="needTrainingAid" size="small" label="2" >{{$t('teacher.no')}}</el-radio>
     </el-form-item>
