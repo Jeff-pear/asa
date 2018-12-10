@@ -51,8 +51,20 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="courseDateStudent" label="课程时间" v-if="isMySelect == 'true' " style="width: 60px;">
+        <template slot-scope="scope">
+          &nbsp;
+          <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('tue')>-1">{{$t('week.tue')}}</span>
+          <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('wed')>-1">{{$t('week.wed')}}</span>
+          <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('thu')>-1">{{$t('week.thu')}}</span>
+        </template>
       </el-table-column>
       <el-table-column align="center" prop="courseDate" label="课程时间" v-if="isMySelect == 'false' " style="width: 60px;">
+        <template slot-scope="scope">
+          &nbsp;
+          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
+          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('wed')>-1">{{$t('week.wed')}}</span>
+          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
+        </template>
       </el-table-column>
       <el-table-column align="center" prop="nickname" label="教师" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="origin_fileName" label="附件" width="170">
@@ -89,7 +101,7 @@
     </el-pagination>
 
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :before-close="beforeClose()">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :before-close="beforeClose">
       <el-row :gutter="24">
         <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
                  style='width: 500px; margin-left:50px;'>
@@ -351,7 +363,15 @@
       })
       },
       beforeClose(){
-        console.log('close')
+        this.dialogFormVisible = false;
+        this.api({
+          url: this.$props['listUrl'],
+          method: "get",
+          params: this.listQuery
+        }).then(data => {
+          this.list = data.list;
+          this.totalCount = data.totalCount;
+        })
       }
     }
   }
