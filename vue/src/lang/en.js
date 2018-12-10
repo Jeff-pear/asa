@@ -40,9 +40,16 @@ export default {
     finishStep: 'Finish',
     price: 'Price',
     recommendBrand: 'Recommend Brand',
+    needSelfMaterial: 'Student should prepare their own learning materials',
     yes: 'Yes',
     no: 'No'
 
+  },
+  student:{
+    selectedCourse: 'My Course',
+    pickCourse: 'Pick Course',
+    revoke: 'Revoke',
+    select: 'Select This',
   },
   common:{
     loading: 'Loading...',
