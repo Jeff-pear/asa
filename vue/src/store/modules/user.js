@@ -20,6 +20,7 @@ const user = {
       state.role = userInfo.roleName;
       state.menus = userInfo.menuList;
       state.permissions = userInfo.permissionList;
+      state.groupTag = userInfo.groupTag;
     },
     RESET_USER: (state) => {
       console.log(state);
@@ -28,6 +29,7 @@ const user = {
       state.role = '';
       state.menus = [];
       state.permissions = [];
+      state.groupTag = 0;
     }
   },
   actions: {
