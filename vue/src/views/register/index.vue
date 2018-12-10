@@ -146,16 +146,16 @@
     data() {
       var validatePass = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请输入密码'));
+          callback(new Error(this.$t('validation.passwordRequire')));
         } else {
           callback();
         }
       };
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请再次输入密码'));
+          callback(new Error(this.$t('validation.passwordConfirmRequire')));
         } else if (value !== this.registerForm.password) {
-          callback(new Error('两次输入密码不一致!'));
+          callback(new Error(this.$t('validation.differentFor2Times')));
         } else {
           callback();
         }
@@ -164,7 +164,7 @@
       var validateEmail = (rule, value, callback) => {
         if (this.registerForm.curUserType==2 ) {
           if (value === '') {
-            callback(new Error('请输入邮箱'));
+            callback(new Error(this.$t('validation.emailRequire')));
           }else{
             this.api({
               url: "/register/checkEmail",
@@ -204,19 +204,21 @@
           class: ''
         },
         registerRules: {
-          roleId:[{required: true, trigger: 'blur', message: "请选择用户类型"}],
-          username: [{required: true, trigger: 'blur', message: "请输入用户名"},
+          roleId:[{required: true, trigger: 'blur', message: this.$t('validation.userTypeRequire')}],
+          username: [{required: true, trigger: 'blur', message: this.$t('validation.userNameRequire')},
             {validator: validateUsername, trigger: 'blur'}],
-          sex: [{required: true, trigger: 'blur', message: "请选择性别"}],
-          password: [{required: true, trigger: 'blur', message: "请输入密码"},{ validator: validatePass, trigger: 'blur' }],
+          sex: [{required: true, trigger: 'blur', message: this.$t('validation.sexRequire')}],
+          password: [{required: true, trigger: 'blur', message: this.$t('validation.passwordRequire')},{ validator: validatePass, trigger: 'blur' }],
           email: [
-            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] },
+            { type: 'email', message: this.$t('validation.emailReg'), trigger: ['blur', 'change'] },
             { validator: validateEmail, trigger: 'blur' }],
           passwordConfirm: [
             { validator: validatePass2, trigger: 'blur' }
           ],
           age: [{required: true, trigger: 'blur', message: "请输入年龄"}],
-          nickname: [{required: true, trigger: 'blur', message: "请输入真实姓名"}],
+          phone: [{ type: 'number', message: this.$t('validation.phoneNeedNum')}],
+          nickname: [{required: true, trigger: 'blur', message: this.$t('validation.nickNameRequire')}],
+          //nicknameCn: [{required: true, trigger: 'blur', message: this.$t('validation.nickNameCnRequire')}],
           // class:[{required: true, trigger: 'blur', message: "请选择年级"}],
         },
         loading: false,
