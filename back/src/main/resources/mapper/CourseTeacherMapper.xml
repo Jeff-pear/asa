@@ -149,7 +149,7 @@
             sys_attach.id attachId
         FROM course_teacher w
           LEFT JOIN sys_user u ON w.teacher_name = u.id
-          left JOIN sys_attach on w.id= sys_attach.business_id
+          left JOIN sys_attach on w.id= sys_attach.business_id and sys_attach.type='course-teacher'
         WHERE w.delete_status = '1'
         <if test="content !='' and content !=null">
             AND w.content like concat(concat('%',#{content}),'%')
