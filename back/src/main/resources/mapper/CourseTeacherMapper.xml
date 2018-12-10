@@ -106,7 +106,7 @@
             AND w.teacher_name = #{author}
         </if>
         <if test="studentCanPick !='' and studentCanPick !=null">
-            and w.id not in (select course_id from course_student where select_user_id = #{studentCanPick} and delete_status = '1')
+            and w.status = 'publish' and w.id not in (select course_id from course_student where select_user_id = #{studentCanPick} and delete_status = '1')
         </if>
         <if test="idNotEqual !='' and idNotEqual !=null">
             AND w.id  &lt;&gt; #{idNotEqual}
@@ -161,7 +161,7 @@
             AND w.create_user = #{author}
         </if>
         <if test="studentCanPick !='' and studentCanPick !=null">
-            and w.status = 2 and w.id not in (select course_id from course_student where select_user_id = #{studentCanPick} and delete_status = '1' )
+            and w.status = 'publish' and w.id not in (select course_id from course_student where select_user_id = #{studentCanPick} and delete_status = '1' )
         </if>
         <if test="studentGradeFilter !='' and studentGradeFilter != null">
             AND w.grade like concat(concat('%',#{studentGradeFilter}),'%')
