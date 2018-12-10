@@ -5,7 +5,7 @@
       <el-tab-pane :label="$t('teacher.listCourse') " name="first">
         <student-table listUrl="/course-student/listTeacherCourse" v-on:changeTab="changeTabIndex" isMySelect="false" ref="tabList.courseList"></student-table>
       </el-tab-pane>
-      <el-tab-pane label="已选课程" name="second">
+      <el-tab-pane :label="$t('student.selectedCourse')" name="second">
         <student-table listUrl="/course-student/listCourse" isMySelect="true" ref="tabList.mySelect"></student-table>
       </el-tab-pane>
     </el-tabs>
