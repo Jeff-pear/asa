@@ -1,5 +1,5 @@
 <template >
-  <div class="login-container">
+  <div class="login-container" :style="loginBg">
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left"
              label-width="0px"
              class="card-box login-form">
@@ -12,13 +12,13 @@
 
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
-          <svg-icon icon-class="user" style="color:black;"/>
+          <svg-icon icon-class="user" />
         </span>
         <el-input v-model="loginForm.username" autoComplete="on"/>
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password" style="color:black;"></svg-icon>
+          <svg-icon icon-class="password" ></svg-icon>
         </span>
         <el-input type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password"
                   autoComplete="on"></el-input>
@@ -49,11 +49,13 @@
 </template>
 <script>
   import LangSelect from '@/components/LangSelect'
+  import loginBgPic from '@/assets/common/login_bg.jpg'
   export default {
     name: 'login',
     components: { LangSelect },
     data() {
       return {
+        loginBg:"background-image: url('"+loginBgPic+"') ",
         loginForm: {
           username: 'admin',
           password: '123456'
@@ -96,13 +98,14 @@
   @import "../../styles/mixin.scss";
   $bg: #2d3a4b;
   $dark_gray: #889aa4;
-  $light_gray: #eee;
+  $light_gray: black;
 
   .login-container {
     @include relative;
     height: 100vh;
-
-    background: url(https://harsima.github.io/vue-backend/static/images/default/login.caef9df.jpg) 50% no-repeat;
+    background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    //background: url(https://harsima.github.io/vue-backend/static/images/default/login.caef9df.jpg) 50% no-repeat;
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
       -webkit-text-fill-color: #fff !important;
@@ -123,7 +126,7 @@
     }
     .tips {
       font-size: 14px;
-      color: #fff;
+      color: gray;
       margin-bottom: 10px;
     }
     .svg-container {
@@ -145,6 +148,7 @@
     }
     .login-form {
       position: absolute;
+      background-color: white;
       left: 0;
       right: 0;
       width: 400px;
@@ -172,7 +176,7 @@
     }
     .registerBtn{
       text-align: right;
-      color: #fff;
+      color: $light_gray;
     }
   }
 </style>
