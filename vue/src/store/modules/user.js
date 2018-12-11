@@ -12,6 +12,7 @@ const user = {
     role: '',
     menus: [],
     permissions: [],
+    period: {},
   },
   mutations: {
     SET_USER: (state, userInfo) => {
@@ -21,6 +22,7 @@ const user = {
       state.menus = userInfo.menuList;
       state.permissions = userInfo.permissionList;
       state.groupTag = userInfo.groupTag;
+      state.period = userInfo.period;
     },
     RESET_USER: (state) => {
       console.log(state);
@@ -30,6 +32,7 @@ const user = {
       state.menus = [];
       state.permissions = [];
       state.groupTag = 0;
+      state.period = {};
     }
   },
   actions: {
