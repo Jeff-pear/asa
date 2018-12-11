@@ -11,9 +11,9 @@
     :on-remove="handleFileRemove"
     :before-remove="beforeFileRemove"
     list-type="text"
-    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    :accept="acceptStr"
     :auto-upload="true"
-    action="/api/course-teacher/uploadFile"
+    action="/api/sys/uploadFile"
   >
     <i class="el-icon-upload"></i>
     <div class="el-upload__text">{{$t('teacher.uploadTip1')}}<em>{{$t('teacher.uploadTip2')}}</em></div>
@@ -26,19 +26,24 @@
 <script>
     export default {
       name: "FileUploader",
-      props:['dataVal','fileListArr','businessId'],
+      props:['dataVal','fileListArr','businessId','businessType'],
       data(){
         return {
           attachId: this.$props['dataVal'],
           fileList: this.$props['fileListArr'],//上传文件list
           busId: this.$props['businessId'],//上传文件list
-
+          busType: this.$props['businessType'],
+          acceptStr: this.$props['businessType'] == 'course-teacher'?
+            'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            'image/jpeg,image/gif,image/png,image/bmp'
         }
       },
       methods: {
         handleFileRemove(file, fileList) {
+          debugger;
           console.log(file, fileList);
           this.fileList = [];
+          this.$emit('fileChangeToFather',this.fileList);
         },
         beforeFileRemove(file, fileList) {
           this.api({
@@ -46,7 +51,7 @@
             method: "post",
             data: {
               id: file.url,
-              businessId: busId
+              businessId: this.busId
             }
           }).then(response  => {
             this.$message.success(this.$t('common.deleteSuccess'));
@@ -78,10 +83,13 @@
             method: "post",
             data: {
               id: result.returnData.attachId,
-              businessId: this.busId
+              businessId: this.busId,
+              businessType: this.businessType
             }
           }).then(response  => {
             this.$message.success(this.$t('common.uploadSuccess'));
+            debugger
+          this.$emit('fileChangeToFather',this.fileList);
           });
 
         },
