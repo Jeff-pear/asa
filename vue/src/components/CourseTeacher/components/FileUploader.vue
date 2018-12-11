@@ -40,7 +40,7 @@
       },
       methods: {
         handleFileRemove(file, fileList) {
-          debugger;
+
           console.log(file, fileList);
           this.fileList = [];
           this.$emit('fileChangeToFather',this.fileList);
@@ -77,18 +77,18 @@
             url: result.returnData.attachId
           });
           //update attachment table
-
+          debugger
           this.api({
             url: "/sys/updateAttachment/",
             method: "post",
             data: {
               id: result.returnData.attachId,
-              businessId: this.busId,
+              businessId: this.$props['businessId'],
               businessType: this.businessType
             }
           }).then(response  => {
             this.$message.success(this.$t('common.uploadSuccess'));
-            debugger
+
           this.$emit('fileChangeToFather',this.fileList);
           });
 
