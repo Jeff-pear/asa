@@ -7,11 +7,18 @@ import com.pears.asa.dao.UserDao;
 import com.pears.asa.service.SysService;
 import com.pears.asa.util.CommonUtil;
 import com.pears.asa.util.constants.Constants;
+import com.pears.asa.util.constants.ErrorEnum;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -21,10 +28,13 @@ import java.util.List;
  */
 @Service
 public class SysServiceImpl implements SysService {
+    private static Logger logger = LoggerFactory.getLogger(SysServiceImpl.class);
     @Autowired
     private SysDao sysDao;
     @Autowired
     private UserDao userDao;
+    @Value("${prop.upload-folder}")
+    private String upLoad_Folder;
 
     @Override
     public List<JSONObject> listSysUserActive(JSONObject jsonObject) {
@@ -110,6 +120,24 @@ public class SysServiceImpl implements SysService {
     @Override
     public void deleteAttachmentById(JSONObject jsonObject) {
         sysDao.deleteAttachmentById(jsonObject);
+    }
+
+    @Override
+    public JSONObject deleteAttachment(JSONObject jsonObject) {
+        CommonUtil.hasAllRequired(jsonObject, "id");
+        List<JSONObject> list = sysDao.listAttachment(jsonObject);
+        if(list.size()>0){
+            sysDao.deleteAttachmentById(jsonObject);
+            Path path = Paths.get(upLoad_Folder+"/"+list.get(0).getString("location"));
+            File file = new File(path.toString());
+            if(file.exists()&&file.isFile())
+                file.delete();
+            return CommonUtil.successJson();
+        }else{
+            ErrorEnum err = ErrorEnum.E_10006;
+            err.setErrorMsg("文件删除失败！");
+            return CommonUtil.errorJson(err);
+        }
     }
 
 }
