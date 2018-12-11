@@ -31,6 +31,7 @@
             params: {}
           }).then(data => {
             this.allTeacher = data
+            this.$emit('renderFinalTeacherName',data);
         });
         }
       },
