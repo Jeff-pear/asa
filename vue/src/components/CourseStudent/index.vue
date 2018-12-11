@@ -51,15 +51,15 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="courseDateStudent" :label="$t('teacher.courseDate')" v-if="isMySelect == 'true' " style="width: 60px;">
-        <template slot-scope="scope">
+        <template slot-scope="scope" v-if="scope.row.courseDateStudent!=null">
           &nbsp;
           <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('tue')>-1">{{$t('week.tue')}}</span>
           <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('wed')>-1">{{$t('week.wed')}}</span>
           <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('thu')>-1">{{$t('week.thu')}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" v-if="isMySelect == 'false' " style="width: 60px;">
-        <template slot-scope="scope">
+      <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" v-if="isMySelect == 'false'" style="width: 60px;">
+        <template slot-scope="scope" v-if="scope.row.courseDate!=null">
           &nbsp;
           <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
           <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('wed')>-1">{{$t('week.wed')}}</span>
@@ -69,12 +69,22 @@
       <el-table-column align="center" prop="nickname" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="origin_fileName" :label="$t('teacher.attachment')" width="170">
         <template slot-scope="scope">
-          <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row)">{{scope.row.originFileName}}</a>
+          <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row.attachId)">{{scope.row.originFileName}}</a>
         </template>
       </el-table-column>
-      <el-table-column align="center" :label="$t('table.manage')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && getPeriod('canPick'))">
+
+      <el-table-column align="center" prop="origin_fileName" v-if="isMySelect == 'true'" :label="$t('teacher.attachment')" width="170">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" size="small" v-if="isMySelect == 'false' " @click="showUpdate(scope.$index)">{{$t('student.pickCourse')}}</el-button>
+          <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row.attachIdStu)">{{scope.row.originFileNameStu}}</a>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" :label="$t('table.actions')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && (getPeriod('canPick') || getPeriod('canFee')))">
+        <template slot-scope="scope">
+
+          <el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (isMySelect == 'false' && getPeriod('canPick')) " @click="showUpdate(scope.$index,'pick')">{{$t('student.pickCourse')}}</el-button>
+
+          <el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (isMySelect == 'true' && getPeriod('canFee')) " @click="showUpdate(scope.$index,'fee')">{{$t('student.pay')}}</el-button>
 
           <el-popover v-if="isMySelect == 'true' || getGroupTag() == '-1'"
             placement="top"
@@ -84,11 +94,12 @@
             <div style="text-align: center; margin: 0">
               <el-button type="primary" size="mini" @click="deleteMyCourse(scope.row.id)">{{$t('table.confirm')}}</el-button>
             </div>
-            <el-button type="danger" icon="edit" size="small" slot="reference" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && getPeriod('canPick'))">{{$t('student.revoke')}}</el-button>
+            <el-button type="danger" icon="edit" size="small" slot="reference" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') )">{{$t('student.revoke')}}</el-button>
           </el-popover>
 
         </template>
       </el-table-column>
+
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"
@@ -108,22 +119,34 @@
           <el-form-item :label="$t('teacher.courseNameNoDetail')">
             <span>{{tempCourse.content}}</span>
           </el-form-item>
-          <el-form-item :label="$t('teacher.courseDate')">
-            <course-date v-bind:dataVal="tempCourse.courseDate"
-                         v-bind:dataArr="tempCourse.courseDateArr"
-                         v-bind="$attrs" v-on="$listeners"
-                         v-bind:dataCheckAll="checkAll"
-                         v-bind:dataIsIndeterminate="isIndeterminate"
-                         v-bind:courseDateOptions="courseDateOptions"
-                         v-on:changeCourseDate="changeCourseDate"
-                         ref="courseDate"></course-date>
-          </el-form-item>
-        </el-form>
+          <div v-if="type=='pick'">
+            <el-form-item :label="$t('teacher.courseDate')">
+              <course-date v-bind:dataVal="tempCourse.courseDate"
+                           v-bind:dataArr="tempCourse.courseDateArr"
 
+                           v-bind:dataCheckAll="checkAll"
+                           v-bind:dataIsIndeterminate="isIndeterminate"
+                           v-bind:courseDateOptions="courseDateOptions"
+                           v-on:changeCourseDate="changeCourseDate"
+                           ref="courseDate"></course-date>
+            </el-form-item>
+          </div>
+          <div v-if="type=='fee'">
+            <el-form-item :label="$t('student.payAttach')">
+              <file-uploader v-bind:dataVal="tempCourse.attachIdStu" v-bind:fileListArr="fileList"
+                             v-bind:businessId="tempCourse.id"
+                             v-on:fileChangeToFather="fileChangeToFather"
+                             v-bind:businessType="attachBusinessType"
+              ></file-uploader>
+            </el-form-item>
+          </div>
+        </el-form>
       </el-row>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
-        <el-button type="success" v-bind:disabled="selectBtnDisabled" @click="selectCourse">{{$t('student.select')}}</el-button>
+        <el-button type="success" v-bind:disabled="selectBtnDisabled" @click="selectCourse" v-if="type=='pick'">{{$t('student.select')}}</el-button>
+        <el-button type="success" v-bind:disabled="selectBtnDisabled" @click="feeCourse" v-if="type=='fee'">{{$t('student.confirmHasPay')}}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -142,8 +165,11 @@
       return {
         mySelfList: this.$props['isMySelect'],
         selectBtnDisabled: false,
+        type: 'pick',
+        attachBusinessType: 'course-student',
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
+        fileList: [],//上传文件list
         listLoading: false,//数据加载等待动画
         listQuery: {
           studentCanPick: true,
@@ -156,7 +182,8 @@
         dialogFormVisible: false,
         textMap: {
           update: this.$t('student.pickCourse'),
-          create: this.$t('teacher.createCourse')
+          create: this.$t('teacher.createCourse'),
+          pay: this.$t('student.pay')
         },
         checkAll: false,
         isIndeterminate: true,
@@ -165,6 +192,7 @@
           courseDateArr:[],
           courseDate: 0,
           content: '',
+          attachIdStu: ""
         }
       }
     },
@@ -181,7 +209,7 @@
         }
       },
       downloadFromList(obj){
-        this.previewUploadFile({url:obj.attachId});
+        this.previewUploadFile({url:obj});
       },
       previewUploadFile(obj){
         this.api({
@@ -244,100 +272,122 @@
         //表格序号
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
-      showUpdate($index) {
+      showUpdate($index,type) {
         //显示修改对话框
-        this.tempCourse = this.list[$index];
-        this.tempCourse.courseId = this.list[$index].id;
-        if(this.$refs['courseDate']){
-          if(this.list[$index].courseDate == 'tue'){
-            this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = false;
-            this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = true;
-            this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = true;
-            this.$refs['courseDate']['courseDate'] = 1;
-            this.$refs['courseDate']['courseDateArr'] = ['tue']
-          }else if(this.list[$index].courseDate == 'wed'){
-            this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = true;
-            this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = false;
-            this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = true;
-            this.$refs['courseDate']['courseDate'] = 2;
-            this.$refs['courseDate']['courseDateArr'] = ['wed']
-          }else if(this.list[$index].courseDate == 'tue,wed'){
-            this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = false;
-            this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = false;
-            this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = true;
-            this.$refs['courseDate']['courseDate'] = 3;
-            this.$refs['courseDate']['courseDateArr'] = ['tue','wed']
-          }else if(this.list[$index].courseDate == 'thu'){
-            this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = true;
-            this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = true;
-            this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = false;
-            this.$refs['courseDate']['courseDate'] = 4;
-            this.$refs['courseDate']['courseDateArr'] = ['thu']
-          }else if(this.list[$index].courseDate == 'tue,thu'){
-            this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = false;
-            this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = true;
-            this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = false;
-            this.$refs['courseDate']['courseDate'] = 5;
-            this.$refs['courseDate']['courseDateArr'] = ['tue','thu']
-          }else if(this.list[$index].courseDate == 'wed,thu'){
-            this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = true;
-            this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = false;
-            this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = false;
-            this.$refs['courseDate']['courseDate'] = 6;
-            this.$refs['courseDate']['courseDateArr'] = ['wed','thu']
+        this.type = type;
+        if(type=='pick'){
+          this.tempCourse = this.list[$index];
+          this.tempCourse.courseId = this.list[$index].id;
+          if(this.$refs['courseDate']){
+            if(this.list[$index].courseDate == 'tue'){
+              this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = false;
+              this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = true;
+              this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = true;
+              this.$refs['courseDate']['courseDate'] = 1;
+              this.$refs['courseDate']['courseDateArr'] = ['tue']
+            }else if(this.list[$index].courseDate == 'wed'){
+              this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = true;
+              this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = false;
+              this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = true;
+              this.$refs['courseDate']['courseDate'] = 2;
+              this.$refs['courseDate']['courseDateArr'] = ['wed']
+            }else if(this.list[$index].courseDate == 'tue,wed'){
+              this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = false;
+              this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = false;
+              this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = true;
+              this.$refs['courseDate']['courseDate'] = 3;
+              this.$refs['courseDate']['courseDateArr'] = ['tue','wed']
+            }else if(this.list[$index].courseDate == 'thu'){
+              this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = true;
+              this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = true;
+              this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = false;
+              this.$refs['courseDate']['courseDate'] = 4;
+              this.$refs['courseDate']['courseDateArr'] = ['thu']
+            }else if(this.list[$index].courseDate == 'tue,thu'){
+              this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = false;
+              this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = true;
+              this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = false;
+              this.$refs['courseDate']['courseDate'] = 5;
+              this.$refs['courseDate']['courseDateArr'] = ['tue','thu']
+            }else if(this.list[$index].courseDate == 'wed,thu'){
+              this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = true;
+              this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = false;
+              this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = false;
+              this.$refs['courseDate']['courseDate'] = 6;
+              this.$refs['courseDate']['courseDateArr'] = ['wed','thu']
+            }else{
+              this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = false;
+              this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = false;
+              this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = false;
+              this.$refs['courseDate']['courseDate'] = 7;
+              this.$refs['courseDate']['courseDateArr'] = ['tue','wed','thu']
+            }
           }else{
-            this.$refs['courseDate']['courseDateOptions'][0]['disabled'] = false;
-            this.$refs['courseDate']['courseDateOptions'][1]['disabled'] = false;
-            this.$refs['courseDate']['courseDateOptions'][2]['disabled'] = false;
-            this.$refs['courseDate']['courseDate'] = 7;
-            this.$refs['courseDate']['courseDateArr'] = ['tue','wed','thu']
+            let courseDateOptionsArr = [{label: 'tue',disabled: false}, {label:'wed',disabled: false}, {label:'thu',disabled: false}];
+            if(this.list[$index].courseDate == 'tue'){
+              courseDateOptionsArr[1]['disabled'] = true;
+              courseDateOptionsArr[2]['disabled'] = true;
+              this.tempCourse.courseDate = 1;
+              this.tempCourse.courseDateArr = ['tue'];
+            }else if(this.list[$index].courseDate == 'wed'){
+              courseDateOptionsArr[0]['disabled'] = true;
+              courseDateOptionsArr[2]['disabled'] = true;
+              this.tempCourse.courseDate = 2;
+              this.tempCourse.courseDateArr = ['wed'];
+            }else if(this.list[$index].courseDate == 'tue,wed'){
+              courseDateOptionsArr[2]['disabled'] = true;
+              this.tempCourse.courseDate = 3;
+              this.tempCourse.courseDateArr = ['tue','wed'];
+            }else if(this.list[$index].courseDate == 'thu'){
+              courseDateOptionsArr[0]['disabled'] = true;
+              courseDateOptionsArr[1]['disabled'] = true;
+              this.tempCourse.courseDate = 4;
+              this.tempCourse.courseDateArr = ['thu'];
+            }else if(this.list[$index].courseDate == 'tue,thu'){
+              courseDateOptionsArr[1]['disabled'] = true;
+              this.tempCourse.courseDate = 5;
+              this.tempCourse.courseDateArr = ['tue','thu'];
+            }else if(this.list[$index].courseDate == 'wed,thu'){
+              courseDateOptionsArr[0]['disabled'] = true;
+              this.tempCourse.courseDate = 6;
+              this.tempCourse.courseDateArr = ['wed','thu'];
+            }else{
+              courseDateOptionsArr[0]['disabled'] = false;
+              courseDateOptionsArr[1]['disabled'] = false;
+              courseDateOptionsArr[2]['disabled'] = false;
+              this.tempCourse.courseDate = 7;
+              this.tempCourse.courseDateArr = ['tue','wed','thu'];
+            }
+            this.courseDateOptions = courseDateOptionsArr;
           }
+          this.dialogStatus = "update"
         }else{
-          let courseDateOptionsArr = [{label: 'tue',disabled: false}, {label:'wed',disabled: false}, {label:'thu',disabled: false}];
-          if(this.list[$index].courseDate == 'tue'){
-            courseDateOptionsArr[1]['disabled'] = true;
-            courseDateOptionsArr[2]['disabled'] = true;
-            this.tempCourse.courseDate = 1;
-            this.tempCourse.courseDateArr = ['tue'];
-          }else if(this.list[$index].courseDate == 'wed'){
-            courseDateOptionsArr[0]['disabled'] = true;
-            courseDateOptionsArr[2]['disabled'] = true;
-            this.tempCourse.courseDate = 2;
-            this.tempCourse.courseDateArr = ['wed'];
-          }else if(this.list[$index].courseDate == 'tue,wed'){
-            courseDateOptionsArr[2]['disabled'] = true;
-            this.tempCourse.courseDate = 3;
-            this.tempCourse.courseDateArr = ['tue','wed'];
-          }else if(this.list[$index].courseDate == 'thu'){
-            courseDateOptionsArr[0]['disabled'] = true;
-            courseDateOptionsArr[1]['disabled'] = true;
-            this.tempCourse.courseDate = 4;
-            this.tempCourse.courseDateArr = ['thu'];
-          }else if(this.list[$index].courseDate == 'tue,thu'){
-            courseDateOptionsArr[1]['disabled'] = true;
-            this.tempCourse.courseDate = 5;
-            this.tempCourse.courseDateArr = ['tue','thu'];
-          }else if(this.list[$index].courseDate == 'wed,thu'){
-            courseDateOptionsArr[0]['disabled'] = true;
-            this.tempCourse.courseDate = 6;
-            this.tempCourse.courseDateArr = ['wed','thu'];
-          }else{
-            courseDateOptionsArr[0]['disabled'] = false;
-            courseDateOptionsArr[1]['disabled'] = false;
-            courseDateOptionsArr[2]['disabled'] = false;
-            this.tempCourse.courseDate = 7;
-            this.tempCourse.courseDateArr = ['tue','wed','thu'];
+          this.fileList = [];
+          this.selectBtnDisabled = true;
+          this.tempCourse.courseId = this.list[$index].courseId;
+          this.tempCourse.id = this.list[$index].id;
+          this.tempCourse.content = this.list[$index].content;
+          this.tempCourse.attachIdStu = this.list[$index].attachIdStu;
+          this.tempCourse.originFileNameStu = this.list[$index].originFileNameStu;
+
+          if(this.tempCourse.attachIdStu && this.tempCourse.attachIdStu!=''){
+            this.fileList.push({name: this.tempCourse.originFileNameStu, url: this.tempCourse.attachIdStu})
+            this.selectBtnDisabled = false;
           }
-          this.courseDateOptions = courseDateOptionsArr;
+          this.dialogStatus = "pay"
         }
-        this.dialogStatus = "update"
+
+
         this.dialogFormVisible = true
+      },
+      fileChangeToFather(childFileList){
+        this.fileList = childFileList;
+        this.selectBtnDisabled = !(this.fileList.length>0);
       },
       selectCourse(){
         this.tempCourse.courseDate = this.$refs['courseDate']['courseDate'];
         this.courseDateArr = this.$refs['courseDate']['courseDateArr'];
 
-        //保存新课程
         this.api({
           url: "/course-student/pickCourse",
           method: "post",
@@ -347,6 +397,18 @@
           this.$emit('changeTab',event.target,'0');
           this.dialogFormVisible = false
         });
+      },
+      feeCourse(){
+
+        this.api({
+          url: "/course-student/feeCourse",
+          method: "post",
+          data: this.tempCourse
+        }).then(() => {
+          this.getList();
+        this.$emit('changeTab',event.target,'0');
+        this.dialogFormVisible = false
+      });
       },
       deleteMyCourse(tmpId) {
         //删除选中课程
