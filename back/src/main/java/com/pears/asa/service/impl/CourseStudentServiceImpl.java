@@ -83,6 +83,9 @@ public class CourseStudentServiceImpl implements CourseStudentService {
 
     private JSONObject getList(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
+        Session session = SecurityUtils.getSubject().getSession();
+        JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
+        jsonObject.put("selectUserId",userInfo.getInteger("userId"));
         int count = courseStudentDao.countCourse(jsonObject);
         List<JSONObject> list = courseStudentDao.listCourse(jsonObject);
         list.stream().forEach(p->{
