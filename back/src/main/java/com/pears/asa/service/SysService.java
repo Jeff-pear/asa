@@ -74,5 +74,11 @@ public interface SysService {
      *
      */
     void deleteAttachmentById(JSONObject jsonObject);
+    /**
+     * 删除atta
+     *
+     */
+    JSONObject deleteAttachment(JSONObject jsonObject);
+
 
 }
