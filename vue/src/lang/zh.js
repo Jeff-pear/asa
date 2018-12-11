@@ -30,7 +30,7 @@ export default {
     courseNameNoDetail: '课程名',
     courseType: '课程类型',
     brief: '简介',
-    attachment: '附件',
+    attachment: '课程附件',
     uploadTip1: '将文件拖到此处，或',
     uploadTip2: '点击上传',
     uploadTip3: '只能上传pdf/word文件，且不超过3Mb',
@@ -47,6 +47,9 @@ export default {
   student:{
     selectedCourse: '已选课程',
     pickCourse: '选课',
+    pay: '缴费',
+    confirmHasPay: '确认已缴费',
+    payAttach: '缴费凭证',
     revoke: '撤销',
     select: '选 择',
   },
@@ -59,7 +62,7 @@ export default {
     switchLanSuccess: '切换语言成功',
     uploadSuccess: '上传成功',
     downloadSuccess: '下载成功',
-    restrictionUpload: '当前限制选择 1 个文件'
+    restrictionUpload: '当前限制选择 1 个文件，请先删除之前的附件'
 
   },
   route: {
