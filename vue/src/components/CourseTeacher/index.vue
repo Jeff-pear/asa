@@ -25,10 +25,23 @@
     </div>
 
     <el-table ref="teacherTable" :data="list" height="530" v-loading.body="listLoading" border fit
-              highlight-current-row>
+              highlight-current-row
+              :row-key="getRowKeys">
       <el-table-column align="center" :label="$t('table.id')" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="mySelfList=='true'" type="expand">
+        <template slot-scope="props" >
+          <el-table :data="list[props.$index].students" border>
+            <el-table-column width="250" property="nickname" label="学生姓名">
+              <template slot-scope="scope2">
+                {{scope2.row.nickname}}({{scope2.row.nickname_cn}})
+              </template>
+            </el-table-column>
+            <el-table-column width="150" property="course_date" label="选课日期"></el-table-column>
+          </el-table>
         </template>
       </el-table-column>
       <!--课程名-->
@@ -59,12 +72,12 @@
                 </template>
               </el-table-column>
               <el-table-column width="150" property="course_date" label="选课日期"></el-table-column>
-              <el-table-column width="100" property="is_pay" label="是否缴费">
-                <template slot-scope="scope2">
-                  <span v-if="scope2.row.is_pay == '0'">未支付</span>
-                  <span v-if="scope2.row.is_pay == '1'">已支付</span>
-                </template>
-              </el-table-column>
+              <!--<el-table-column width="100" property="is_pay" label="是否缴费">-->
+                <!--<template slot-scope="scope2">-->
+                  <!--<span v-if="scope2.row.is_pay == '0'">未支付</span>-->
+                  <!--<span v-if="scope2.row.is_pay == '1'">已支付</span>-->
+                <!--</template>-->
+              <!--</el-table-column>-->
             </el-table>
             <i slot="reference" class="el-icon-share" v-if="scope.row.brief!=null" style="cursor: pointer;" @click="showStudentList(scope.row.id)"></i>
           </el-popover>
@@ -205,7 +218,9 @@
               <tuition-com v-bind:dataTuition="tempCourse.tuition" v-bind:dataTuitionType="tempCourse.tuitionType" v-bind:dataTuitionSubType="tempCourse.tuitionSubType" ref="tuition" ></tuition-com>
             </el-form-item>
             <el-form-item :label="$t('teacher.attachment')">
-              <file-uploader v-bind:dataVal="tempCourse.attachId" v-on:fileChangeToFather="fileChangeToFather" v-bind:fileListArr="fileList" v-bind:businessId="tempCourse.id" v-bind:businessType="attachBusinessType"></file-uploader>
+              <file-uploader v-bind:dataVal="tempCourse.attachId" v-on:fileChangeToFather="fileChangeToFather"
+                             v-bind:fileListArr="fileList" v-bind:businessId="tempCourse.id"
+                             v-bind:businessType="attachBusinessType" ref="fileUploader" ></file-uploader>
             </el-form-item>
 
           </div>
@@ -586,6 +601,10 @@
           this.$refs['courseDate']['checkAll'] = this.checkAll;
           this.$refs['courseDate']['isIndeterminate'] = this.isIndeterminate;
         }
+        if(this.$refs['fileUploader']){
+          this.$refs['fileUploader']['fileList'] = this.fileList
+        }
+
         if(this.$refs['teacherName']){
           this.$refs['teacherName']['teacherName'] = this.tempCourse.teacherName;
         }else{
@@ -677,6 +696,21 @@
           this.getList();
           this.deleteAlertVisible = false;
       })
+      },
+      // 获取row的key值
+      getRowKeys(row) {
+        return row.id;
+      },
+      toggleRowExpansion(row,expended){
+        this.api({
+          url: "/course-student/listStudentDetail4Teacher/",
+          method: "get",
+          params:  {
+            courseId: row.id
+          },
+        }).then(response  => {
+          row.students = response.list;
+        });
       },
       handleClose(){
         this.dialogFormVisible = false;
