@@ -194,10 +194,8 @@ public class SysController {
     @PostMapping("/deleteAttachment")
     public JSONObject deleteAttachment(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id,businessId");
-
         List<JSONObject> list = sysService.listAttachment(requestJson);
         if(list.size()>0){
-
             sysService.deleteAttachmentById(requestJson);
             Path path = Paths.get(upLoad_Folder+"/"+list.get(0).getString("location"));
             File file = new File(path.toString());
