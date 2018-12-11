@@ -133,7 +133,9 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
             JSONObject j = new JSONObject();
             j.put("courseId",i.get("id"));
             int num = courseStudentDao.countStudentDetail4Teacher(j);
+            List<JSONObject> l = courseStudentDao.listStudentDetail4Teacher(j);
             i.put("pickStudentNum",num);
+            i.put("students",l);
         });
         return result;
     }
