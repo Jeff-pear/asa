@@ -3,21 +3,28 @@ package com.pears.asa.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.service.SysService;
 import com.pears.asa.util.CommonUtil;
+import com.pears.asa.util.constants.Constants;
 import com.pears.asa.util.constants.ErrorEnum;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author: pears
@@ -122,6 +129,50 @@ public class SysController {
     }
 
     /**
+     * 新增课程时，文件上传
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping("/uploadFile")
+    public JSONObject uploadFile(MultipartFile file) {
+        if (Objects.isNull(file) || file.isEmpty()) {
+            logger.error("文件为空");
+        }
+        try {
+            byte[] bytes = file.getBytes();
+
+            UUID fileUrl = UUID.randomUUID();
+            Path path = Paths.get(upLoad_Folder + fileUrl);
+            //如果没有files文件夹，则创建
+            if (!Files.isWritable(path)) {
+                Files.createDirectories(Paths.get(upLoad_Folder));
+            }
+            //文件写入指定路径
+            Files.write(path, bytes);
+            logger.debug("文件写入成功...");
+            JSONObject result = new JSONObject();
+            result.put("originalFileName",file.getOriginalFilename());
+            result.put("returnCode", Constants.SUCCESS_CODE);
+            result.put("location",fileUrl.toString());
+            Session session = SecurityUtils.getSubject().getSession();
+            JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
+            int userId = userInfo.getInteger("userId");
+            //result.put("type","course-teacher");
+            result.put("userId",userId);
+            result.put("originFileName",file.getOriginalFilename());
+            result = sysService.addAttachment(result);
+            result.put("attachId",result.getInteger("id"));
+            return CommonUtil.successJson(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+            ErrorEnum err = ErrorEnum.E_10006;
+            err.setErrorMsg(e.getMessage());
+            return CommonUtil.errorJson(err);
+        }
+
+    }
+    /**
      * 更新附件
      *
      * @param requestJson
@@ -129,7 +180,7 @@ public class SysController {
      */
     @PostMapping("/updateAttachment")
     public JSONObject updateAttachment(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "id,businessId");
+        CommonUtil.hasAllRequired(requestJson, "id,businessId,businessType");
         sysService.updateAttachmentBusinessById(requestJson);
         return CommonUtil.successJson();
     }
