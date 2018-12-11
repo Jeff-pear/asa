@@ -178,7 +178,7 @@
             <el-form-item :label="$t('teacher.teacherName')">
               <!--<el-input type="text" v-model="tempCourse.teacherName" clearable>-->
               <!--</el-input>-->
-              <teacher-name v-bind:dataVal="tempCourse.teacherName" ref="teacherName"></teacher-name>
+              <teacher-name v-bind:dataVal="tempCourse.teacherName" v-on:renderFinalTeacherName="renderFinalTeacherName" ref="teacherName"></teacher-name>
 
             </el-form-item>
             <el-form-item :label="$t('teacher.studentNum')">
@@ -230,7 +230,7 @@
             </el-row>
 
             <el-row>
-              {{$t('teacher.teacherName') }}: {{tempCourse.teacherName}}
+              {{$t('teacher.teacherName') }}: {{finalCourse.teacherName}}
             </el-row>
 
             <el-row>
@@ -366,7 +366,9 @@
           price: 0,
           recommendBrand: '',
         },
-
+        finalCourse:{
+          teacherName: ''
+        }
       }
     },
     created() {
@@ -663,6 +665,16 @@
         }else{
           this.tempCourse.status = 1;
         }
+      },
+      renderFinalTeacherName(data){
+        let that = this;
+        data.forEach(function(i){
+          //this.tempCourse.teacherName
+          if(that.tempCourse.teacherName == i.id){
+            that.finalCourse.teacherName = i['nickname']+'('+i['nickname_cn']+')';
+          }
+        });
+
       },
       updateCourse() {
         //修改课程
