@@ -73,7 +73,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="origin_fileName" v-if="isMySelect == 'true'" :label="$t('teacher.attachment')" width="170">
+      <el-table-column align="center" prop="origin_fileName" v-if="isMySelect == 'true'" :label="$t('student.payAttach')" width="170">
         <template slot-scope="scope">
           <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row.attachIdStu)">{{scope.row.originFileNameStu}}</a>
         </template>
@@ -92,7 +92,7 @@
             width="160">
             <p>{{$t('table.deleteConfirm')}}</p>
             <div style="text-align: center; margin: 0">
-              <el-button type="primary" size="mini" @click="deleteMyCourse(scope.row.id)">{{$t('table.confirm')}}</el-button>
+              <el-button type="primary" size="mini" @click="deleteMyCourse(scope.row.id,scope.row.attachIdStu)">{{$t('table.confirm')}}</el-button>
             </div>
             <el-button type="danger" icon="edit" size="small" slot="reference" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') )">{{$t('student.revoke')}}</el-button>
           </el-popover>
@@ -137,6 +137,7 @@
                              v-bind:businessId="tempCourse.id"
                              v-on:fileChangeToFather="fileChangeToFather"
                              v-bind:businessType="attachBusinessType"
+                             ref="fileUploader"
               ></file-uploader>
             </el-form-item>
           </div>
@@ -362,7 +363,12 @@
           }
           this.dialogStatus = "update"
         }else{
+          debugger;
           this.fileList = [];
+          if(this.$refs['fileUploader']){
+            this.$refs['fileUploader']['fileList'] = this.fileList
+          }
+
           this.selectBtnDisabled = true;
           this.tempCourse.courseId = this.list[$index].courseId;
           this.tempCourse.id = this.list[$index].id;
@@ -373,6 +379,9 @@
           if(this.tempCourse.attachIdStu && this.tempCourse.attachIdStu!=''){
             this.fileList.push({name: this.tempCourse.originFileNameStu, url: this.tempCourse.attachIdStu})
             this.selectBtnDisabled = false;
+          }
+          if(this.$refs['fileUploader']){
+            this.$refs['fileUploader']['fileList'] = this.fileList
           }
           this.dialogStatus = "pay"
         }
@@ -410,12 +419,12 @@
         this.dialogFormVisible = false
       });
       },
-      deleteMyCourse(tmpId) {
+      deleteMyCourse(tmpId,attachIdStu) {
         //删除选中课程
         this.api({
           url: "/course-student/deleteCourse",
           method: "post",
-          data: {id: tmpId}
+          data: {id: tmpId,attachIdStu:attachIdStu}
         }).then(() => {
           //this.$refs['searchBtn'].focus();
           this.$message.success(this.$t('common.deleteSuccess'));
