@@ -76,11 +76,11 @@
 
     <insert id="addAttachment" useGeneratedKeys="true" keyProperty="id" parameterType="com.alibaba.fastjson.JSONObject">
         insert into sys_attach (
-        user_id, location, business_id, origin_fileName,type
+        user_id, location, business_id, origin_fileName
         )
         values
         (
-        #{userId},  #{location,jdbcType=VARCHAR},  #{businessId}, #{originFileName}, #{type}
+        #{userId},  #{location,jdbcType=VARCHAR},  #{businessId}, #{originFileName}
         )
     </insert>
 
@@ -94,7 +94,7 @@
 
     <update id="updateAttachmentBusinessById" >
         update  sys_attach
-        set business_id = #{businessId}
+        set business_id = #{businessId}, type = #{businessType}
         where 1=1
             and id = #{id}
     </update>
