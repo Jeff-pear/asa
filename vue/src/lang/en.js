@@ -49,6 +49,9 @@ export default {
     selectedCourse: 'My Course',
     pickCourse: 'Pick Course',
     revoke: 'Revoke',
+    pay: 'Pay',
+    confirmHasPay: 'Confirm payment',
+    payAttach: 'Payment Attachment',
     select: 'Select This',
   },
   common:{
@@ -60,7 +63,7 @@ export default {
     switchLanSuccess: 'Switch Language Success',
     uploadSuccess: 'Upload Successfully!',
     downloadSuccess: 'Download Successfully!',
-    restrictionUpload: 'Current restrictions on selecting one file'
+    restrictionUpload: 'The current restriction is to select one file. Please delete the previous attachment first.'
   },
   route: {
     dashboard: 'Dashboard',
