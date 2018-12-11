@@ -205,7 +205,7 @@
               <tuition-com v-bind:dataTuition="tempCourse.tuition" v-bind:dataTuitionType="tempCourse.tuitionType" v-bind:dataTuitionSubType="tempCourse.tuitionSubType" ref="tuition" ></tuition-com>
             </el-form-item>
             <el-form-item :label="$t('teacher.attachment')">
-              <file-uploader v-bind:dataVal="tempCourse.attachId" v-bind:fileListArr="fileList" v-bind:businessId="tempCourse.id"></file-uploader>
+              <file-uploader v-bind:dataVal="tempCourse.attachId" v-on:fileChangeToFather="fileChangeToFather" v-bind:fileListArr="fileList" v-bind:businessId="tempCourse.id" v-bind:businessType="attachBusinessType"></file-uploader>
             </el-form-item>
 
           </div>
@@ -281,6 +281,7 @@
         checkAll: false,
         isIndeterminate: true,
         downloadLoading: false,
+        attachBusinessType: 'course-teacher',
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         fileList: [],//上传文件list
@@ -545,6 +546,9 @@
         if(this.$refs['teacherName']){
           this.$refs['teacherName']['teacherName'] = undefined;
         }
+      },
+      fileChangeToFather(childFileList){
+        this.fileList = childFileList;
       },
       showUpdate($index) {
         this.resetTempCourse();
