@@ -63,6 +63,21 @@ public class CourseStudentController {
     }
 
     /**
+     * 缴费
+     *
+     * @param requestJson
+     * @return
+     */
+    @RequiresPermissions("course-student:update")
+    @PostMapping("/feeCourse")
+    public JSONObject feeCourse(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id,courseId");
+        requestJson.put("isPay","1");
+        return courseStudentService.updateCourse(requestJson);
+    }
+
+
+    /**
      * 修改
      *
      * @param requestJson
