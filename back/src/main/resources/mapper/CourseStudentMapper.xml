@@ -72,10 +72,16 @@
         s.nickname,
         u.grade,
         u.tuition_type tuitionType,
-        u.final_tuition finalTuition
+        u.final_tuition finalTuition,
+        sys_attach.origin_fileName originFileName,
+        sys_attach.id attachId,
+        sys_attach2.origin_fileName originFileNameStu,
+        sys_attach2.id attachIdStu
         FROM course_student w
           LEFT JOIN course_teacher u ON w.course_id = u.id
           LEFT JOIN sys_user s ON u.create_user = s.id
+          left JOIN sys_attach on u.id= sys_attach.business_id and sys_attach.type='course-teacher'
+          left JOIN sys_attach sys_attach2 on w.id= sys_attach2.business_id and sys_attach2.type='course-student'
         WHERE w.delete_status = '1'
 
         <if test="selectUserId !='' and selectUserId !=null">
@@ -96,6 +102,12 @@
         </if>
         <if test="deleteStatus !='' and deleteStatus !=null">
             , delete_status = #{deleteStatus}
+        </if>
+        <if test="isPay !='' and isPay !=null">
+            , is_pay = #{isPay}
+        </if>
+        <if test="courseDate !='' and courseDate !=null">
+            , course_date = #{courseDate}
         </if>
         WHERE id = #{id}
     </update>
