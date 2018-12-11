@@ -3,6 +3,7 @@ package com.pears.asa.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.service.CourseStudentService;
 import com.pears.asa.service.CourseTeacherService;
+import com.pears.asa.service.SysService;
 import com.pears.asa.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class CourseStudentController {
     private CourseStudentService courseStudentService;
     @Autowired
     private CourseTeacherService courseTeacherService;
+    @Autowired
+    private SysService sysService;
 
 
     /**
@@ -101,7 +104,14 @@ public class CourseStudentController {
     public JSONObject deleteCourse(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id");
         requestJson.put("deleteStatus","2");
-        return courseStudentService.updateCourse(requestJson);
+        JSONObject result = courseStudentService.updateCourse(requestJson);
+        Long attachIdStu = requestJson.getLong("attachIdStu");
+        if(attachIdStu!=null && attachIdStu!=0L){
+            requestJson.put("id",attachIdStu);
+            result = sysService.deleteAttachment(requestJson);
+        }
+
+        return result;
     }
 
     /**
