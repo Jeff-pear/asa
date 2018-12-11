@@ -11,7 +11,6 @@ export function getGroupTag() {
 }
 
 export function getPeriod(periodType) {
-  debugger;
-    return store.getters.period[periodType]
+   return store.getters.period[periodType]
 }
 
