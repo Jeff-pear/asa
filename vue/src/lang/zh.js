@@ -41,8 +41,8 @@ export default {
     recommendBrand: '推荐品牌',
     needSelfMaterial: '需要自备教具',
     yes: '是',
-    no: '否'
-
+    no: '否',
+    isPay: '支付情况'
   },
   student:{
     selectedCourse: '已选课程',
@@ -52,6 +52,7 @@ export default {
     payAttach: '缴费凭证',
     revoke: '撤销',
     select: '选 择',
+    name: '学生姓名'
   },
   common:{
     loading: '加载中...',
