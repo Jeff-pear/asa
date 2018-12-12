@@ -32,23 +32,31 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="capacity" :label="$t('teacher.studentNum')" style="width: 60px;"></el-table-column>
+
+      <el-table-column align="center" prop="capacity" :label="$t('teacher.studentNum')" style="width: 60px;">
+        <template slot-scope="scope">
+          {{Number(scope.row.capacity)-Number(scope.row.pickStudentNum)}}
+        </template>
+
+      </el-table-column>
       <!--<el-table-column align="center" prop="grade" label="授课年级" style="width: 60px;">-->
         <!--<template slot-scope="scope">-->
           <!--{{formatGrade(scope.row.grade)}}-->
         <!--</template>-->
       <!--</el-table-column>-->
-      <el-table-column align="center" :label="$t('teacher.tuition')" style="width: 60px;">
-        <template slot-scope="scope" >
-          <div v-if="scope.row.tuitionType=='fee'">
-            {{scope.row.tuition}} RMB
-            <span v-if="scope.row.tuitionSubType == '1'">{{$t('teacher.tuitionOption1')}}</span>
-            <span v-if="scope.row.tuitionSubType == '2'">{{$t('teacher.tuitionOption2')}}</span>
-            <span v-if="scope.row.tuitionSubType == '3'">{{$t('teacher.tuitionOption3')}}</span>
-          </div>
-          <div v-if="scope.row.tuitionType=='free'">{{$t('teacher.tuitionFree')}}</div>
+      <!--<el-table-column align="center" :label="$t('teacher.tuition')" style="width: 60px;">-->
+        <!--<template slot-scope="scope" >-->
+          <!--<div v-if="scope.row.tuitionType=='fee'">-->
+            <!--{{scope.row.tuition}} RMB-->
+            <!--<span v-if="scope.row.tuitionSubType == '1'">{{$t('teacher.tuitionOption1')}}</span>-->
+            <!--<span v-if="scope.row.tuitionSubType == '2'">{{$t('teacher.tuitionOption2')}}</span>-->
+            <!--<span v-if="scope.row.tuitionSubType == '3'">{{$t('teacher.tuitionOption3')}}</span>-->
+          <!--</div>-->
+          <!--<div v-if="scope.row.tuitionType=='free'">{{$t('teacher.tuitionFree')}}</div>-->
 
-        </template>
+        <!--</template>-->
+      <!--</el-table-column>-->
+      <el-table-column align="center" prop="finalTuition" :label="$t('teacher.tuition')" style="width: 60px;">
       </el-table-column>
       <el-table-column align="center" prop="courseDateStudent" :label="$t('teacher.courseDate')" v-if="isMySelect == 'true' " style="width: 60px;">
         <template slot-scope="scope" v-if="scope.row.courseDateStudent!=null">
@@ -82,7 +90,7 @@
       <el-table-column align="center" :label="$t('table.actions')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && (getPeriod('canPick') || getPeriod('canFee')))">
         <template slot-scope="scope">
 
-          <el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (isMySelect == 'false' && getPeriod('canPick')) " @click="showUpdate(scope.$index,'pick')">{{$t('student.pickCourse')}}</el-button>
+          <el-button type="primary" icon="edit" size="small" v-if="(Number(scope.row.capacity)-Number(scope.row.pickStudentNum))>0 && (getGroupTag()=='-1' || (isMySelect == 'false' && getPeriod('canPick'))) " @click="showUpdate(scope.$index,'pick')">{{$t('student.pickCourse')}}</el-button>
 
           <el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (isMySelect == 'true' && getPeriod('canFee')) " @click="showUpdate(scope.$index,'fee')">{{$t('student.pay')}}</el-button>
 
