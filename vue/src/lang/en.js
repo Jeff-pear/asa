@@ -42,17 +42,19 @@ export default {
     recommendBrand: 'Recommend Brand',
     needSelfMaterial: 'Student should prepare their own learning materials',
     yes: 'Yes',
-    no: 'No'
+    no: 'No',
+    isPay: 'Has Pay'
 
   },
   student:{
     selectedCourse: 'My Course',
-    pickCourse: 'Pick Course',
+    pickCourse: 'Sign Up',
     revoke: 'Revoke',
     pay: 'Pay',
     confirmHasPay: 'Confirm payment',
     payAttach: 'Payment Attachment',
     select: 'Select This',
+    name: 'Student'
   },
   common:{
     loading: 'Loading...',
@@ -70,7 +72,7 @@ export default {
     courseManagement: 'Course',
     course: 'Course',
     courseStudent: 'Student Course',
-    courseFinance: 'Finance Management'
+    courseFinance: 'Finance'
   },
   navbar: {
     home: 'Home',
