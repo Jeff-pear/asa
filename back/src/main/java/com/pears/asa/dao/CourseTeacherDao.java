@@ -44,10 +44,33 @@ public interface CourseTeacherDao {
     int updateCourse(JSONObject jsonObject);
 
     /**
+     * 更新文章
+     *
+     * @param jsonObject
+     * @return
+     */
+    int updateFinalTuition(JSONObject jsonObject);
+    /**
      * 文章列表
      *
      * @param jsonObject
      * @return
      */
     List<JSONObject> listAllTeacher(JSONObject jsonObject);
+
+    /**
+     * 列表
+     *
+     * @param jsonObject
+     * @return
+     */
+    List<JSONObject> listCourseResult4Finance(JSONObject jsonObject);
+
+    /**
+     * 数
+     *
+     * @param jsonObject
+     * @return
+     */
+    int countCourseResult4Finance(JSONObject jsonObject);
 }
