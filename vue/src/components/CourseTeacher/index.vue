@@ -104,6 +104,13 @@
 
         </template>
       </el-table-column>
+      <el-table-column align="center" prop="finalTuition" label="最终费用(admin可见" v-if="getGroupTag()=='-1'" style="width: 150px;">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.finalTuition" class="edit-input" size="mini">
+            <el-button type="success" icon="el-icon-check" size="small" circle slot="append" @click="updateFinalTuition(scope.row)"></el-button>
+          </el-input>
+        </template>
+      </el-table-column>
       <!--课程时间-->
       <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" style="width: 60px;">
         <template slot-scope="scope">
@@ -675,6 +682,19 @@
           }
         });
 
+      },
+      updateFinalTuition(row){
+        this.api({
+          url: "/course-teacher/updateFinalTuition",
+          method: "post",
+          data: row
+        }).then(() => {
+          this.getList();
+          this.$message.success('操作成功！');
+        }).catch(v=>{
+            this.getList();
+          console.warn(v);
+        });
       },
       updateCourse() {
         //修改课程
