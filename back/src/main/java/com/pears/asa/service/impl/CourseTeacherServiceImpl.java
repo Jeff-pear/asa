@@ -113,7 +113,15 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
             JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
             jsonObject.put("studentCanPick",userInfo.getInteger("userId"));
         }
-        return getList(jsonObject,session);
+        JSONObject result = getList(jsonObject,session);
+        List<JSONObject>  list = (List<JSONObject> )result.getJSONObject("returnData").get("list");
+        list.stream().forEach(i->{
+            JSONObject j = new JSONObject();
+            j.put("courseId",i.get("id"));
+            int num = courseStudentDao.countStudentDetail4Teacher(j);
+            i.put("pickStudentNum",num);
+        });
+        return result;
     }
 
     /**
@@ -132,9 +140,7 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         list.stream().forEach(i->{
             JSONObject j = new JSONObject();
             j.put("courseId",i.get("id"));
-            int num = courseStudentDao.countStudentDetail4Teacher(j);
             List<JSONObject> l = courseStudentDao.listStudentDetail4Teacher(j);
-            i.put("pickStudentNum",num);
             i.put("students",l);
         });
         return result;
@@ -182,6 +188,12 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         return CommonUtil.successJson();
     }
 
+    @Override
+    public JSONObject updateFinalTuition(JSONObject jsonObject) {
+        courseTeacherDao.updateFinalTuition(jsonObject);
+        return CommonUtil.successJson();
+    }
+
     /**
      * 更新课程
      *
@@ -205,6 +217,15 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     @Override
     public JSONObject listAllTeacher(JSONObject jsonObject) {
         return CommonUtil.successJson(courseTeacherDao.listAllTeacher(jsonObject));
+    }
+
+    @Override
+    public JSONObject listCourseResult4Finance(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = courseTeacherDao.countCourseResult4Finance(jsonObject);
+        List<JSONObject> list = courseTeacherDao.listCourseResult4Finance(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
+
     }
 
     private void exeUpdateCourse(JSONObject jsonObject) {
