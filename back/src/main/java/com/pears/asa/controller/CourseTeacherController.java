@@ -66,6 +66,18 @@ public class CourseTeacherController {
         return courseTeacherService.listAllTeacher(CommonUtil.request2Json(request));
     }
 
+    /**
+     * 查询student sign up course result
+     *
+     * @param request
+     * @return
+     */
+    @RequiresPermissions("course-finance:list")
+    @GetMapping("/listCourseResult4Finance")
+    public JSONObject listCourseResult4Finance(HttpServletRequest request) {
+        return courseTeacherService.listCourseResult4Finance(CommonUtil.request2Json(request));
+    }
+
    /**
      * 新增课程
      *
@@ -98,6 +110,13 @@ public class CourseTeacherController {
 
         return courseTeacherService.updateCourse(requestJson);
     }
+    @RequiresPermissions("course-teacher:update")
+    @PostMapping("/updateFinalTuition")
+    public JSONObject updateFinalTuition(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id, finalTuition");
+        return courseTeacherService.updateFinalTuition(requestJson);
+    }
+
     /**
      * 删除课程
      *
