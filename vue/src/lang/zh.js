@@ -71,7 +71,8 @@ export default {
     courseManagement: '课程',
     course: '课程',
     courseStudent: '学生选课',
-    courseFinance: '财务管理'
+    courseFinance: '财务管理',
+    courseNotice: '结果公示'
   },
   navbar: {
     home: '首页',
