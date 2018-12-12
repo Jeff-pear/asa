@@ -72,7 +72,8 @@ export default {
     courseManagement: 'Course',
     course: 'Course',
     courseStudent: 'Student Course',
-    courseFinance: 'Finance'
+    courseFinance: 'Finance',
+    courseNotice: 'Notice'
   },
   navbar: {
     home: 'Home',
