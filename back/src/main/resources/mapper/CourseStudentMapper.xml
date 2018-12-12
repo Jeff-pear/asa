@@ -109,6 +109,9 @@
         <if test="courseDate !='' and courseDate !=null">
             , course_date = #{courseDate}
         </if>
+        <if test="financeIsPay !='' and financeIsPay !=null">
+            , finance_is_pay = #{financeIsPay}
+        </if>
         WHERE id = #{id}
     </update>
 
