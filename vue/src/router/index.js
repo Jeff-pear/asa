@@ -58,6 +58,13 @@ export const asyncRouterMap = [
         meta: {title: 'courseFinance', icon: 'hand'},
         menu: 'course-finance'
       },
+      {
+        path: 'course-notice',
+        name: 'courseNotice',
+        component: _import('course/notice'),
+        meta: {title: 'courseNotice', icon: 'hand'},
+        menu: 'course-notice'
+      },
     ]
   },
   {
