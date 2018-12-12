@@ -59,7 +59,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('table.actions')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && (getPeriod('canPick') || getPeriod('canFee')))">
+      <el-table-column align="center" :label="$t('table.actions')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && (getPeriod('canFinance') ))">
         <template slot-scope="scope">
           <!--<el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (getPeriod('canFinance')) " @click="startUpdate(scope.$index)">{{$t('table.edit')}}</el-button>-->
           <el-button v-if="scope.row.edit" type="success" size="mini" icon="el-icon-circle-check-outline" @click="confirmEdit(scope.row)">{{$t('table.confirm')}}</el-button>
