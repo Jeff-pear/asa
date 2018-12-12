@@ -79,6 +79,18 @@ public class CourseStudentController {
         return courseStudentService.updateCourse(requestJson);
     }
 
+    /**
+     * 财务确认缴费
+     *
+     * @param requestJson
+     * @return
+     */
+    @RequiresPermissions("course-finance:update")
+    @PostMapping("/financePayConfirm")
+    public JSONObject financePayConfirm(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id,financeIsPay");
+        return courseStudentService.updateCourse(requestJson);
+    }
 
     /**
      * 修改
