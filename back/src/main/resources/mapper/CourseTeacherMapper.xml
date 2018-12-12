@@ -133,6 +133,7 @@
           u.id teacherName,
           w.brief,
           w.capacity,
+          w.final_tuition finalTuition,
           w.course_date courseDate,
           w.tuition,
           w.create_user,
@@ -238,6 +239,12 @@
         WHERE id = #{id}
     </update>
 
+    <update id="updateFinalTuition" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE course_teacher
+        SET final_tuition = #{finalTuition}
+        WHERE id = #{id}
+    </update>
+
     <select id="listAllTeacher" resultType="com.alibaba.fastjson.JSONObject">
         select  sys_user.id,
                 sys_user.username,
@@ -250,5 +257,40 @@
             WHERE (sys_role.group_tag = 2 or sys_role.group_tag = 0 or group_tag = -1)
             and sys_user.delete_status = 1
             and sys_user.active_status=1;
+    </select>
+    <select id="listCourseResult4Finance" resultType="com.alibaba.fastjson.JSONObject">
+        select  s.id,
+            s.course_id courseId,
+            u1.nickname nicknameStu,
+            u1.nickname_cn nickNameCnStu,
+            u1.grade,
+             s.is_pay isPay,
+             s.finance_is_pay financeIsPay,
+             s.course_date courseDate,
+             t.content content,
+             t.course_date courseDateTeacher,
+             t.final_tuition finalTuition,
+             u2.nickname nicknameTeacher,
+             u2.nickname_cn nicknameTeacher,
+            a.id attachId,a.origin_fileName originFileName
+        from course_student s
+          left join course_teacher t on t.id = s.course_id
+          left join sys_user u1 on u1.id = s.select_user_id
+          left join sys_user u2 on u2.id = t.teacher_name
+          left join sys_attach a on a.business_id = s.id and a.type = 'course-student'
+        where s.delete_status = '1' and t.delete_status = '1'
+        <if test="content !='' and content !=null">
+            AND t.content like concat(concat('%',#{content}),'%')
+        </if>
+        order by s.course_id asc
+    </select>
+    <select id="countCourseResult4Finance" resultType="Integer">
+    SELECT count(0)
+        from course_student s
+        left join course_teacher t on t.id = s.course_id
+        where s.delete_status = '1' and t.delete_status = '1'
+        <if test="content !='' and content !=null">
+            AND t.content like concat(concat('%',#{content}),'%')
+        </if>
     </select>
 </mapper>
