@@ -39,6 +39,14 @@ public interface CourseTeacherService {
      * @return
      */
     JSONObject updateCourse(JSONObject jsonObject);
+
+    /**
+     * 更新文章
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject updateFinalTuition(JSONObject jsonObject);
     /**
      * 更新文章
      *
@@ -54,4 +62,13 @@ public interface CourseTeacherService {
      * @return
      */
     JSONObject listAllTeacher(JSONObject jsonObject);
+
+    /**
+     * 列表
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject listCourseResult4Finance(JSONObject jsonObject);
+
 }
