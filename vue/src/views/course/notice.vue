@@ -4,10 +4,10 @@
       <el-form :model="listQuery" ref="listQuery">
         <el-form-item prop="content">
           <el-input class="filter-item" :placeholder="$t('teacher.courseNameNoDetail')" v-model="listQuery.content"
-                    size="small" v-if="hasPerm('course-student:list')" ref="searchBtn" style="width: 200px;"
+                    size="small" v-if="hasPerm('course-notice:list')" ref="searchBtn" style="width: 200px;"
                     @keyup.enter.native="handleFilter" clearable/>
-          <el-button class="filter-item" type="primary" icon="el-icon-search" size="small" v-if="hasPerm('course-student:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
-          <el-button :loading="downloadLoading" style="margin-left: 0px;" icon="el-icon-download" type="primary" size="small" v-if="hasPerm('course-teacher:list')" @click="handleDownload">{{ $t('excel.export') }} Excel</el-button>
+          <el-button class="filter-item" type="primary" icon="el-icon-search" size="small" v-if="hasPerm('course-notice:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
+          <el-button :loading="downloadLoading" style="margin-left: 0px;" icon="el-icon-download" type="primary" size="small" v-if="hasPerm('course-notice:list')" @click="handleDownload">{{ $t('excel.export') }} Excel</el-button>
 
         </el-form-item>
       </el-form>
@@ -21,7 +21,9 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="nicknameTeacher" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="content" :label="$t('teacher.courseName')" style="width: 60px;">
+      <el-table-column align="center" prop="content" :label="$t('teacher.courseNameNoDetail')" style="width: 60px;">
+      </el-table-column>
+      <el-table-column align="center" prop="courseArea" :label="$t('teacher.courseArea')" style="width: 60px;">
       </el-table-column>
       <el-table-column align="center" prop="nicknameStu" :label="$t('student.name')" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="grade" :label="$t('teacher.grade')" style="width: 60px;">
@@ -117,7 +119,7 @@
         return 'common-row';
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-        if(columnIndex === 1 || columnIndex === 2){
+        if(columnIndex === 1 || columnIndex === 2 || columnIndex === 3){
           const _row = this.spanArr[rowIndex]
           const _col = _row>0?1:0;
           return{
@@ -237,7 +239,7 @@
       },
       handleDownload() {
         this.downloadLoading = true;
-        if (!this.hasPerm('course-teacher:list')) {
+        if (!this.hasPerm('course-notice:list')) {
           return
         }
         this.api({
