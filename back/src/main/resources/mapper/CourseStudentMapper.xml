@@ -121,6 +121,9 @@
         select count(0) from course_student
         LEFT JOIN course_teacher on course_student.course_id = course_teacher.id
         where course_teacher.id = #{courseId} and course_student.delete_status = '1'
+        <if test="financeIsPay !='' and financeIsPay !=null">
+            and course_student.finance_is_pay = #{financeIsPay}
+        </if>
     </select>
 
     <select id="listStudentDetail4Teacher" resultType="com.alibaba.fastjson.JSONObject">
@@ -128,6 +131,9 @@
           LEFT JOIN course_teacher on course_student.course_id = course_teacher.id
           LEFT JOIN sys_user on sys_user.id=course_student.select_user_id
         where course_teacher.id = #{courseId} and course_student.delete_status = '1'
+        <if test="financeIsPay !='' and financeIsPay !=null">
+            and course_student.finance_is_pay = #{financeIsPay}
+        </if>
         order by course_student.update_date asc
 
     </select>
