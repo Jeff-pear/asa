@@ -168,39 +168,36 @@
       },
       getList() {
         //查询列表
-        if (!this.hasPerm('course-finance:list')) {
+        if (!this.hasPerm('course-notice:list')) {
           return
         }
         this.listLoading = true;
         this.spanArr = [];
         this.api({
-          url: '/course-teacher/listCourseResult4Finance',
+          url: '/course-teacher/listCourseResult4Notice',
           method: "get",
           params: this.listQuery
         }).then(data => {
           this.listLoading = false;
-        this.list = data.list;
-        this.totalCount = data.totalCount;
-
-
-        let contactDot = 0;
-        this.list.forEach((item,index) => {
-          item.index = index;
-        this.$set(item, 'edit', false);
-        item.originalFinanceIsPay = item.financeIsPay
-        if(index === 0){
-          this.spanArr.push(1);
-        }else{
-          if(item.courseId === this.list[index - 1].courseId){
-            this.spanArr[contactDot] +=1;
-            this.spanArr.push(0);
-          }else{
+          this.list = data.list;
+          this.totalCount = data.totalCount;
+          let contactDot = 0;
+          this.list.forEach((item,index) => {
+            item.index = index;
+          this.$set(item, 'edit', false);
+          item.originalFinanceIsPay = item.financeIsPay
+          if(index === 0){
             this.spanArr.push(1);
-            contactDot = index;
+          }else{
+            if(item.courseId === this.list[index - 1].courseId){
+              this.spanArr[contactDot] +=1;
+              this.spanArr.push(0);
+            }else{
+              this.spanArr.push(1);
+              contactDot = index;
+            }
           }
-        }
-      });
-
+        });
       })
       },
       handleSizeChange(val) {
