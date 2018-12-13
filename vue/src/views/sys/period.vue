@@ -51,10 +51,12 @@
             end-placeholder="结束日期"
             value-format="yyyy.MM.dd">
           </el-date-picker>
+
         </div>
+
       </el-form-item>
 
-      <el-form-item label="结果公示开始时间">
+      <el-form-item label="结果公示开始时间" >
         <div class="block">
           <el-date-picker
             v-model="tempPeriod.noticeStartDate"
@@ -75,6 +77,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer footer-left" >
       <el-button type="success" @click="setPeriod">发 布</el-button>
+      <span style="color: red;">系统将在财务审核费用截止日期第二天01:00:00自动执行系统任务</span>
     </div>
 
     <el-table :data="list" v-loading.body="listLoading" style="margin-top: 10px; " element-loading-text="拼命加载中" border fit
