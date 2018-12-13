@@ -24,6 +24,7 @@
             notice_start_date noticeStartDate,
             comments   comments,
             status     status,
+            type ,
             CURRENT_DATE curDate
         FROM course_period
         WHERE status='0'
