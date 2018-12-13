@@ -43,7 +43,8 @@ export default {
     needSelfMaterial: 'Student should prepare their own learning materials',
     yes: 'Yes',
     no: 'No',
-    isPay: 'Has Pay'
+    isPay: 'Has Pay',
+    courseArea: 'Location'
 
   },
   student:{
@@ -73,7 +74,12 @@ export default {
     course: 'Course',
     courseStudent: 'Student Course',
     courseFinance: 'Finance',
-    courseNotice: 'Notice'
+    courseNotice: 'Notice',
+    userPower: 'User Permission',
+    userList: 'User',
+    permissionList: 'Role',
+    system: 'System',
+    period: 'Peroid'
   },
   navbar: {
     home: 'Home',
