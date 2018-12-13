@@ -72,16 +72,16 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/user/',
     name: 'userPower',
-    meta: {title: '用户权限', icon: 'table'},
+    meta: {title: 'userPower', icon: 'table'},
     children: [
       {
-        path: '', name: 'userList', component: _import('user/user'), meta: {title: '用户列表', icon: 'user'}, menu: 'user'
+        path: '', name: 'userList', component: _import('user/user'), meta: {title: 'userList', icon: 'user'}, menu: 'user'
       },
       {
         path: 'role',
         name: 'roleManage',
         component: _import('user/role'),
-        meta: {title: '权限管理', icon: 'password'},
+        meta: {title: 'permissionList', icon: 'password'},
         menu: 'role'
       },
     ]
@@ -91,20 +91,20 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/sys/period',
     name: 'system',
-    meta: {title: '系统设置', icon: 'system'},
+    meta: {title: 'system', icon: 'system'},
     children: [
       {
         path: 'period',
         name: 'period',
         component: _import('sys/period'),
-        meta: {title: '选课周期', icon: 'peroid'},
+        meta: {title: 'period', icon: 'peroid'},
         menu: 'period'
       },
       {
         path: 'email',
         name: 'email',
         component: _import('sys/email'),
-        meta: {title: '邮件管理', icon: 'mail'},
+        meta: {title: 'Email', icon: 'mail'},
         menu: 'email'
       },
 
