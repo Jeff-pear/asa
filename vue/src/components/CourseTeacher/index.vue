@@ -106,9 +106,20 @@
       </el-table-column>
       <el-table-column align="center" prop="finalTuition" label="最终费用(admin可见" v-if="getGroupTag()=='-1'" style="width: 150px;">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.finalTuition" class="edit-input" size="mini">
-            <el-button type="success" icon="el-icon-check" size="small" circle slot="append" @click="updateFinalTuition(scope.row)"></el-button>
-          </el-input>
+          <el-tooltip :content="scope.row.finalTuition" placement="top" effect="light">
+            <el-input v-model="scope.row.finalTuition" class="edit-input" size="mini">
+              <el-button type="success" icon="el-icon-check" size="small" circle slot="append" @click="updateFinalTuition(scope.row)"></el-button>
+            </el-input>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="courseArea" label="课程地点(admin可见" v-if="getGroupTag()=='-1'" style="width: 150px;">
+        <template slot-scope="scope">
+          <el-tooltip :content="scope.row.courseArea" placement="top" effect="light">
+            <el-input v-model="scope.row.courseArea" class="edit-input" size="mini">
+              <el-button type="success" icon="el-icon-check" size="small" circle slot="append" @click="updateCourseArea(scope.row)"></el-button>
+            </el-input>
+          </el-tooltip>
         </template>
       </el-table-column>
       <!--课程时间-->
@@ -693,6 +704,19 @@
           this.$message.success('操作成功！');
         }).catch(v=>{
             this.getList();
+          console.warn(v);
+        });
+      },
+      updateCourseArea(row){
+        this.api({
+          url: "/course-teacher/updateCourseArea",
+          method: "post",
+          data: row
+        }).then(() => {
+          this.getList();
+        this.$message.success('操作成功！');
+      }).catch(v=>{
+          this.getList();
           console.warn(v);
         });
       },
