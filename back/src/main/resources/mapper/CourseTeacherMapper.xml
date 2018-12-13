@@ -142,6 +142,7 @@
           w.tuition_type tuitionType,
           w.tuition_sub_type tuitionSubType,
           w.final_tuition finalTuition,
+          w.course_area courseArea,
           w.teacher_type teacherType,
           w.status status,
         w.need_training_aid needTrainingAid,
@@ -241,7 +242,13 @@
 
     <update id="updateFinalTuition" parameterType="com.alibaba.fastjson.JSONObject">
         UPDATE course_teacher
-        SET final_tuition = #{finalTuition}
+        SET id=id
+        <if test="finalTuition !='' and finalTuition !=null">
+            , final_tuition = #{finalTuition}
+        </if>
+        <if test="courseArea !='' and courseArea !=null">
+            , course_area = #{courseArea}
+        </if>
         WHERE id = #{id}
     </update>
 
@@ -270,6 +277,7 @@
              t.content content,
              t.course_date courseDateTeacher,
              t.final_tuition finalTuition,
+              t.course_area courseArea,
              u2.nickname nicknameTeacher,
              u2.nickname_cn nicknameTeacher,
             a.id attachId,a.origin_fileName originFileName
