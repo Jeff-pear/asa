@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="capacity" :label="$t('teacher.studentNum')" style="width: 60px;">
+      <el-table-column align="center" prop="capacity" v-if="isMySelect == 'false' " :label="$t('teacher.studentNum')" style="width: 60px;">
         <template slot-scope="scope">
           {{Number(scope.row.capacity)-Number(scope.row.pickStudentNum)}}
         </template>
@@ -74,6 +74,8 @@
           <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" prop="courseArea" :label="$t('teacher.courseArea')"style="width: 150px;">
+      </el-table-column>
       <el-table-column align="center" prop="nickname" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="origin_fileName" :label="$t('teacher.attachment')" width="170">
         <template slot-scope="scope">
@@ -92,7 +94,13 @@
 
           <el-button type="primary" icon="edit" size="small" v-if="(Number(scope.row.capacity)-Number(scope.row.pickStudentNum))>0 && (getGroupTag()=='-1' || (isMySelect == 'false' && getPeriod('canPick'))) " @click="showUpdate(scope.$index,'pick')">{{$t('student.pickCourse')}}</el-button>
 
-          <el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (isMySelect == 'true' && getPeriod('canFee')) " @click="showUpdate(scope.$index,'fee')">{{$t('student.pay')}}</el-button>
+          <el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (isMySelect == 'true' && getPeriod('canFee'))" @click="showUpdate(scope.$index,'fee')">
+            <template >
+              <span v-if="scope.row.isPay=='1'">已支付</span>
+              <span v-else>{{$t('student.pay')}}</span>
+            </template>
+
+          </el-button>
 
           <el-popover v-if="isMySelect == 'true' || getGroupTag() == '-1'"
             placement="top"
@@ -137,6 +145,9 @@
                            v-bind:courseDateOptions="courseDateOptions"
                            v-on:changeCourseDate="changeCourseDate"
                            ref="courseDate"></course-date>
+            </el-form-item>
+            <el-form-item>
+              <span style="color:red;font-weight: bolder;">注意：请于选课日期截止后三日内进行缴费，并上传截图，逾期缴费会导致选课失败，望知悉。</span>
             </el-form-item>
           </div>
           <div v-if="type=='fee'">
