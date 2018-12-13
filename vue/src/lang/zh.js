@@ -13,7 +13,7 @@ export default {
     externalTeacher:'外聘',
     courseName: '课程名(详情)',
     studentNum: '学生数',
-    grade: '授课年级',
+    grade: '年级',
     tuition: '学费',
     tuitionOption1: '(人*课)',
     tuitionOption2: '(课)',
@@ -53,7 +53,8 @@ export default {
     payAttach: '缴费凭证',
     revoke: '撤销',
     select: '选 择',
-    name: '学生姓名'
+    name: '学生姓名',
+    hasPay: '已支付'
   },
   common:{
     loading: '加载中...',
