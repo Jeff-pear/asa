@@ -142,6 +142,8 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
             j.put("courseId",i.get("id"));
             List<JSONObject> l = courseStudentDao.listStudentDetail4Teacher(j);
             i.put("students",l);
+            int num = courseStudentDao.countStudentDetail4Teacher(j);
+            i.put("pickStudentNum",num);
         });
         return result;
     }
