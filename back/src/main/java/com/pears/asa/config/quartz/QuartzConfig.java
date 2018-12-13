@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
             //cron方式
             return TriggerBuilder.newTrigger().forJob(testQuartz2())
                     .withIdentity("sysTask")
-                    .withSchedule(CronScheduleBuilder.cronSchedule("0 06 18 * * ?"))
+                    .withSchedule(CronScheduleBuilder.cronSchedule("0 00 01 * * ?"))
                     .build();
         }
 
