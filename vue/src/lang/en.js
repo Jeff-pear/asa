@@ -55,7 +55,8 @@ export default {
     confirmHasPay: 'Confirm payment',
     payAttach: 'Payment Attachment',
     select: 'Select This',
-    name: 'Student'
+    name: 'Student',
+    hasPay: 'Has Pay'
   },
   common:{
     loading: 'Loading...',
