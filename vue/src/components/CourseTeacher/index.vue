@@ -113,6 +113,9 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <!--课程地点-->
+      <el-table-column align="center" prop="courseArea" :label="$t('teacher.courseArea')" v-if="getGroupTag()!='-1'" style="width: 150px;">
+      </el-table-column>
       <el-table-column align="center" prop="courseArea" label="课程地点(admin可见" v-if="getGroupTag()=='-1'" style="width: 150px;">
         <template slot-scope="scope">
           <el-tooltip :content="scope.row.courseArea" placement="top" effect="light">
