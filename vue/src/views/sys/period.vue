@@ -112,6 +112,11 @@
       <!--</el-table-column>-->
       <el-table-column align="center" label="备注" prop="comments" width="170"></el-table-column>
 
+      <el-table-column align="center" :label="$t('table.manage')" width="200" v-if="getGroupTag()=='-1' ">
+        <template slot-scope="scope">
+          <el-button type="success" size="mini" icon="el-icon-circle-check-outline" @click="startEdit(scope.row)">{{$t('table.edit')}}</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
   </div>
@@ -126,20 +131,21 @@
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         tempPeriod: {
-          teacherPeriod: "",
-          studentPeriod: "",
-          feePeriod: "",
-          financePeriod:"",
-          noticeStartDate:"",
+          teacherPeriod: [],
+          studentPeriod: [],
+          feePeriod: [],
+          financePeriod:[],
+          noticeStartDate:[],
           comments: "",
           type: "0"
         },
       }
     },
+
     filters:{
       formatDate(time){
         let date = new Date(time);
-        return formatDate(date,'yyyy-MM-dd hh:mm');
+        return formatDate(date,'yyyy-MM-dd');
         //此处formatDate是一个函数，将其封装在common/js/date.js里面，便于全局使用
       }
     },
@@ -147,6 +153,11 @@
       this.getList();
     },
     methods: {
+      formatDate(time){
+        let date = new Date(time);
+        return formatDate(date,'yyyy-MM-dd');
+        //此处formatDate是一个函数，将其封装在common/js/date.js里面，便于全局使用
+      },
       getList() {
         //查询列表
         this.listLoading = true;
@@ -159,7 +170,15 @@
           this.list = data.list;
         })
       },
-
+      startEdit(r){
+        let that = this;
+        that.tempPeriod.teacherPeriod = Object.assign( [that.formatDate(r.teacherStartDate),that.formatDate(r.teacherEndDate)]);
+        that.tempPeriod.studentPeriod = Object.assign(  [that.formatDate(r.pickStartDate),that.formatDate(r.pickEndDate)]);
+        that.tempPeriod.feePeriod = Object.assign(  [that.formatDate(r.feeStartDate),that.formatDate(r.feeEndDate)]);
+        that.tempPeriod.financePeriod = Object.assign(  [that.formatDate(r.financeStartDate),that.formatDate(r.financeEndDate)]);
+        that.tempPeriod.noticeStartDate = Object.assign(  that.formatDate(r.noticeStartDate));
+        that.tempPeriod.comments = Object.assign(  r.comments);
+      },
       setPeriod() {
         this.listLoading = true;
         //保存新文章
@@ -170,8 +189,9 @@
         }).then(() => {
           console.log("设置成功");
           this.reload();
-        this.listLoading = false;
-      })
+          this.getList();
+          this.listLoading = false;
+        })
       },
       //组件通信
       reload(){
