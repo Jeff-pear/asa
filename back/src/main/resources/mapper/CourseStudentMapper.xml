@@ -71,6 +71,8 @@
         u.tuition,
         s.nickname,
         u.grade,
+        w.is_pay isPay,
+        u.course_area courseArea,
         u.tuition_type tuitionType,
         u.final_tuition finalTuition,
         sys_attach.origin_fileName originFileName,
