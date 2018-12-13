@@ -190,6 +190,19 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 更新课程4 system
+     *
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject updateCourse4Sys(JSONObject jsonObject) {
+        courseTeacherDao.updateCourse(jsonObject);
+        return CommonUtil.successJson();
+    }
+
     @Override
     public JSONObject updateFinalTuition(JSONObject jsonObject) {
         courseTeacherDao.updateFinalTuition(jsonObject);
