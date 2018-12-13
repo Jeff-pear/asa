@@ -4,9 +4,9 @@
       <el-form :model="listQuery" ref="listQuery">
         <el-form-item prop="content">
           <el-input class="filter-item" :placeholder="$t('teacher.courseNameNoDetail')" v-model="listQuery.content"
-                    size="small" v-if="hasPerm('course-student:list')" ref="searchBtn" style="width: 200px;"
+                    size="small" v-if="hasPerm('course-finance:list')" ref="searchBtn" style="width: 200px;"
                     @keyup.enter.native="handleFilter" clearable/>
-          <el-button class="filter-item" type="primary" icon="el-icon-search" size="small" v-if="hasPerm('course-student:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
+          <el-button class="filter-item" type="primary" icon="el-icon-search" size="small" v-if="hasPerm('course-finance:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -59,7 +59,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('table.actions')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && (getPeriod('canFinance') ))">
+      <el-table-column align="center" :label="$t('table.actions')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-finance:update') && (getPeriod('canFinance') ))">
         <template slot-scope="scope">
           <!--<el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (getPeriod('canFinance')) " @click="startUpdate(scope.$index)">{{$t('table.edit')}}</el-button>-->
           <el-button v-if="scope.row.edit" type="success" size="mini" icon="el-icon-circle-check-outline" @click="confirmEdit(scope.row)">{{$t('table.confirm')}}</el-button>
@@ -258,21 +258,6 @@
         this.fileList = childFileList;
         this.selectBtnDisabled = !(this.fileList.length>0);
       },
-
-      selectCourse(){
-        this.tempCourse.courseDate = this.$refs['courseDate']['courseDate'];
-        this.courseDateArr = this.$refs['courseDate']['courseDateArr'];
-
-        this.api({
-          url: "/course-student/pickCourse",
-          method: "post",
-          data: this.tempCourse
-        }).then(() => {
-          this.getList();
-        this.$emit('changeTab',event.target,'0');
-        this.dialogFormVisible = false
-      });
-      }
     }
   }
 </script>
