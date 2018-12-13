@@ -42,7 +42,8 @@ export default {
     needSelfMaterial: '需要自备教具',
     yes: '是',
     no: '否',
-    isPay: '支付情况'
+    isPay: '支付情况',
+    courseArea: '课程地点'
   },
   student:{
     selectedCourse: '已选课程',
@@ -72,7 +73,12 @@ export default {
     course: '课程',
     courseStudent: '学生选课',
     courseFinance: '财务管理',
-    courseNotice: '结果公示'
+    courseNotice: '结果公示',
+    userPower: '用户权限',
+    userList: '用户管理',
+    permissionList: '权限管理',
+    system: '系统管理',
+    period: '选课周期'
   },
   navbar: {
     home: '首页',
