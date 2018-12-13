@@ -39,6 +39,13 @@ public interface CourseTeacherService {
      * @return
      */
     JSONObject updateCourse(JSONObject jsonObject);
+    /**
+     * 更新4sys
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject updateCourse4Sys(JSONObject jsonObject);
 
     /**
      * 更新文章
