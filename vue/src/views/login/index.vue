@@ -41,7 +41,15 @@
         <span>{{ $t('login.password') }} : 123456</span>
       </div>
       <div class="tips">
+        <span style="margin-right:28px;">{{ $t('login.username') }} : finance</span>
+        <span>{{ $t('login.password') }} : 123456</span>
+      </div>
+      <div class="tips">
         <span style="margin-right:18px;">{{ $t('login.username') }} : xiaoming</span>
+        <span>{{ $t('login.password') }} : 123456</span>
+      </div>
+      <div class="tips">
+        <span style="margin-right:21px;">{{ $t('login.username') }} : xiaofang</span>
         <span>{{ $t('login.password') }} : 123456</span>
       </div>
     </el-form>
