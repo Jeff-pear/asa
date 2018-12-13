@@ -158,6 +158,9 @@ public class CommonUtil {
                 if (StringTools.isNullOrEmpty(val)) {
                     missCol += column + "  ";
                 }
+                if(jsonObject.get(column) instanceof List && ((List) val).size()==0){
+                    missCol += column + "  ";
+                }
             }
             if (!StringTools.isNullOrEmpty(missCol)) {
                 jsonObject.clear();
