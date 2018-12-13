@@ -290,6 +290,9 @@
         <if test="content !='' and content !=null">
             AND t.content like concat(concat('%',#{content}),'%')
         </if>
+        <if test="statusSuccess !='' and statusSuccess !=null">
+            AND t.status = 'success'
+        </if>
         order by s.course_id asc
     </select>
     <select id="countCourseResult4Finance" resultType="Integer">
