@@ -21,8 +21,12 @@
       <el-table-column align="center" prop="nicknameTeacher" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="content" :label="$t('teacher.courseName')" style="width: 60px;">
       </el-table-column>
-      <el-table-column align="center" prop="nicknameStu" :label="$t('student.name')" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="grade" :label="$t('teacher.grade')" style="width: 60px;">
+      <el-table-column align="center" prop="nicknameStu" :label="$t('student.name')" style="width: 60px;">
+        <template slot-scope="scope">
+          {{scope.row.nicknameStu}}({{scope.row.nickNameCnStu}})
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="grade" :label="$t('teacher.grade')" style="width: 40px;">
         <template slot-scope="scope">
           {{formatGrade(scope.row.grade)}}
         </template>
@@ -44,17 +48,18 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="financeIsPay" :label="$t('teacher.isPay')" style="width: 100px;">
+      <el-table-column align="center" prop="financeIsPay" :label="$t('teacher.isPay')" style="width: 100px;"
+                       :filters="[{ text: '未支付', value: '0' }, { text: '已支付', value: '1' }]"
+                       :filter-method="filterTag"
+                       filter-placement="bottom-end">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-
-            <el-radio v-model="scope.row.financeIsPay" label="0" size="mini">否</el-radio>
             <el-radio v-model="scope.row.financeIsPay" label="1" size="mini">是</el-radio>
-
+            <el-radio v-model="scope.row.financeIsPay" label="0" size="mini">否</el-radio>
           </template>
           <span v-else>
-            <label v-if="scope.row.financeIsPay == '0'">未支付</label>
-            <label v-if="scope.row.financeIsPay == '1'">已支付</label>
+            <el-tag v-if="scope.row.financeIsPay == '0'" type="danger">未支付</el-tag>
+            <el-tag v-if="scope.row.financeIsPay == '1'" type="success">已支付</el-tag>
           </span>
         </template>
       </el-table-column>
@@ -128,6 +133,9 @@
       this.getList();
     },
     methods: {
+      filterTag(value, row) {
+        return row.financeIsPay === value;
+      },
       tableRowClassName({row, rowIndex}) {
         return 'common-row';
       },
@@ -218,8 +226,6 @@
           this.listLoading = false;
           this.list = data.list;
           this.totalCount = data.totalCount;
-
-
           let contactDot = 0;
           this.list.forEach((item,index) => {
             item.index = index;
