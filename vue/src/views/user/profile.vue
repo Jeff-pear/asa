@@ -1,6 +1,6 @@
 <template>
   <div class="profile-container" >
-    <el-form class="small-space" ref="profileForm" :model="tempProfile" :rules="profileRules" label-position="left" label-width="140px"
+    <el-form class="small-space" status-icon ref="profileForm" :model="tempProfile" :rules="profileRules" label-position="left" label-width="140px"
              style='width: 450px; margin-left:50px;'>
       <el-form-item :label="$t('profile.oldPwd')" prop="password">
         <el-input type="password" @keyup.enter.native="handleRegister" v-model="tempProfile.password"
@@ -29,9 +29,9 @@
 
         var validatePass2 = (rule, value, callback) => {
           if (value === '') {
-            callback(new Error('请再次输入密码'));
+            callback(new Error(this.$t('validation.passwordConfirmRequire')));
           } else if (value !== this.tempProfile.newPassword) {
-            callback(new Error('两次输入密码不一致!'));
+            callback(new Error(this.$t('validation.differentFor2Times')));
           } else {
             callback();
           }
@@ -45,10 +45,10 @@
             passwordConfirm: ""
           },
           profileRules: {
-            password: [{required: true, trigger: 'blur', message: "请输入密码"}],
-            newPassword: [{required: true, trigger: 'blur', message: "请输入新密码"}],
+            password: [{required: true, trigger: 'blur', message: this.$t('validation.passwordRequire')}],
+            newPassword: [{required: true, trigger: 'blur', message: this.$t('validation.passwordRequire')}],
             passwordConfirm: [
-              {required: true, trigger: 'blur', message: "请输入密码"},{ validator: validatePass2, trigger: 'blur' }
+              {required: true, trigger: 'blur', message: this.$t('validation.passwordConfirmRequire')},{ validator: validatePass2, trigger: 'blur' }
             ],
 
           },
