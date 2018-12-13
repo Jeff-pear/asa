@@ -117,6 +117,14 @@ public class CourseTeacherController {
         return courseTeacherService.updateFinalTuition(requestJson);
     }
 
+    @RequiresPermissions("course-teacher:update")
+    @PostMapping("/updateCourseArea")
+    public JSONObject updateCourseArea(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id, courseArea");
+        return courseTeacherService.updateFinalTuition(requestJson);
+    }
+
+
     /**
      * 删除课程
      *
