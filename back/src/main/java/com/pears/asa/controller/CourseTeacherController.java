@@ -78,6 +78,20 @@ public class CourseTeacherController {
         return courseTeacherService.listCourseResult4Finance(CommonUtil.request2Json(request));
     }
 
+    /**
+     * 查询notice result
+     *
+     * @param request
+     * @return
+     */
+    @RequiresPermissions("course-notice:list")
+    @GetMapping("/listCourseResult4Notice")
+    public JSONObject listCourseResult4Notice(HttpServletRequest request) {
+        JSONObject j = CommonUtil.request2Json(request);
+        j.put("statusSuccess","true");
+        return courseTeacherService.listCourseResult4Finance(j);
+    }
+
    /**
      * 新增课程
      *
