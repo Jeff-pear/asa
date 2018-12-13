@@ -237,6 +237,9 @@
         <if test="recommendBrand !='' and recommendBrand !=null">
             , recommend_brand = #{recommendBrand}
         </if>
+        <if test="statusSuccess !='' and statusSuccess !=null">
+            , status = #{statusSuccess}
+        </if>
         WHERE id = #{id}
     </update>
 
@@ -289,6 +292,9 @@
         where s.delete_status = '1' and t.delete_status = '1'
         <if test="content !='' and content !=null">
             AND t.content like concat(concat('%',#{content}),'%')
+        </if>
+        <if test="statusPublish !='' and statusPublish !=null">
+            AND t.status = 'publish'
         </if>
         <if test="statusSuccess !='' and statusSuccess !=null">
             AND t.status = 'success'
