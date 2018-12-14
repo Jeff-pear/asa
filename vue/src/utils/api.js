@@ -22,6 +22,11 @@ const downloadUrl = url => {
 
 // request拦截器
 service.interceptors.request.use(config => {
+  if(store.getters.language == '' || store.getters.language =='en'){
+    config.headers.common['Accept-Language'] = 'en-US'
+  }else{
+    config.headers.common['Accept-Language'] = 'zh-CN'
+  }
   return config
 }, error => {
   // Do something with request error
@@ -41,6 +46,7 @@ service.interceptors.response.use(
     response.headers['content-type'] = 'text/json'
     return response;
   }
+
     const res = response.data;
     if (res.returnCode == '1000') {
       return res;
