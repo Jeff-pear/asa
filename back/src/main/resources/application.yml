@@ -17,6 +17,7 @@ spring:
   quartz:
       wait-for-jobs-to-complete-on-shutdown: true
       job-store-type: memory
-
+  messages:
+      basename: i18n/messages
 mybatis:
    mapperLocations: classpath:/mapper/*.xml
