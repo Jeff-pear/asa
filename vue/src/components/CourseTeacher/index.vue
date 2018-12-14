@@ -26,7 +26,7 @@
 
     <el-table ref="teacherTable" :data="list" height="530" v-loading.body="listLoading" border fit
               highlight-current-row
-              :row-key="getRowKeys">
+              :row-key="getRowKeys" style="width: 100%">
       <el-table-column align="center" :label="$t('table.id')" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
@@ -45,7 +45,7 @@
         </template>
       </el-table-column>
       <!--课程名-->
-      <el-table-column align="center" prop="content" :label="$t('teacher.courseName')" style="width: 60px;">
+      <el-table-column align="center" prop="content" :label="$t('teacher.courseName')" >
         <template slot-scope="scope">
           {{scope.row.content}}
           <el-popover class="col-el-popover"
@@ -148,10 +148,11 @@
       </el-table-column>
       <!--教师-->
       <el-table-column align="center" prop="nickname" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="status" :label="$t('table.status')" style="width: 60px;">
+      <el-table-column align="center" prop="status" :label="$t('table.status')" width="90">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status == 'draft'" type="danger">{{$t('table.draft')}}</el-tag>
           <el-tag v-if="scope.row.status == 'publish'" type="success">{{$t('table.publish')}}</el-tag>
+          <el-tag v-if="scope.row.status == 'success'" type="primary">{{$t('table.success')}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" :label="$t('table.manage')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-teacher:update') && mySelfList == 'true' && getPeriod('canTeacher') )">
@@ -246,43 +247,45 @@
 
           </div>
           <div v-if="tempCourse.stepActive==3">
-            <el-row>
-              {{$t('teacher.courseNameNoDetail') }}: {{tempCourse.content}}
-            </el-row>
+            <div class="stepActive3">
+              <el-row class="stepActive3Row">
+                <span>{{$t('teacher.courseNameNoDetail') }}:</span> {{tempCourse.content}}
+              </el-row>
 
-            <el-row>
-              {{$t('teacher.teacherName') }}: {{finalCourse.teacherName}}
-            </el-row>
+              <el-row class="stepActive3Row">
+                <span>{{$t('teacher.teacherName') }}:</span> {{finalCourse.teacherName}}
+              </el-row>
 
-            <el-row>
-              {{$t('teacher.studentNum') }}: {{tempCourse.capacity}}
-            </el-row>
+              <el-row class="stepActive3Row">
+                <span>{{$t('teacher.studentNum') }}:</span> {{tempCourse.capacity}}
+              </el-row>
 
-            <el-row>
-              {{$t('teacher.courseDate') }}: {{tempCourse.capacity}}
-            </el-row>
+              <el-row class="stepActive3Row">
+                <span>{{$t('teacher.courseDate') }}:</span>{{this.convertCourseDate(tempCourse.courseDate)}}
+              </el-row>
 
-            <el-row>
-              {{$t('teacher.grade') }}: {{tempCourse.grade}}
-            </el-row>
+              <el-row class="stepActive3Row">
+                <span>{{$t('teacher.grade') }}:</span> {{this.formatGrade(tempCourse.grade)}}
+              </el-row>
 
-            <el-row>
-              {{$t('teacher.courseType') }}: {{tempCourse.teacherType}}
-            </el-row>
+              <el-row class="stepActive3Row">
+                <span>{{$t('teacher.courseType') }}:</span> {{this.convertCourseType(tempCourse.teacherType)}}
+              </el-row>
 
-            <el-row>
-              {{$t('teacher.tuition') }}:
-              <span v-if="tempCourse.tuitionType == 'free'">{{$t('teacher.tuitionFree') }}</span>
-              <span v-if="tempCourse.tuitionType == 'fee'">{{tempCourse.tuition}} {{tempCourse.tuitionSubType}} </span>
-            </el-row>
+              <el-row class="stepActive3Row">
+                <span>{{$t('teacher.tuition') }}:</span>
+                <label v-if="tempCourse.tuitionType == 'free'">{{$t('teacher.tuitionFree') }}</label>
+                <label v-if="tempCourse.tuitionType == 'fee'">{{tempCourse.tuition}} (RMB) {{this.convertTuitionSubType(tempCourse.tuitionSubType)}} </label>
+              </el-row>
 
-            <el-row>
-              {{$t('teacher.brief') }}: {{tempCourse.brief}}
-            </el-row>
+              <el-row class="stepActive3Row">
+                <span>{{$t('teacher.brief') }}:</span> {{tempCourse.brief}}
+              </el-row>
 
-            <el-row>
-              {{$t('teacher.attachment') }}: {{tempCourse.attachment}}
-            </el-row>
+              <el-row class="stepActive3Row">
+                <span>{{$t('teacher.attachment') }}:</span> <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(tempCourse)">{{tempCourse.originFileName}}</a>
+              </el-row>
+            </div>
           </div>
         </el-form>
       <div slot="footer" class="dialog-footer">
@@ -311,7 +314,6 @@
       SliderWithLabels,TuitionCom,CourseType,TeacherName,CourseDate,FileUploader
     },
     data() {
-
       return {
         mySelfList: this.$props['showMyBtn'],
         checkAll: false,
@@ -482,12 +484,68 @@
         this.listQuery.pageNum = 1;
         this.getList();
       },
-
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-          return v[j];
-      }))
-    },
+      convertTuitionSubType(type){
+        let result = '';
+        switch (type){
+          case '1':
+            result = this.$t('teacher.tuitionOption1');
+            break;
+          case '2':
+            result = this.$t('teacher.tuitionOption2');
+            break;
+          case '3':
+            result = this.$t('teacher.tuitionOption3');
+            break;
+        }
+        return result;
+      },
+      convertCourseType(type){
+        let result = '';
+        switch (type){
+          case '0':
+            result = this.$t('teacher.chineseTeacher');
+            break;
+          case '1':
+            result = this.$t('teacher.foreignTeacher');
+            break;
+          case '2':
+            result = this.$t('teacher.externalTeacher');
+            break;
+        }
+        return result;
+      },
+      convertCourseDate(num){
+        let result = '';
+        switch (num){
+          case 1:
+            result = this.$t('week.tue');
+            break;
+          case 2:
+            result = this.$t('week.wed');
+            break;
+          case 3:
+            result = this.$t('week.tue')+','+this.$t('week.wed');
+            break;
+          case 4:
+            result = this.$t('week.thu');
+            break;
+          case 5:
+            result = this.$t('week.tue')+','+this.$t('week.thu');
+            break;
+          case 6:
+            result = this.$t('week.wed')+','+this.$t('week.thu');
+            break;
+          case 7:
+            result = this.$t('week.tue')+','+this.$t('week.wed')+','+this.$t('week.thu');
+            break;
+        }
+        return result;
+      },
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => {
+            return v[j];
+        }))
+      },
       handleDownload() {
         this.downloadLoading = true;
         if (!this.hasPerm('course-teacher:list')) {
@@ -786,7 +844,7 @@
     }
   }
 </script>
-<style scoped>
+<style lang="scss" scoped>
   .event-active {
     font-weight: bold;
     color: #78CB5B;
@@ -805,5 +863,13 @@
   }
   .teacherCourseDialog .el-form-item__content .el-select, .teacherCourseDialog .el-form-item__content .el-input-number{
     width:102% !important;
+  }
+  .stepActive3{
+    span{
+      width: 200px;
+    }
+  }
+  .stepActive3Row{
+    display: flex;
   }
 </style>
