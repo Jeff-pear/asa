@@ -135,7 +135,8 @@ export default {
     delete: '删除',
     deleteConfirm: '确定删除此课程吗？',
     cancel: '取 消',
-    confirm: '确 定'
+    confirm: '确 定',
+    success: '已公示'
   },
   validation: {
     passwordRequire: '请输入密码',
