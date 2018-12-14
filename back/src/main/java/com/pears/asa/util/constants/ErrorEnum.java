@@ -1,5 +1,7 @@
 package com.pears.asa.util.constants;
 
+import com.pears.asa.util.CommonUtil;
+
 /**
  * @author: pears
  * @date: 2017/10/24 10:16
@@ -8,26 +10,26 @@ public enum ErrorEnum {
     /*
      * 错误信息
      * */
-    E_400("400", "请求处理异常，请稍后再试"),
-    E_500("500", "请求方式有误,请检查 GET/POST"),
-    E_501("501", "请求路径不存在"),
-    E_502("502", "权限不足"),
-    E_10008("10008", "角色删除失败,尚有用户属于此角色"),
-    E_10009("10009", "账户已存在"),
+    E_400("400", CommonUtil.getI18NMessage("validation.requestDisposalException",null)),
+    E_500("500", CommonUtil.getI18NMessage("validation.requestMethodException",null)),
+    E_501("501", CommonUtil.getI18NMessage("validation.requestPathNotExist",null)),
+    E_502("502", CommonUtil.getI18NMessage("validation.noAuth",null)),
+    E_10008("10008", CommonUtil.getI18NMessage("validation.failWhenDelRole",null)),
+    E_10009("10009", CommonUtil.getI18NMessage("validation.accountHasExist",null)),
 
-    E_20011("20011", "登陆已过期,请重新登陆"),
+    E_20011("20011", CommonUtil.getI18NMessage("validation.sessionInvalid",null)),
 
-    E_90003("90003", "缺少必填参数"),
+    E_90003("90003", CommonUtil.getI18NMessage("validation.missingParams",null)),
 
-    E_00001("00001", "邮箱已存在"),
+    E_00001("00001", CommonUtil.getI18NMessage("validation.emailExist",null)),
 
-    E_00002("00002", "用户名已存在"),
+    E_00002("00002", CommonUtil.getI18NMessage("validation.userNameExist",null)),
 
-    E_00003("00003", "邮件发送失败，请联系管理员！"),
+    E_00003("00003", CommonUtil.getI18NMessage("validation.failSendEmail",null)),
 
-    E_10004("00004", "选中的课程日期已有课程，请修改"),
+    E_10004("00004", CommonUtil.getI18NMessage("validation.selectedDateHasCourse",null)),
 
-    E_10005("00005", "已有学生选中此课程，请联系管理员删除"),
+    E_10005("00005", CommonUtil.getI18NMessage("validation.hasStudentSelected",null)),
 
     E_10006("00006", "");
 
