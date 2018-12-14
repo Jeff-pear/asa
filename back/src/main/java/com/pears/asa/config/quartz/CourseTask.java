@@ -1,6 +1,7 @@
 package com.pears.asa.config.quartz;
 
 import com.alibaba.fastjson.JSONObject;
+import com.pears.asa.config.properties.SystemConfig;
 import com.pears.asa.dao.CourseStudentDao;
 import com.pears.asa.dao.SysDao;
 import com.pears.asa.service.CourseTeacherService;
@@ -27,6 +28,8 @@ public class CourseTask extends QuartzJobBean{
     private CourseStudentDao courseStudentDao;
     @Autowired
     private SysDao sysDao;
+    @Autowired
+    SystemConfig systemConfig;
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -49,7 +52,7 @@ public class CourseTask extends QuartzJobBean{
                     j.put("financeIsPay","1");
                     int num = courseStudentDao.countStudentDetail4Teacher(j);
 
-                    if(num>=1){
+                    if(num>= Integer.parseInt(systemConfig.getCourseMminimumStudent())){
                         set.add(i.getString("courseId"));
                     }
                 });
