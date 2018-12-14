@@ -104,25 +104,43 @@
 
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="finalTuition" label="最终费用(admin可见" v-if="getGroupTag()=='-1'" style="width: 150px;">
+      <el-table-column align="center" prop="finalTuition" label="最终费用(admin可见" v-if="getGroupTag()=='-1'" width="180">
         <template slot-scope="scope">
           <el-tooltip :content="scope.row.finalTuition" placement="top" effect="light">
-            <el-input v-model="scope.row.finalTuition" class="edit-input" size="mini">
-              <el-button type="success" icon="el-icon-check" size="small" circle slot="append" @click="updateFinalTuition(scope.row)"></el-button>
+            <el-input style="width:100px;" v-model="scope.row.finalTuition" class="edit-input" size="mini">
+
             </el-input>
+
           </el-tooltip>
+          <el-button plain type="info"  icon="el-icon-check" size="mini" @click="updateFinalTuition(scope.row)"></el-button>
         </template>
       </el-table-column>
       <!--课程地点-->
       <el-table-column align="center" prop="courseArea" :label="$t('teacher.courseArea')" v-if="getGroupTag()!='-1'" style="width: 150px;">
       </el-table-column>
-      <el-table-column align="center" prop="courseArea" label="课程地点(admin可见" v-if="getGroupTag()=='-1'" style="width: 150px;">
+      <el-table-column align="center" prop="courseArea" label="课程地点(admin可见" v-if="getGroupTag()=='-1'" width="200">
         <template slot-scope="scope">
           <el-tooltip :content="scope.row.courseArea" placement="top" effect="light">
-            <el-input v-model="scope.row.courseArea" class="edit-input" size="mini">
-              <el-button type="success" icon="el-icon-check" size="small" circle slot="append" @click="updateCourseArea(scope.row)"></el-button>
-            </el-input>
+            <el-select style="width:100px;"
+              v-model="scope.row.courseArea"
+              size="mini"
+              :readonly="courseAreaReadOnly"
+              placeholder="请选择">
+              <el-option
+                v-for="item in courseAreaOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+
+            </el-select>
+            <!--<el-input v-model="scope.row.courseArea" class="edit-input" size="mini">-->
+              <!--<el-button type="success" icon="el-icon-check" size="small" circle slot="append" @click="updateCourseArea(scope.row)"></el-button>-->
+              <!---->
+
+            <!--</el-input>-->
           </el-tooltip>
+          <el-button plain type="info" icon="el-icon-check" size="mini" @click="updateCourseArea(scope.row)"></el-button>
         </template>
       </el-table-column>
       <!--课程时间-->
@@ -317,6 +335,7 @@
       return {
         mySelfList: this.$props['showMyBtn'],
         checkAll: false,
+        courseAreaReadOnly: true,
         isIndeterminate: true,
         downloadLoading: false,
         attachBusinessType: 'course-teacher',
@@ -326,6 +345,16 @@
         selectStudentData:[],//表格的数据
         excelList: [],
         courseDateOptionsInside : [{label: 'tue',disabled: false}, {label:'wed',disabled: false}, {label:'thu',disabled: false}],
+        courseAreaOptions: [{
+          value: '1楼302',
+          label: '1楼302'
+        }, {
+          value: '2楼大会议室',
+          label: '2楼大会议室'
+        }, {
+          value: '3楼厕所',
+          label: '3楼厕所'
+        }],
         options: [{
           value: '0',
           label: 'KG'
