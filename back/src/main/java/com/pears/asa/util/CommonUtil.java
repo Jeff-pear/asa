@@ -4,18 +4,23 @@ import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.config.exception.CommonJsonException;
 import com.pears.asa.util.constants.Constants;
 import com.pears.asa.util.constants.ErrorEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.List;
-
+import java.util.Locale;
 /**
  * @author: pears
  * @description: 本后台接口系统常用的json工具类
  * @date: 2017/10/24 10:12
  */
 public class CommonUtil {
-
+    private static Logger logger = LoggerFactory.getLogger(CommonUtil.class);
     /**
      * 返回一个returnData为空对象的成功消息的json
      *
@@ -162,6 +167,8 @@ public class CommonUtil {
                     missCol += column + "  ";
                 }
             }
+            String test = getI18NMessage("operation.success",null);
+
             if (!StringTools.isNullOrEmpty(missCol)) {
                 jsonObject.clear();
                 jsonObject.put("returnCode", ErrorEnum.E_90003.getErrorCode());
@@ -199,4 +206,28 @@ public class CommonUtil {
     public static void fillPageParam(final JSONObject paramObject) {
         fillPageParam(paramObject, 10);
     }
+
+    /**
+     * 国际化
+     * 注：通过@Autowired private MessageSource messageSource无法获取
+     *
+     * @param result
+     * @return
+     */
+    public static String getI18NMessage(String result, Object[] params) {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setCacheSeconds(-1);
+        messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
+        messageSource.setBasenames("/i18n/messages");
+
+        String message = "";
+        try {
+            Locale locale = LocaleContextHolder.getLocale();
+            message = messageSource.getMessage(result, params, locale);
+        } catch (Exception e) {
+            logger.error("i18n parse message error! ", e);
+        }
+        return message;
+    }
+
 }
