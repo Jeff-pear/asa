@@ -135,7 +135,7 @@ public class SysServiceImpl implements SysService {
             return CommonUtil.successJson();
         }else{
             ErrorEnum err = ErrorEnum.E_10006;
-            err.setErrorMsg("文件删除失败！");
+            err.setErrorMsg(CommonUtil.getI18NMessage("validation.failDeleteFile",null));
             return CommonUtil.errorJson(err);
         }
     }
