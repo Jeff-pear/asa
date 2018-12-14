@@ -137,7 +137,8 @@ export default {
     manage: 'Manage',
     deleteConfirm: 'To confirm the deletion ?',
     cancel: 'Cancel',
-    confirm: 'Confirm'
+    confirm: 'Confirm',
+    success: 'Notice'
   },
   validation: {
     passwordRequire: 'Please enter the password',
