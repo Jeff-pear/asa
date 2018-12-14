@@ -124,7 +124,7 @@ public class SysController {
             }
         }
         ErrorEnum err = ErrorEnum.E_10006;
-        err.setErrorMsg("文件未找到！");
+        err.setErrorMsg(CommonUtil.getI18NMessage("validation.noFile",null));
         return CommonUtil.errorJson(err);
     }
 
@@ -137,7 +137,7 @@ public class SysController {
     @PostMapping("/uploadFile")
     public JSONObject uploadFile(MultipartFile file) {
         if (Objects.isNull(file) || file.isEmpty()) {
-            logger.error("文件为空");
+            logger.error(CommonUtil.getI18NMessage("validation.fileIsNull",null));
         }
         try {
             byte[] bytes = file.getBytes();
@@ -201,11 +201,10 @@ public class SysController {
             File file = new File(path.toString());
             if(file.exists()&&file.isFile())
                 file.delete();
-
             return CommonUtil.successJson();
         }else{
             ErrorEnum err = ErrorEnum.E_10006;
-            err.setErrorMsg("文件删除失败！");
+            err.setErrorMsg(CommonUtil.getI18NMessage("validation.failDeleteFile",null));
             return CommonUtil.errorJson(err);
         }
 
