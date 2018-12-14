@@ -167,12 +167,11 @@ public class CommonUtil {
                     missCol += column + "  ";
                 }
             }
-            String test = getI18NMessage("operation.success",null);
 
             if (!StringTools.isNullOrEmpty(missCol)) {
                 jsonObject.clear();
                 jsonObject.put("returnCode", ErrorEnum.E_90003.getErrorCode());
-                jsonObject.put("returnMsg", "缺少必填参数:" + missCol.trim());
+                jsonObject.put("returnMsg", getI18NMessage("validation.missingParams",null)+":" + missCol.trim());
                 jsonObject.put("returnData", new JSONObject());
                 throw new CommonJsonException(jsonObject);
             }
