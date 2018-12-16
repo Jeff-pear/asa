@@ -11,9 +11,9 @@ spring:
     protocol: smtp
   datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3307/asa_db?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+      url: jdbc:mysql://172.16.240.254:3307/asa_db?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
       username: root
-      password: root
+      password: ASA_root
   quartz:
       wait-for-jobs-to-complete-on-shutdown: true
       job-store-type: memory
