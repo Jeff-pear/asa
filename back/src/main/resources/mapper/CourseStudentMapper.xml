@@ -75,6 +75,8 @@
         u.course_area courseArea,
         u.tuition_type tuitionType,
         u.final_tuition finalTuition,
+        u.need_training_aid needTrainingAid,
+        u.phone,u.price,u.recommend_brand recommendBrand,
         sys_attach.origin_fileName originFileName,
         sys_attach.id attachId,
         sys_attach2.origin_fileName originFileNameStu,

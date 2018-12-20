@@ -58,6 +58,16 @@
       <!--</el-table-column>-->
       <el-table-column align="center" prop="finalTuition" :label="$t('teacher.tuition')" style="width: 60px;">
       </el-table-column>
+      <el-table-column align="center" prop="needTrainingAid" :label="$t('teacher.needSelfMaterial')" style="width: 60px;">
+        <template slot-scope="scope" v-if="scope.row.needTrainingAid!=null">
+          &nbsp;
+          <span v-if="scope.row.needTrainingAid == '1'">{{$t('teacher.yes')}}</span>
+          <span v-if="scope.row.needTrainingAid == '2'">{{$t('teacher.no')}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="price" :label="$t('teacher.materialPrice')" style="width: 60px;">
+
+      </el-table-column>
       <el-table-column align="center" prop="courseDateStudent" :label="$t('teacher.courseDate')" v-if="isMySelect == 'true' " style="width: 60px;">
         <template slot-scope="scope" v-if="scope.row.courseDateStudent!=null">
           &nbsp;

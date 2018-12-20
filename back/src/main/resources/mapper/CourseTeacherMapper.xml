@@ -252,6 +252,9 @@
         <if test="courseArea !='' and courseArea !=null">
             , course_area = #{courseArea}
         </if>
+        <if test="comments !='' and comments !=null">
+            , comments = #{comments}
+        </if>
         WHERE id = #{id}
     </update>
 

@@ -7,7 +7,7 @@ export function hasPermission(permission) {
 
 export function getGroupTag() {
   let groupTag = store.getters.groupTag;
-  return groupTag;
+  return groupTag==undefined ? -1: groupTag;
 }
 
 export function getPeriod(periodType) {

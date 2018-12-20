@@ -53,7 +53,11 @@
   }
 </script>
 <style lang="scss">
-
+  .el-menu--collapse{
+.app-title{
+  height: 50px;
+}
+  }
   .app-title{
     color: #188EA7;
     font-size: larger;

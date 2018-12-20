@@ -41,6 +41,7 @@ export default {
     price: 'Price',
     recommendBrand: 'Recommend Brand',
     needSelfMaterial: 'Student should prepare their own learning materials',
+    materialPrice: 'materials price ¥',
     yes: 'Yes',
     no: 'No',
     isPay: 'Has Pay',
@@ -138,7 +139,7 @@ export default {
     deleteConfirm: 'To confirm the deletion ?',
     cancel: 'Cancel',
     confirm: 'Confirm',
-    success: 'Notice'
+    success: 'Done'
   },
   validation: {
     passwordRequire: 'Please enter the password',

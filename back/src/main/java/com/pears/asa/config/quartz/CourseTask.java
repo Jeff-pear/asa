@@ -31,7 +31,7 @@ public class CourseTask extends QuartzJobBean{
     @Autowired
     SystemConfig systemConfig;
     @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+    public void executeInternal(JobExecutionContext context) throws JobExecutionException {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date startDate = new Date();
         logger.info("------------Execute cron task start !!!------------" + sdf.format(startDate));

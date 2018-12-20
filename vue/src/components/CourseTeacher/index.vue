@@ -143,6 +143,18 @@
           <el-button plain type="info" icon="el-icon-check" size="mini" @click="updateCourseArea(scope.row)"></el-button>
         </template>
       </el-table-column>
+      <!--备注-->
+      <el-table-column align="center" prop="comments" label="备注(admin可见" v-if="getGroupTag()=='-1'" width="200">
+        <template slot-scope="scope">
+          <el-tooltip :content="scope.row.comments" placement="top" effect="light">
+            <el-input style="width:100px;" v-model="scope.row.comments" class="edit-input" size="mini">
+
+            </el-input>
+          </el-tooltip>
+          <el-button plain type="info" icon="el-icon-check" size="mini" @click="updateCourseArea(scope.row)"></el-button>
+        </template>
+      </el-table-column>
+
       <!--课程时间-->
       <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" style="width: 60px;">
         <template slot-scope="scope">

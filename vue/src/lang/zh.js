@@ -40,6 +40,7 @@ export default {
     price: '金额',
     recommendBrand: '推荐品牌',
     needSelfMaterial: '需要自备教具',
+    materialPrice: '教具金额¥',
     yes: '是',
     no: '否',
     isPay: '支付情况',
