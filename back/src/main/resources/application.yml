@@ -3,7 +3,8 @@ prop:
 spring:
   http:
     multipart:
-      max-file-size: 3MB
+      maxFileSize: 100Mb
+      maxRequestSize: 100Mb
   mail:
     default-encoding: UTF-8
     host: smtp.263.net

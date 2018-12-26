@@ -61,6 +61,13 @@ public interface CourseTeacherService {
      * @return
      */
     JSONObject deleteCourse(JSONObject jsonObject);
+    /**
+     * 更新文章
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject disabledCourse(JSONObject jsonObject);
 
     /**
      * 列表

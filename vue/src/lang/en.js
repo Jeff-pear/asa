@@ -68,6 +68,7 @@ export default {
     switchLanSuccess: 'Switch Language Success',
     uploadSuccess: 'Upload Successfully!',
     downloadSuccess: 'Download Successfully!',
+    operationSuccess: 'Operation Successfully',
     restrictionUpload: 'The current restriction is to select one file. Please delete the previous attachment first.'
   },
   route: {

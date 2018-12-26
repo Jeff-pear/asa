@@ -156,7 +156,7 @@
           data: {id:row.id,financeIsPay:row.financeIsPay}
         }).then(() => {
           this.getList();
-          this.$message.success('操作成功！');
+          this.$message.success(this.$t('common.operationSuccess'));
         }).catch(v=>{
           this.getList();
           console.warn(v);

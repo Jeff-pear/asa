@@ -4,7 +4,7 @@
       <el-tab-pane :label="$t('teacher.listCourse') " name="first">
         <teacher-table listUrl="listCourse" showMyBtn="false" ref="tabList.courseList"></teacher-table>
       </el-tab-pane>
-      <el-tab-pane :label="$t('teacher.myCourse') " name="second">
+      <el-tab-pane :label="$t('teacher.myCourse') " name="second" v-if="getGroupTag()!='-1'">
         <teacher-table listUrl="myListCourse" showMyBtn="true" ref="tabList.mySelect"></teacher-table>
       </el-tab-pane>
     </el-tabs>

@@ -31,8 +31,10 @@ public enum ErrorEnum {
 
     E_10005("00005", CommonUtil.getI18NMessage("validation.hasStudentSelected",null)),
 
-    E_10006("00006", "");
+    E_10006("00006", ""),
 
+    E_10007("00007", CommonUtil.getI18NMessage("validation.studentNotSelectSameDate",null)),
+    E_1000A("0000A", CommonUtil.getI18NMessage("validation.fileIsBig",null));
     private String errorCode;
 
     private String errorMsg;

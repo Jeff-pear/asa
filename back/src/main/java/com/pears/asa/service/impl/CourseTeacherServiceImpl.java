@@ -229,6 +229,32 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 更新课程
+     *
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject disabledCourse(JSONObject jsonObject) {
+
+        JSONObject jo = new JSONObject();
+        jo.put("courseId",jsonObject.getInteger("id"));
+        List<JSONObject> sunList = courseStudentDao.listCourse(jo);
+        if(sunList.size()>0){
+            sunList.stream().forEach(i->{
+                JSONObject jov = new JSONObject();
+                jov.put("id",i.get("id"));
+                jov.put("deleteStatus","2");
+                jov.put("adminDisabled","1");
+                courseStudentDao.updateCourse(jov);
+            });
+        }
+        exeUpdateCourse(jsonObject);
+        return CommonUtil.successJson();
+    }
+
     @Override
     public JSONObject listAllTeacher(JSONObject jsonObject) {
         return CommonUtil.successJson(courseTeacherDao.listAllTeacher(jsonObject));

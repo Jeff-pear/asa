@@ -66,6 +66,7 @@ export default {
     switchLanSuccess: '切换语言成功',
     uploadSuccess: '上传成功',
     downloadSuccess: '下载成功',
+    operationSuccess: '操作成功',
     restrictionUpload: '当前限制选择 1 个文件，请先删除之前的附件'
 
   },

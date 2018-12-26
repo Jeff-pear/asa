@@ -72,7 +72,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="en"/>
             </span>
-            <el-input v-model="registerForm.nickname" autoComplete="on" :placeholder="$t('register.enName')"/>
+            <el-input v-model="registerForm.nickname" autoComplete="on" maxlength="255" :placeholder="$t('register.enName')"/>
           </el-form-item>
         </el-col>
         <el-col :span="12" >
@@ -80,7 +80,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="mail"/>
             </span>
-            <el-input v-model="registerForm.email" autoComplete="on" placeholder="Email"/>
+            <el-input v-model="registerForm.email" autoComplete="on" maxlength="255" placeholder="Email"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -91,7 +91,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="cn"/>
             </span>
-            <el-input v-model="registerForm.nicknameCn" autoComplete="on" :placeholder="$t('register.chName')"/>
+            <el-input v-model="registerForm.nicknameCn" autoComplete="on" maxlength="255" :placeholder="$t('register.chName')"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -99,7 +99,7 @@
             <span class="svg-container svg-container_register">
               <svg-icon icon-class="phone"/>
             </span>
-            <el-input v-model="registerForm.phone" autoComplete="on" :placeholder="$t('register.phone')"/>
+            <el-input v-model="registerForm.phone" autoComplete="on" maxlength="30" :placeholder="$t('register.phone')"/>
           </el-form-item>
         </el-col>
 
@@ -216,7 +216,6 @@
             { validator: validatePass2, trigger: 'blur' }
           ],
           age: [{required: true, trigger: 'blur', message: "请输入年龄"}],
-          phone: [{ type: 'number', message: this.$t('validation.phoneNeedNum')}],
           nickname: [{required: true, trigger: 'blur', message: this.$t('validation.nickNameRequire')}],
           //nicknameCn: [{required: true, trigger: 'blur', message: this.$t('validation.nickNameCnRequire')}],
           // class:[{required: true, trigger: 'blur', message: "请选择年级"}],

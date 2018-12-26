@@ -155,4 +155,21 @@ public class CourseTeacherController {
         json.put("deleteStatus","2");
         return courseTeacherService.deleteCourse(json);
     }
+
+    /**
+     * disabled课程
+     *
+     * @param requestJson
+     * @return
+     */
+    @PostMapping("/disabledCourse")
+    public JSONObject disabledCourse(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id");
+
+        JSONObject json = new JSONObject();
+        json.put("id",requestJson.getInteger("id"));
+        json.put("deleteStatus","2");
+        json.put("status","disabled");
+        return courseTeacherService.disabledCourse(json);
+    }
 }

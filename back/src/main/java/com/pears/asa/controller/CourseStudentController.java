@@ -5,6 +5,7 @@ import com.pears.asa.service.CourseStudentService;
 import com.pears.asa.service.CourseTeacherService;
 import com.pears.asa.service.SysService;
 import com.pears.asa.util.CommonUtil;
+import com.pears.asa.util.constants.ErrorEnum;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +63,14 @@ public class CourseStudentController {
     @PostMapping("/pickCourse")
     public JSONObject pickCourse(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "courseId,courseDate");
+        JSONObject j = new JSONObject();
+        j.put("courseDateStudentArr",requestJson.getJSONArray("courseDateArr"));
+        j.put("selectUserId",requestJson.get("selectUserId"));
+        JSONObject json = courseStudentService.listCourse(j);
+        Integer count = (Integer )json.getJSONObject("returnData").get("totalCount");
+        if(count>0){
+            return CommonUtil.errorJson(ErrorEnum.E_10007);
+        }
         return courseStudentService.selectCourse(requestJson);
     }
 

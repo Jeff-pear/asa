@@ -17,7 +17,7 @@
           <!--</el-select>-->
 
           <el-button class="filter-item" type="primary" icon="el-icon-search" style="margin-left: 10px;" size="small" v-if="hasPerm('course-teacher:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
-          <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add') && mySelfList == 'true'" @click="showCreate">{{ $t('table.add') }}</el-button>
+          <el-button class="filter-item" type="primary" icon="el-icon-edit" style="margin-left: 0px;" size="small"  v-if="hasPerm('course-teacher:add') " @click="showCreate">{{ $t('table.add') }}</el-button>
           <el-button :loading="downloadLoading" style="margin-left: 0px;" icon="el-icon-download" type="primary" size="small" v-if="hasPerm('course-teacher:list')" @click="handleDownload">{{ $t('excel.export') }} Excel</el-button>
           <!--<el-button class="filter-item" size="small" style="margin-left: 0px;" @click="resetForm('listQuery')">重置</el-button>-->
         </el-form-item>
@@ -126,12 +126,24 @@
               size="mini"
               :readonly="courseAreaReadOnly"
               placeholder="请选择">
-              <el-option
-                v-for="item in courseAreaOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
+              <!--<el-option-->
+                <!--v-for="item in courseAreaOptions"-->
+                <!--:key="item.value"-->
+                <!--:label="item.label"-->
+                <!--:value="item.value">-->
+              <!--</el-option>-->
+
+              <el-option-group
+                v-for="group in courseAreaOptions"
+                :key="group.label"
+                :label="group.label">
+                <el-option
+                  v-for="item in group.options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-option-group>
 
             </el-select>
             <!--<el-input v-model="scope.row.courseArea" class="edit-input" size="mini">-->
@@ -196,8 +208,10 @@
             <div style="text-align: center; margin: 0">
               <el-button type="primary" size="mini" @click="deleteCourse(scope.row.id)">{{$t('table.confirm')}}</el-button>
             </div>
-            <el-button type="danger" size="small" v-if="hasPerm('course-teacher:delete') " @click="deleteAlertVisible=true" slot="reference">{{$t('table.delete')}}</el-button>
+            <el-button type="danger" size="small" v-if="getGroupTag()!='-1' && hasPerm('course-teacher:delete') " @click="deleteAlertVisible=true" slot="reference">{{$t('table.delete')}}</el-button>
           </el-popover>
+
+          <el-button type="danger" size="small" icon="edit" @click="disabledCourse(scope.row.id)" v-if="getGroupTag()=='-1'">Disabled</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -313,7 +327,7 @@
               </el-row>
 
               <el-row class="stepActive3Row">
-                <span>{{$t('teacher.attachment') }}:</span> <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(tempCourse)">{{tempCourse.originFileName}}</a>
+                <span>{{$t('teacher.attachment') }}:</span> <a style="text-decoration: underline;color: #409EFF;" @click="downloadDialog(fileList[0].url)" v-if="fileList.size>0">{{fileList[0].name}}</a>
               </el-row>
             </div>
           </div>
@@ -336,6 +350,7 @@
   import CourseDate from './components/CourseDate';
   import FileUploader from './components/FileUploader';
   import store from '../../store'
+  import { courseAreaOptions,gradeDataArr } from './dataJson.js';
 
   export default {
     name: 'teacher-table',
@@ -357,47 +372,8 @@
         selectStudentData:[],//表格的数据
         excelList: [],
         courseDateOptionsInside : [{label: 'tue',disabled: false}, {label:'wed',disabled: false}, {label:'thu',disabled: false}],
-        courseAreaOptions: [{
-          value: '1楼302',
-          label: '1楼302'
-        }, {
-          value: '2楼大会议室',
-          label: '2楼大会议室'
-        }, {
-          value: '3楼厕所',
-          label: '3楼厕所'
-        }],
-        options: [{
-          value: '0',
-          label: 'KG'
-        }, {
-          value: '1',
-          label: 'G1'
-        }, {
-          value: '2',
-          label: 'G2'
-        }, {
-          value: '3',
-          label: 'G3'
-        }, {
-          value: '4',
-          label: 'G4'
-        }, {
-          value: '5',
-          label: 'G5'
-        }, {
-          value: '6',
-          label: 'G6'
-        }, {
-          value: '7',
-          label: 'G7'
-        }, {
-          value: '8',
-          label: 'G8'
-        }, {
-          value: '9',
-          label: 'G9'
-        }],
+        courseAreaOptions: courseAreaOptions,
+        options: gradeDataArr,
         listLoading: false,//数据加载等待动画
         listQuery: {
           pageNum: 1,//页码
@@ -475,6 +451,10 @@
       //download file
       downloadFromList(obj){
         this.previewUploadFile({url:obj.attachId});
+      },
+      //download file
+      downloadDialog(id){
+        this.previewUploadFile({url:id});
       },
       previewUploadFile(obj){
         this.api({
@@ -803,7 +783,7 @@
           data: row
         }).then(() => {
           this.getList();
-          this.$message.success('操作成功！');
+          this.$message.success(this.$t('common.operationSuccess'));
         }).catch(v=>{
             this.getList();
           console.warn(v);
@@ -816,7 +796,7 @@
           data: row
         }).then(() => {
           this.getList();
-        this.$message.success('操作成功！');
+        this.$message.success(this.$t('common.operationSuccess'));
       }).catch(v=>{
           this.getList();
           console.warn(v);
@@ -854,6 +834,19 @@
           this.getList();
           this.deleteAlertVisible = false;
       })
+      },
+      disabledCourse(tmpId) {
+        //disabled课程
+        this.api({
+          url: "/course-teacher/disabledCourse",
+          method: "post",
+          data: {id: tmpId}
+        }).then(() => {
+          this.$refs['searchBtn'].focus();
+          this.$message.success(this.$t('Disable 成功！！'));
+          this.getList();
+          this.deleteAlertVisible = false;
+        })
       },
       // 获取row的key值
       getRowKeys(row) {

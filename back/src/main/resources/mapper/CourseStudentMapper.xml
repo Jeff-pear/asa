@@ -54,6 +54,13 @@
         <if test="courseId !='' and courseId !=null">
             AND w.course_id = #{courseId}
         </if>
+        <if test="courseDateStudentArr !=null">
+            AND (
+            <foreach collection="courseDateStudentArr" item="item" index="index" separator=" or ">
+                FIND_IN_SET(#{item},w.course_date)
+            </foreach>
+            )
+        </if>
     </select>
 
     <select id="listCourse" resultType="com.alibaba.fastjson.JSONObject">
@@ -94,8 +101,17 @@
         <if test="courseId !='' and courseId !=null">
             AND w.course_id = #{courseId}
         </if>
+        <if test="courseDateStudentArr !=null">
+            AND (
+            <foreach collection="courseDateStudentArr" item="item" index="index" separator=" or ">
+                FIND_IN_SET(#{item},w.course_date)
+            </foreach>
+            )
+        </if>
               ORDER BY w.id DESC
-        LIMIT #{offSet}, #{pageRow}
+        <if test="offSet !='' and offSet !=null and pageRow !='' and pageRow !=null">
+            LIMIT #{offSet}, #{pageRow}
+        </if>
     </select>
 
     <update id="updateCourse" parameterType="com.alibaba.fastjson.JSONObject">
@@ -115,6 +131,9 @@
         </if>
         <if test="financeIsPay !='' and financeIsPay !=null">
             , finance_is_pay = #{financeIsPay}
+        </if>
+        <if test="adminDisabled !='' and adminDisabled !=null">
+            , admin_disabled = #{adminDisabled}
         </if>
         WHERE id = #{id}
     </update>

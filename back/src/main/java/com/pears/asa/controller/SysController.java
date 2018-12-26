@@ -139,6 +139,10 @@ public class SysController {
         if (Objects.isNull(file) || file.isEmpty()) {
             logger.error(CommonUtil.getI18NMessage("validation.fileIsNull",null));
         }
+        long len = file.getSize()/1024/1024;
+        if(len>5){
+            return CommonUtil.errorJson(ErrorEnum.E_1000A);
+        }
         try {
             byte[] bytes = file.getBytes();
 

@@ -21,14 +21,14 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="content" :label="$t('teacher.courseName')" style="width: 60px;">
-        <template v-if="scope.row.brief!=null" slot-scope="scope">
+        <template v-if="scope.row.content!=null" slot-scope="scope">
           {{scope.row.content}}
           <el-popover class="col-el-popover"
                       placement="top-start"
                       width="400"
                       trigger="click">
             {{scope.row.brief}}
-            <i slot="reference" class="el-icon-share" style="cursor: pointer;"></i>
+            <i slot="reference" v-if="scope.row.brief!=null" class="el-icon-share" style="cursor: pointer;"></i>
           </el-popover>
         </template>
       </el-table-column>
@@ -425,6 +425,7 @@
       selectCourse(){
         this.tempCourse.courseDate = this.$refs['courseDate']['courseDate'];
         this.courseDateArr = this.$refs['courseDate']['courseDateArr'];
+        this.tempCourse.courseDateArr = this.$refs['courseDate']['courseDateArr'];
 
         this.api({
           url: "/course-student/pickCourse",
