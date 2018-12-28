@@ -67,7 +67,8 @@ export default {
     uploadSuccess: '上传成功',
     downloadSuccess: '下载成功',
     operationSuccess: '操作成功',
-    restrictionUpload: '当前限制选择 1 个文件，请先删除之前的附件'
+    restrictionUpload: '当前限制选择 1 个文件，请先删除之前的附件',
+    fileUploadSize: '上传文件大小不能超过 {0}MB!'
 
   },
   route: {

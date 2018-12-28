@@ -43,6 +43,8 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.demo-input-suffix .el-form-item__label{
+  width: 140px;
+}
 </style>

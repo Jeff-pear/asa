@@ -12,6 +12,7 @@
     :before-remove="beforeFileRemove"
     list-type="text"
     :accept="acceptStr"
+    :beforeUpload="beforeUpload"
     :auto-upload="true"
     action="/api/sys/uploadFile"
   >
@@ -39,13 +40,25 @@
         }
       },
       methods: {
+        beforeUpload(file){
+          const isLt2M = file.size / 1024 / 1024 < 3;
+          return isLt2M;
+        },
         handleFileRemove(file, fileList) {
-
           console.log(file, fileList);
           this.fileList = [];
           this.$emit('fileChangeToFather',this.fileList);
         },
         beforeFileRemove(file, fileList) {
+          const isLt2M = file.size / 1024 / 1024 < 3
+          if(!isLt2M) {
+            this.$message({
+              message: this.$t('common.fileUploadSize',['3']),
+              type: 'warning'
+            });
+            return ;
+          }
+          debugger;
           this.api({
             url: "/sys/deleteAttachment/",
             method: "post",
@@ -56,7 +69,7 @@
           }).then(response  => {
             this.$message.success(this.$t('common.deleteSuccess'));
           }).catch(()=>{
-            this.$message.error(this.$t('common.deleteFail'));
+            //this.$message.error(this.$t('common.deleteFail'));
           });
         },
         handleExceed(files, fileList) {

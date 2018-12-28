@@ -1,5 +1,5 @@
 <template >
-  <div class="login-container" :style="loginBg">
+  <div class="login-container" v-bind:style="loginBg" >
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left"
              label-width="0px"
              class="card-box login-form">
@@ -63,7 +63,9 @@
     components: { LangSelect },
     data() {
       return {
-        loginBg:"background-image: url('"+loginBgPic+"') ",
+        // ll: 'this.src="' + require('@/assets/common/login_bg.jpg') + '"',
+        // ee: 'https://07033320a.github.io/images/login_bg.JPG',
+        loginBg:"background-image: url('https://07033320a.github.io/images/login_bg.JPG') ",
         loginForm: {
           username: 'admin',
           password: '123456'

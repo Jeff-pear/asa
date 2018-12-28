@@ -40,7 +40,7 @@ export default {
     finishStep: 'Finish',
     price: 'Price',
     recommendBrand: 'Recommend Brand',
-    needSelfMaterial: 'Student should prepare their own learning materials',
+    needSelfMaterial: 'Bring own supplies',
     materialPrice: 'materials price ¥',
     yes: 'Yes',
     no: 'No',
@@ -69,7 +69,8 @@ export default {
     uploadSuccess: 'Upload Successfully!',
     downloadSuccess: 'Download Successfully!',
     operationSuccess: 'Operation Successfully',
-    restrictionUpload: 'The current restriction is to select one file. Please delete the previous attachment first.'
+    restrictionUpload: 'The current restriction is to select one file. Please delete the previous attachment first.',
+    fileUploadSize: 'Upload file size should not exceed {0}MB!'
   },
   route: {
     dashboard: 'Dashboard',
