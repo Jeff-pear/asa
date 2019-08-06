@@ -9,7 +9,7 @@ router.beforeEach((to, from, next) => {
   if (getToken()) {
     //如果已经登录
 
-    if (to.path === '/login' || to.path.indexOf('register')>-1 ) {
+    if (to.path === '/login' || to.path.indexOf('register')>-1 || to.path.indexOf('active')>-1 ) {
       next({path: '/'})
       NProgress.done() // 结束Progress
     } else if (!store.getters.role) {

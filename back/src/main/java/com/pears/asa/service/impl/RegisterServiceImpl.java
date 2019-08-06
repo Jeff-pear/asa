@@ -44,7 +44,7 @@ public class RegisterServiceImpl implements RegisterService {
         int result = userDao.registerUser(jsonObject);
         //send email
         MailVO vo = new MailVO();
-        vo.setSubject("ASA教师帐户邮箱激活");
+        vo.setSubject(CommonUtil.getI18NMessage("email.registerTitle",null));
         vo.setFromUser(Constants.EMAIL_SENDER);
         vo.setToUser(jsonObject.getString("email"));
         String checkCode = StringTools.getStringRandom(26);
@@ -54,11 +54,11 @@ public class RegisterServiceImpl implements RegisterService {
         userDao.addActiveCode(jsonObjectActive);
 
         //String url = "<a href='http://localhost:8080/register/activeUser?code="+checkCode+"'>激活链接</a>";
-        String url = "<a target='_blank' href='"+emailConfig.getUrlhost()+"/active?code="+checkCode+"'>激活链接</a>";
+        String url = "<a target='_blank' href='"+emailConfig.getUrlhost()+"/#/active?code="+checkCode+"'>"+CommonUtil.getI18NMessage("email.registerLink",null)+"</a>";
 
         StringBuffer sb = new StringBuffer();
-        sb.append("<html><head></head><body><h1>亲爱的用户： 您好！</h1>")
-                .append("<p style='color:gray'>您正在使用此安全邮箱注册，激活请点击链接</p>")
+        sb.append("<html><head></head><body><h1>"+CommonUtil.getI18NMessage("email.part1",null)+"</h1>")
+                .append("<p style='color:gray'>"+CommonUtil.getI18NMessage("email.part2",null)+"</p>")
                 .append("<p style=''>"+url+"</p>");
         vo.setContent(sb.toString());
         EmailUtil e = new EmailUtil();

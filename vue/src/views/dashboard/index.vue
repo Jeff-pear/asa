@@ -1,6 +1,8 @@
 <template>
   <div class="dashboard-container">
     <el-container class="welcome-container">
+      <dashboard-index></dashboard-index>
+      <!--<img src="https://07033320a.github.io/images/dashboard_pic.jpeg" width="100%" height="100%">-->
       <el-row :gutter="20" style="width: 100%;">
         <el-col :span="12">
           <!--<el-card class="box-card" shadow="hover">-->
@@ -30,6 +32,7 @@
   </div>
 </template>
 <script>
+  import DashboardIndex from '@/components/Dashboard';
   export default {
     name: 'dashboard',
   }
@@ -44,8 +47,10 @@
   }
 </style>
 <script>
+  import DashboardIndex from "../../components/Dashboard/index";
   export default {
     name: 'dashboard',
+    components: {DashboardIndex},
     data() {
       return {}
     },

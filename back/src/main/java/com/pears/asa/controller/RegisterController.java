@@ -1,5 +1,6 @@
 package com.pears.asa.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.service.RegisterService;
 import com.pears.asa.service.SysService;
@@ -41,6 +42,22 @@ public class RegisterController {
     public JSONObject createUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "username,password,nickname,roleId");
         return registerService.createUser(requestJson);
+    }
+
+    @GetMapping("/test")
+    public JSONArray test(){
+        JSONObject j = new JSONObject();
+        j.put("managerId","u0026083");
+        j.put("managerName","Achenbach Thorsten, BBF-4");
+        j.put("delegationName",null);
+        JSONArray a = new JSONArray();
+        a.add(j);
+        return a;
+    }
+
+    @PostMapping("/testToken")
+    public String testToken(){
+        return "xl8sbdHi_ekWnImCAVRfcsfV8JIa:tDfq14XxgAlAkFFY0AfqC1ANq_Ea";
     }
 
     /**

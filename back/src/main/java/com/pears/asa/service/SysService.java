@@ -48,6 +48,14 @@ public interface SysService {
     JSONObject setPassword(JSONObject jsonObject);
 
     /**
+     * 设置grade
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject setGrade(JSONObject jsonObject);
+
+    /**
      * 添加附件
      *
      * @param jsonObject
@@ -79,6 +87,12 @@ public interface SysService {
      *
      */
     JSONObject deleteAttachment(JSONObject jsonObject);
+
+    /**
+     * 通过userid获取user
+     *
+     */
+    List<JSONObject> getUserByUserId(JSONObject jsonObject);
 
 
 }

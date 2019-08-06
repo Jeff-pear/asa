@@ -8,7 +8,7 @@ import store from './store'
 import '@/icons' // icon
 import '@/permission' // 权限
 import {default as api} from './utils/api'
-import {hasPermission, getGroupTag, getPeriod} from "./utils/hasPermission";
+import {hasPermission, getGroupTag, getPeriod, needResetPwd} from "./utils/hasPermission";
 import i18n from './lang' // Internationalization
 Vue.use(ElementUI, {  i18n: (key, value) => i18n.t(key, value)})
 Vue.prototype.api = api
@@ -16,6 +16,7 @@ Vue.prototype.api = api
 Vue.prototype.hasPerm = hasPermission
 Vue.prototype.getGroupTag = getGroupTag
 Vue.prototype.getPeriod = getPeriod;
+Vue.prototype.needResetPwd = needResetPwd;
 //生产环境时自动设置为 false 以阻止 vue 在启动时生成生产提示。
 Vue.config.productionTip = (process.env.NODE_ENV != 'production');
 Vue.prototype.$bus = new Vue();

@@ -70,6 +70,11 @@ public class UserRealm extends AuthorizingRealm {
         );
         //session中不需要保存密码
         user.remove("password");
+        Boolean needResetPwd = false;
+        if(password.equalsIgnoreCase("asa1234")){
+            needResetPwd = true;
+        }
+        user.put("needResetPwd",needResetPwd);
         //将用户信息放入session中
         SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_INFO, user);
         return authenticationInfo;

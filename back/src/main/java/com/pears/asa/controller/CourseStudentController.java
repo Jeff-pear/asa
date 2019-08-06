@@ -7,6 +7,8 @@ import com.pears.asa.service.SysService;
 import com.pears.asa.util.CommonUtil;
 import com.pears.asa.util.constants.ErrorEnum;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/course-student")
 public class CourseStudentController {
+    private static Logger logger = LoggerFactory.getLogger(CourseStudentController.class);
 
     @Autowired
     private CourseStudentService courseStudentService;
@@ -71,6 +74,7 @@ public class CourseStudentController {
         if(count>0){
             return CommonUtil.errorJson(ErrorEnum.E_10007);
         }
+        logger.info("-----------CourseStudentController pickCourse："+requestJson.get("courseId")+"----------");
         return courseStudentService.selectCourse(requestJson);
     }
 
@@ -98,6 +102,8 @@ public class CourseStudentController {
     @PostMapping("/financePayConfirm")
     public JSONObject financePayConfirm(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id,financeIsPay");
+        logger.info("-----------CourseStudentController financePayConfirm："+requestJson.get("id")+"----------");
+
         return courseStudentService.updateCourse(requestJson);
     }
 
@@ -111,6 +117,8 @@ public class CourseStudentController {
     @PostMapping("/updateCourse")
     public JSONObject updateCourse(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id,courseId,courseDate");
+        logger.info("-----------CourseStudentController updateCourse："+requestJson.get("id")+"----------");
+
         return courseStudentService.updateCourse(requestJson);
     }
 
@@ -131,6 +139,7 @@ public class CourseStudentController {
             requestJson.put("id",attachIdStu);
             result = sysService.deleteAttachment(requestJson);
         }
+        logger.info("-----------CourseStudentController deleteCourse："+requestJson.get("id")+"----------");
 
         return result;
     }

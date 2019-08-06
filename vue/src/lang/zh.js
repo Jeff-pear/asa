@@ -11,8 +11,9 @@ export default {
     chineseTeacher:'中教',
     foreignTeacher:'外教',
     externalTeacher:'外聘',
-    courseName: '课程名(详情)',
+    courseName: '课程名(任课教师联系方式)',
     studentNum: '学生数',
+    remainNum: '剩余名额',
     grade: '年级',
     tuition: '学费',
     tuitionOption1: '(人*课)',
@@ -40,11 +41,12 @@ export default {
     price: '金额',
     recommendBrand: '推荐品牌',
     needSelfMaterial: '需要自备教具',
-    materialPrice: '教具金额¥',
+    materialPrice: '教具参考价格¥',
     yes: '是',
     no: '否',
     isPay: '支付情况',
-    courseArea: '课程地点'
+    courseArea: '课程地点',
+    gradeAndClass: '年级 / 班级'
   },
   student:{
     selectedCourse: '已选课程',
@@ -55,10 +57,14 @@ export default {
     revoke: '撤销',
     select: '选 择',
     name: '学生姓名',
-    hasPay: '已支付'
+    hasPay: '已支付',
+    class: '班级',
+    notice: '备注'
   },
   common:{
     loading: '加载中...',
+    tips: '提示',
+    toModify: '去修改',
     checkAll: '全选',
     pleaseSelect: '请选择',
     deleteSuccess: '删除成功',
@@ -68,7 +74,11 @@ export default {
     downloadSuccess: '下载成功',
     operationSuccess: '操作成功',
     restrictionUpload: '当前限制选择 1 个文件，请先删除之前的附件',
-    fileUploadSize: '上传文件大小不能超过 {0}MB!'
+    fileUploadSize: '上传文件大小不能超过 {0}MB!',
+    toRegister: '去注册',
+    role:'角色',
+    studentRole: '学生',
+    teacherRole: '教师'
 
   },
   route: {
@@ -94,7 +104,10 @@ export default {
   profile: {
     oldPwd:'原密码',
     newPwd:'新密码',
-    confirmPwd:'确认密码'
+    confirmPwd:'确认密码',
+    personalTab:'个人信息',
+    pwdTab:'修改密码',
+    notice: '为了确保账号安全，请修改您的默认密码'
   },
   login: {
     title: 'SIBS ASA 系统登录',

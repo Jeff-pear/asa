@@ -24,7 +24,7 @@
       </el-form>
     </div>
 
-    <el-table ref="teacherTable" :data="list" height="530" v-loading.body="listLoading" border fit
+    <el-table ref="teacherTable" :data="list" height="480" v-loading.body="listLoading" border fit
               highlight-current-row
               :row-key="getRowKeys" style="width: 100%">
       <el-table-column align="center" :label="$t('table.id')" width="80">
@@ -32,6 +32,7 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
+
       <el-table-column v-if="mySelfList=='true'" type="expand">
         <template slot-scope="props" >
           <el-table :data="list[props.$index].students" border>
@@ -163,17 +164,18 @@
 
             </el-input>
           </el-tooltip>
-          <el-button plain type="info" icon="el-icon-check" size="mini" @click="updateCourseArea(scope.row)"></el-button>
+          <el-button plain type="info" icon="el-icon-check" size="mini" @click="updateComments(scope.row)"></el-button>
         </template>
       </el-table-column>
-
+      <el-table-column align="center" prop="id" label="课程id(Admin可见" v-if="getGroupTag()=='-1'" width="80">
+      </el-table-column>
       <!--课程时间-->
       <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" style="width: 60px;">
         <template slot-scope="scope">
           &nbsp;
-          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
-          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('wed')>-1">{{$t('week.wed')}}</span>
-          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
+          <span v-if="scope.row.courseDate && scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
+          <span v-if="scope.row.courseDate && scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('wed')>-1">{{$t('week.wed')}}</span>
+          <span v-if="scope.row.courseDate && scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
           <!--<span v-if="scope.row.courseDate.tue==true">{{$t('week.tue')}}</span>&nbsp;-->
           <!--<span v-if="scope.row.courseDate.wed==true">{{$t('week.wed')}}</span>&nbsp;-->
           <!--<span v-if="scope.row.courseDate.thu==true">{{$t('week.thu')}}</span>-->
@@ -211,7 +213,7 @@
             <el-button type="danger" size="small" v-if="getGroupTag()!='-1' && hasPerm('course-teacher:delete') " @click="deleteAlertVisible=true" slot="reference">{{$t('table.delete')}}</el-button>
           </el-popover>
 
-          <el-button type="danger" size="small" icon="edit" @click="disabledCourse(scope.row.id)" v-if="getGroupTag()=='-1'">Disabled</el-button>
+          <el-button type="danger" size="small" icon="edit" @click="disabledCourse(scope.row.id,scope.row.content, scope.row.email)" v-if="getGroupTag()=='-1'">Disabled</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -235,7 +237,7 @@
       <br/>
 
         <el-form class="small-space" :model="tempCourse" label-position="left" label-width="100px"
-                 style='width: 500px; margin-left:50px;'>
+                 style=' margin-left:50px;'>
           <div v-if="tempCourse.stepActive==1">
             <el-form-item :label="$t('teacher.courseNameNoDetail')">
               <el-input type="text" v-model="tempCourse.content" clearable>
@@ -248,7 +250,7 @@
 
             </el-form-item>
             <el-form-item :label="$t('teacher.studentNum')">
-              <el-input-number v-model="tempCourse.capacity" :min="1" :max="15" clearable>
+              <el-input-number v-model="tempCourse.capacity" :min="1" :max="22" clearable>
               </el-input-number>
             </el-form-item>
             <el-form-item :label="$t('teacher.courseDate')">
@@ -487,7 +489,7 @@
           }
           return resultVal;
         }
-        if(arrVal){
+        if(arrVal!=undefined){
           return formatSingle(arrVal[0]) +'--'+ formatSingle(arrVal[1]);
         }
       },
@@ -576,9 +578,11 @@
           url: "/course-teacher/"+this.$props['listUrl'],
           method: "get",
           params:  {
-            content: this.listQuery.content
+            content: this.listQuery.content,
+            pageRow: -1
           },
         }).then(data => {
+          debugger;
           this.excelList = data.list;
           this.totalCount = data.totalCount;
           import('@/vendor/Export2Excel').then(excel => {
@@ -802,6 +806,19 @@
           console.warn(v);
         });
       },
+      updateComments(row){
+        this.api({
+          url: "/course-teacher/updateComments",
+          method: "post",
+          data: row
+        }).then(() => {
+          this.getList();
+          this.$message.success(this.$t('common.operationSuccess'));
+        }).catch(v=>{
+          this.getList();
+          console.warn(v);
+        });
+      },
       updateCourse() {
         //修改课程
         this.beforePersist();
@@ -835,12 +852,12 @@
           this.deleteAlertVisible = false;
       })
       },
-      disabledCourse(tmpId) {
+      disabledCourse(tmpId,content,email) {
         //disabled课程
         this.api({
           url: "/course-teacher/disabledCourse",
           method: "post",
-          data: {id: tmpId}
+          data: {id: tmpId,content: content,email:email}
         }).then(() => {
           this.$refs['searchBtn'].focus();
           this.$message.success(this.$t('Disable 成功！！'));

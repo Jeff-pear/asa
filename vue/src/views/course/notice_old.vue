@@ -1,19 +1,27 @@
 <template>
-  <div class="course-finance-container">
+  <div class="course-notice-container">
     <div class="filter-container">
       <el-form :model="listQuery" ref="listQuery">
         <el-form-item prop="content">
           <el-input class="filter-item" :placeholder="$t('teacher.courseNameNoDetail')" v-model="listQuery.content"
-                    size="small" v-if="hasPerm('course-finance:list')" ref="searchBtn" style="width: 200px;"
+                    size="small" v-if="hasPerm('course-notice:list')" ref="searchBtn" style="width: 200px;"
                     @keyup.enter.native="handleFilter" clearable/>
-          <el-button class="filter-item" type="primary" icon="el-icon-search" size="small" v-if="hasPerm('course-finance:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
+          <el-cascader
+            size="small"
+            v-model="listQuery.gradeAndClassVal"
+            :options="gradeAndClass"
+            :placeholder="$t('teacher.gradeAndClass')"
+            change-on-select
+            clearable ></el-cascader>
+
+          <el-button class="filter-item" type="primary" icon="el-icon-search" size="small" v-if="hasPerm('course-notice:list')" @click="handleFilter">{{ $t('table.search') }}</el-button>
           <el-button :loading="downloadLoading" style="margin-left: 0px;" icon="el-icon-download" type="primary" size="small" v-if="hasPerm('course-notice:list')" @click="handleDownload">{{ $t('excel.export') }} Excel</el-button>
 
         </el-form-item>
       </el-form>
     </div>
 
-    <el-table class="notice-table" ref="noticeTable" :data="list" v-loading.body="listLoading" element-loading-text="" border fit
+    <el-table ref="noticeTable" :data="list" v-loading.body="listLoading" element-loading-text="" border fit
               :row-class-name="tableRowClassName" :span-method="objectSpanMethod">
       <el-table-column align="center" :label="$t('table.id')" width="80">
         <template slot-scope="scope">
@@ -21,52 +29,67 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="nicknameTeacher" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="content" :label="$t('route.courseManagement')" style="width: 60px;">
+      <el-table-column align="center" prop="content" :label="$t('teacher.courseNameNoDetail')" style="width: 60px;">
       </el-table-column>
-      <el-table-column align="center" prop="nicknameStu" :label="$t('student.name')" style="width: 60px;">
-        <template slot-scope="scope">
-          {{scope.row.nicknameStu}}({{scope.row.nickNameCnStu}})
-        </template>
+      <el-table-column align="center" prop="courseArea" :label="$t('teacher.courseArea')" style="width: 60px;">
       </el-table-column>
-      <el-table-column align="center" prop="grade" :label="$t('teacher.grade')" style="width: 30px;">
+      <el-table-column align="center" prop="nicknameStu" :label="$t('student.name')" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="grade" :label="$t('teacher.grade')" style="width: 60px;">
         <template slot-scope="scope">
           {{formatGrade(scope.row.grade)}}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="class" :label="$t('student.class')" style="width: 30px;">
-      </el-table-column>
+
+      <el-table-column align="center" prop="class" :label="$t('student.class')" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" style="width: 60px;">
         <template slot-scope="scope" v-if="scope.row.courseDate!=null">
           &nbsp;
-          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
-          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('wed')>-1">{{$t('week.wed')}}</span>
-          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
+          <span v-if="scope.row.courseDate && scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
+          <span v-if="scope.row.courseDate && scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('wed')>-1">{{$t('week.wed')}}</span>
+          <span v-if="scope.row.courseDate && scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
         </template>
       </el-table-column>
 
 
       <el-table-column align="center" prop="finalTuition" :label="$t('teacher.tuition')" style="width: 60px;"></el-table-column>
 
-      <el-table-column align="center" prop="originFileName" :label="$t('student.payAttach')" width="170">
+
+      <el-table-column align="center" prop="financeIsPay" :label="$t('teacher.isPay')" style="width: 100px;">
         <template slot-scope="scope">
-          <a style="text-decoration: underline;color: #409EFF;" @click="previewFromList(scope.row.attachId)">{{scope.row.originFileName}}</a>
+          <span >
+            <label v-if="scope.row.financeIsPay == '0'">未支付</label>
+            <label v-if="scope.row.financeIsPay == '1'">已支付</label>
+          </span>
         </template>
       </el-table-column>
-      <el-transfer></el-transfer>
+
+
     </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="listQuery.pageNum"
+      :page-size="listQuery.pageRow"
+      :total="totalCount"
+      :page-sizes="[20, 50, 100, 5000]"
+      layout="total, sizes, prev, pager, next, jumper">
+    </el-pagination>
+
   </div>
 </template>
 
 <script>
+  import { gradeAndClass } from './dataJson.js';
   export default {
     name: 'notice-table',
     components: {
     },
     data() {
       return {
+        gradeAndClass: gradeAndClass,
+        downloadLoading: false,
         highlightRow: false,
         selectBtnDisabled: false,
-        downloadLoading: false,
         attachBusinessType: 'course-student',
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
@@ -75,8 +98,9 @@
         listQuery: {
           studentCanPick: true,
           pageNum: 1,//页码
-          pageRow: 50,//每页条数
-          name: ''
+          pageRow: 5000,//每页条数
+          name: '',
+          gradeAndClassVal: []
         },
         courseDateOptions: [],
         dialogStatus: 'create',
@@ -97,57 +121,20 @@
         },
         globalId: 0,
         globalNum: 0,
-        spanArr:[]
+        spanArr:[],
+
+
       }
     },
     created() {
       this.getList();
     },
     methods: {
-      filterTag(value, row) {
-        return row.financeIsPay === value;
-      },
       tableRowClassName({row, rowIndex}) {
         return 'common-row';
       },
-      cancelEdit(row,index) {
-        row.financeIsPay = row.originalFinanceIsPay
-        row.edit = false
-        this.$message({
-          message: 'ID 为 '+index+'已取消编辑',
-          type: 'warning'
-        })
-      },
-      formatJson(filterVal, jsonData) {
-        return jsonData.map(v => filterVal.map(j => {
-          if(j=='grade'){
-            return this.formatGrade(v[j]);
-          }else if(j=='nicknameStu'){
-            return v[j]+"("+v['nickNameCnStu']+")"
-          }else{
-            return v[j];
-          }
-
-        }))
-      },
-      confirmEdit(row) {
-        row.edit = false
-
-        this.api({
-          url: "/course-student/financePayConfirm",
-          method: "post",
-          data: {id:row.id,financeIsPay:row.financeIsPay}
-        }).then(() => {
-          this.getList();
-          this.$message.success(this.$t('common.operationSuccess'));
-        }).catch(v=>{
-          this.getList();
-          console.warn(v);
-        });
-
-      },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-        if(columnIndex === 1 || columnIndex === 2){
+        if(columnIndex === 1 || columnIndex === 2 || columnIndex === 3){
           const _row = this.spanArr[rowIndex]
           const _col = _row>0?1:0;
           return{
@@ -166,9 +153,6 @@
       },
       downloadFromList(obj){
         this.previewUploadFile({url:obj});
-      },
-      previewFromList(obj){
-        window.open('/api/sys/preview/'+obj);
       },
       previewUploadFile(obj){
         this.api({
@@ -199,15 +183,22 @@
       },
       getList() {
         //查询列表
-        if (!this.hasPerm('course-finance:list')) {
+        if (!this.hasPerm('course-notice:list')) {
           return
         }
         this.listLoading = true;
         this.spanArr = [];
+        var gradeAndClassRequest = this.listQuery.gradeAndClassVal.toLocaleString();
         this.api({
-          url: '/course-teacher/listCourseResult4Finance',
+          url: '/course-teacher/listCourseResult4Notice',
           method: "get",
-          params: this.listQuery
+          params: {
+            studentCanPick: this.listQuery.studentCanPick,
+            pageNum: this.listQuery.pageNum,
+            pageRow: this.listQuery.pageRow,
+            name: this.listQuery.name,
+            gradeAndClassRequest: gradeAndClassRequest
+          }
         }).then(data => {
           this.listLoading = false;
           this.list = data.list;
@@ -215,8 +206,8 @@
           let contactDot = 0;
           this.list.forEach((item,index) => {
             item.index = index;
-            this.$set(item, 'edit', false);
-            item.originalFinanceIsPay = item.financeIsPay
+          this.$set(item, 'edit', false);
+          item.originalFinanceIsPay = item.financeIsPay
           if(index === 0){
             this.spanArr.push(1);
           }else{
@@ -229,8 +220,7 @@
             }
           }
         });
-
-        })
+      })
       },
       handleSizeChange(val) {
         //改变每页数量
@@ -250,6 +240,22 @@
         this.fileList = childFileList;
         this.selectBtnDisabled = !(this.fileList.length>0);
       },
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => {
+          if(j=='grade'){
+            return this.formatGrade(v[j]);
+          }else if(j=='financeIsPay'){
+            if(v[j]=='0'){
+              return '未支付';
+            }else{
+              return '已支付';
+            }
+          }else{
+            return v[j];
+          }
+
+        }))
+      },
       handleDownload() {
         this.downloadLoading = true;
         if (!this.hasPerm('course-notice:list')) {
@@ -266,31 +272,31 @@
           this.totalCount = data.totalCount;
           import('@/vendor/Export2Excel').then(excel => {
             const tHeader = [];
-            const filterVal = []
-            const columns = this.$refs['noticeTable'].$refs.tableHeader.columns;
-            columns.forEach(function(i){
-              if(i['property']){
-                tHeader.push(i['label']);
-                filterVal.push(i['property']);
-              }
-            });
-            const list = this.excelList
-            const data = this.formatJson(filterVal, list)
-            excel.export_json_to_excel({
-              header: tHeader,data,
-              filename: this.filename,
-              autoWidth: this.autoWidth,
-              bookType: this.bookType
-            })
-            this.downloadLoading = false;
+          const filterVal = []
+          const columns = this.$refs['noticeTable'].$refs.tableHeader.columns;
+          columns.forEach(function(i){
+            if(i['property']){
+              tHeader.push(i['label']);
+              filterVal.push(i['property']);
+            }
+          });
+          const list = this.excelList
+          const data = this.formatJson(filterVal, list)
+          excel.export_json_to_excel({
+            header: tHeader,data,
+            filename: this.filename,
+            autoWidth: this.autoWidth,
+            bookType: this.bookType
           })
-        });
+          this.downloadLoading = false;
+        })
+      });
       },
     }
   }
 </script>
 <style scoped>
-  .course-finance-container{
+  .course-notice-container{
     padding: 20px;
   }
   .el-input-number__increase{
@@ -303,11 +309,5 @@
     background-color: white !important;
   }
 
-
-</style>
-<style>
-  .notice-table.el-table--enable-row-hover .el-table__body tr:hover>td{
-    background-color: #fff;
-  }
 </style>
 

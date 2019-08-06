@@ -58,7 +58,6 @@
             });
             return ;
           }
-          debugger;
           this.api({
             url: "/sys/deleteAttachment/",
             method: "post",
@@ -90,7 +89,6 @@
             url: result.returnData.attachId
           });
           //update attachment table
-          debugger
           this.api({
             url: "/sys/updateAttachment/",
             method: "post",

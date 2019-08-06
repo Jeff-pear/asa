@@ -23,6 +23,7 @@ hs_err_pid*
 
 .idea
 node_modules/
+files/
 target/
 src/main/resources/email*
 *.iml

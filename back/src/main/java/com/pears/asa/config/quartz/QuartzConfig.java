@@ -17,18 +17,34 @@ import org.springframework.context.annotation.Configuration;
     @Configuration
     public class QuartzConfig {
 
+//
+//        @Bean
+//        public JobDetail noticeQuartz() {
+//            return JobBuilder.newJob(CourseTask.class).withIdentity("sysTask").storeDurably().build();
+//        }
+//
+//        @Bean
+//        public Trigger quartzNoticeTrigger() {
+//            //cron方式
+//            return TriggerBuilder.newTrigger().forJob(noticeQuartz())
+//                    .withIdentity("sysTask")
+//                    .withSchedule(CronScheduleBuilder.cronSchedule("0 00 01 * * ?"))
+//                    //.withSchedule(CronScheduleBuilder.cronSchedule("0 0/1 * * * ? *"))
+//                    .build();
+//        }
 
         @Bean
-        public JobDetail testQuartz2() {
-            return JobBuilder.newJob(CourseTask.class).withIdentity("sysTask").storeDurably().build();
+        public JobDetail dailyQuartz() {
+            return JobBuilder.newJob(NoticeTask.class).withIdentity("dailyTask").storeDurably().build();
         }
 
         @Bean
-        public Trigger testQuartzTrigger2() {
+        public Trigger quartzDailyTrigger() {
             //cron方式
-            return TriggerBuilder.newTrigger().forJob(testQuartz2())
-                    .withIdentity("sysTask")
-                    .withSchedule(CronScheduleBuilder.cronSchedule("0 00 01 * * ?"))
+            return TriggerBuilder.newTrigger().forJob(dailyQuartz())
+                    .withIdentity("dailyTask")
+                    .withSchedule(CronScheduleBuilder.cronSchedule("0 00 23 * * ?"))
+                    //.withSchedule(CronScheduleBuilder.cronSchedule("0 0/1 * * * ? *"))
                     .build();
         }
 

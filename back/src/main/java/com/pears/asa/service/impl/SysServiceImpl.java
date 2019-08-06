@@ -88,12 +88,26 @@ public class SysServiceImpl implements SysService {
         Session session = SecurityUtils.getSubject().getSession();
         JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
         int userId = userInfo.getInteger("userId");
-        jsonObject.put("curUserId",userId);
-        jsonObject.put("curPassword",jsonObject.getString("password"));
-        List<JSONObject> list = userDao.listUser(jsonObject);
+
+        List<JSONObject> list = this.getUserByUserId(jsonObject);
         if(list.size()>0){
             jsonObject.put("userId",userId);
             jsonObject.put("password",jsonObject.getString("newPassword"));
+            userDao.updateUser(jsonObject);
+        }
+
+        return null;
+    }
+
+    @Override
+    public JSONObject setGrade(JSONObject jsonObject) {
+        Session session = SecurityUtils.getSubject().getSession();
+        JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
+        int userId = userInfo.getInteger("userId");
+
+        List<JSONObject> list = this.getUserByUserId(jsonObject);
+        if(list.size()>0){
+            jsonObject.put("userId",userId);
             userDao.updateUser(jsonObject);
         }
 
@@ -138,6 +152,17 @@ public class SysServiceImpl implements SysService {
             err.setErrorMsg(CommonUtil.getI18NMessage("validation.failDeleteFile",null));
             return CommonUtil.errorJson(err);
         }
+    }
+
+    @Override
+    public List<JSONObject> getUserByUserId(JSONObject jsonObject) {
+        Session session = SecurityUtils.getSubject().getSession();
+        JSONObject userInfo = (JSONObject) session.getAttribute(Constants.SESSION_USER_INFO);
+        int userId = userInfo.getInteger("userId");
+        jsonObject.put("curUserId",userId);
+        jsonObject.put("curPassword",jsonObject.getString("password"));
+        List<JSONObject> list = userDao.listUser(jsonObject);
+        return list;
     }
 
 }

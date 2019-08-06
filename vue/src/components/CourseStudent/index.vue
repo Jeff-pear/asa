@@ -13,7 +13,7 @@
       </el-form>
     </div>
 
-    <el-table :data="list" v-loading.body="listLoading" element-loading-text="" border fit
+    <el-table :data="list" v-loading.body="listLoading" height="480" element-loading-text="" border fit
               highlight-current-row>
       <el-table-column align="center" :label="$t('table.id')" width="80">
         <template slot-scope="scope">
@@ -33,9 +33,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="capacity" v-if="isMySelect == 'false' " :label="$t('teacher.studentNum')" style="width: 60px;">
+      <el-table-column align="center" prop="capacity" v-if="isMySelect == 'false' " :label="$t('teacher.remainNum')" style="width: 60px;">
         <template slot-scope="scope">
-          {{Number(scope.row.capacity)-Number(scope.row.pickStudentNum)}}
+          <span style="color: green;">{{Number(scope.row.capacity)-Number(scope.row.pickStudentNum)}}</span>
         </template>
 
       </el-table-column>
@@ -65,35 +65,36 @@
           <span v-if="scope.row.needTrainingAid == '2'">{{$t('teacher.no')}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="price" :label="$t('teacher.materialPrice')" style="width: 60px;">
-
+      <el-table-column align="center" prop="price" :render-header="materialPrice" width="175">
       </el-table-column>
       <el-table-column align="center" prop="courseDateStudent" :label="$t('teacher.courseDate')" v-if="isMySelect == 'true' " style="width: 60px;">
         <template slot-scope="scope" v-if="scope.row.courseDateStudent!=null">
           &nbsp;
-          <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('tue')>-1">{{$t('week.tue')}}</span>
-          <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('wed')>-1">{{$t('week.wed')}}</span>
-          <span v-if="scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('thu')>-1">{{$t('week.thu')}}</span>
+          <span v-if="scope.row.courseDateStudent && scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('tue')>-1">{{$t('week.tue')}}</span>
+          <span v-if="scope.row.courseDateStudent && scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('wed')>-1">{{$t('week.wed')}}</span>
+          <span v-if="scope.row.courseDateStudent && scope.row.courseDateStudent.indexOf && scope.row.courseDateStudent.indexOf('thu')>-1">{{$t('week.thu')}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" v-if="isMySelect == 'false'" style="width: 60px;">
         <template slot-scope="scope" v-if="scope.row.courseDate!=null">
           &nbsp;
-          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
-          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('wed')>-1">{{$t('week.wed')}}</span>
-          <span v-if="scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
+          <span v-if="scope.row.courseDate && scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('tue')>-1">{{$t('week.tue')}}</span>
+          <span v-if="scope.row.courseDate && scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('wed')>-1">{{$t('week.wed')}}</span>
+          <span v-if="scope.row.courseDate && scope.row.courseDate.indexOf && scope.row.courseDate.indexOf('thu')>-1">{{$t('week.thu')}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="courseArea" :label="$t('teacher.courseArea')"style="width: 150px;">
       </el-table-column>
       <el-table-column align="center" prop="nickname" :label="$t('teacher.teacherName')" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="origin_fileName" :label="$t('teacher.attachment')" width="170">
+      <el-table-column align="center" prop="comments" :label="$t('student.notice')" style="width: 60px;"></el-table-column>
+
+      <el-table-column align="center" prop="origin_fileName" :label="$t('teacher.attachment')" >
         <template slot-scope="scope">
           <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row.attachId)">{{scope.row.originFileName}}</a>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="origin_fileName" v-if="isMySelect == 'true'" :label="$t('student.payAttach')" width="170">
+      <el-table-column align="center" prop="origin_fileName" v-if="isMySelect == 'true'" :label="$t('student.payAttach')" >
         <template slot-scope="scope">
           <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row.attachIdStu)">{{scope.row.originFileNameStu}}</a>
         </template>
@@ -101,10 +102,9 @@
 
       <el-table-column align="center" :label="$t('table.actions')" width="200" v-if="getGroupTag()=='-1' || (hasPerm('course-student:update') && (getPeriod('canPick') || getPeriod('canFee')))">
         <template slot-scope="scope">
-
           <el-button type="primary" icon="edit" size="small" v-if="(Number(scope.row.capacity)-Number(scope.row.pickStudentNum))>0 && (getGroupTag()=='-1' || (isMySelect == 'false' && getPeriod('canPick'))) " @click="showUpdate(scope.$index,'pick')">{{$t('student.pickCourse')}}</el-button>
-
-          <el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (isMySelect == 'true' && getPeriod('canFee'))" @click="showUpdate(scope.$index,'fee')">
+          <el-tag type="danger" v-if="(Number(scope.row.capacity)-Number(scope.row.pickStudentNum))==0 ">名额已满</el-tag>
+          <el-button type="primary" icon="edit" size="small" v-if="getGroupTag()=='-1' || (isMySelect == 'true' && getPeriod('canFee') && !(scope.row.finalTuition && scope.row.finalTuition.indexOf('free')>-1))" @click="showUpdate(scope.$index,'fee')">
             <template >
               <span v-if="scope.row.isPay=='1'">已支付</span>
               <span v-else>{{$t('student.pay')}}</span>
@@ -185,6 +185,7 @@
 <script>
   import CourseDate from '../CourseTeacher/components/CourseDate';
   import FileUploader from '../CourseTeacher/components/FileUploader';
+  import store from '../../store'
   export default {
     name: 'student-table',
     props:['listUrl','isMySelect'],
@@ -230,6 +231,33 @@
       this.getList();
     },
     methods: {
+      materialPrice(h, { column, $index }){
+        if(store.getters.language == '' || store.getters.language =='en'){
+          return (
+            <div>
+            <span> materials price ¥ </span>
+          <el-tooltip class="item" effect="dark" content="If you need to purchase the product uniformly, please contact the external teacher."
+          placement="bottom">
+            <i class="el-icon-warning table-msg" style='color:#9d1f24;'></i>
+            </el-tooltip>
+            </div>
+        )
+
+        }else{
+          return (
+            <div>
+            <span> 教具参考价格¥ </span>
+            <el-tooltip class="item" effect="dark" content="如需统一购买，请与外聘老师联系"  placement="bottom">
+            <i class="el-icon-warning table-msg" style='color:#9d1f24;'></i>
+            </el-tooltip>
+            </div>
+        )
+        }
+
+
+      },
+
+
       changeCourseDate(val){
         this.tempCourse.courseDateArr = val;
         if(val==''){
@@ -260,7 +288,7 @@
           }
           return resultVal;
         }
-        if(arrVal){
+        if(arrVal!=undefined){
           return formatSingle(arrVal[0]) +'--'+ formatSingle(arrVal[1]);
         }
       },
@@ -286,6 +314,7 @@
           this.listLoading = false;
         this.list = data.list;
         this.totalCount = data.totalCount;
+          this.$emit('getTotal',this.totalCount);
       })
       },
       handleSizeChange(val) {
@@ -392,7 +421,6 @@
           }
           this.dialogStatus = "update"
         }else{
-          debugger;
           this.fileList = [];
           if(this.$refs['fileUploader']){
             this.$refs['fileUploader']['fileList'] = this.fileList

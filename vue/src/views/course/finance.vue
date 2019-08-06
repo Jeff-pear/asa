@@ -11,7 +11,7 @@
       </el-form>
     </div>
 
-    <el-table :data="list" v-loading.body="listLoading" element-loading-text="" border fit
+    <el-table class="finance-table" :data="list" v-loading.body="listLoading" element-loading-text="" border fit
               :row-class-name="tableRowClassName" :span-method="objectSpanMethod">
       <el-table-column align="center" :label="$t('table.id')" width="80">
         <template slot-scope="scope">
@@ -31,6 +31,8 @@
           {{formatGrade(scope.row.grade)}}
         </template>
       </el-table-column>
+      <el-table-column align="center" prop="class" :label="$t('student.class')" style="width: 40px;">
+      </el-table-column>
       <el-table-column align="center" prop="courseDate" :label="$t('teacher.courseDate')" style="width: 60px;">
         <template slot-scope="scope" v-if="scope.row.courseDate!=null">
           &nbsp;
@@ -42,6 +44,11 @@
 
 
       <el-table-column align="center" prop="finalTuition" :label="$t('teacher.tuition')" style="width: 60px;"></el-table-column>
+      <el-table-column align="center"  label="预览" style="width: 60px;">
+        <template slot-scope="scope">
+          <a v-if="scope.row.originFileName!=null" target="_blank" style="text-decoration: underline;" @click="previewFromList(scope.row.attachId)" >预览</a>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="originFileName" :label="$t('student.payAttach')" width="170">
         <template slot-scope="scope">
           <a style="text-decoration: underline;color: #409EFF;" @click="downloadFromList(scope.row.attachId)">{{scope.row.originFileName}}</a>
@@ -74,15 +81,7 @@
       </el-table-column>
 
     </el-table>
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="listQuery.pageNum"
-      :page-size="listQuery.pageRow"
-      :total="totalCount"
-      :page-sizes="[10, 20, 50, 100]"
-      layout="total, sizes, prev, pager, next, jumper">
-    </el-pagination>
+
 
   </div>
 </template>
@@ -184,6 +183,9 @@
       downloadFromList(obj){
         this.previewUploadFile({url:obj});
       },
+      previewFromList(obj){
+        window.open('/api/sys/preview/'+obj);
+      },
       previewUploadFile(obj){
         this.api({
           url: "/sys/download/"+obj['url'],
@@ -203,7 +205,7 @@
           }
           return resultVal;
         }
-        if(arrVal){
+        if(arrVal!=undefined){
           return formatSingle(arrVal);
         }
       },
@@ -283,3 +285,8 @@
 
 </style>
 
+<style>
+  .finance-table.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background-color: #fff;
+  }
+</style>

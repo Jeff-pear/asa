@@ -3,6 +3,8 @@ package com.pears.asa.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.pears.asa.service.LoginService;
 import com.pears.asa.util.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/login")
 public class LoginController {
-
+    private static Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private LoginService loginService;
 
@@ -30,6 +32,7 @@ public class LoginController {
     @PostMapping("/auth")
     public JSONObject authLogin(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "username,password");
+        logger.info("-----------欢迎用户："+requestJson.get("username")+"----------");
         return loginService.authLogin(requestJson);
     }
 

@@ -2,21 +2,21 @@
   <div class="errPage-container">
     <el-row>
       <el-col :span="12">
-        <h1 class="text-jumbo text-ginormous" v-show="activeStatus == false">激活中!</h1>
-        <h1 class="text-jumbo text-ginormous" v-show="activeStatus == true">激活成功!</h1>
+        <h1 class="text-jumbo text-ginormous" v-show="activeStatus == false">Activation!</h1>
+        <h1 class="text-jumbo text-ginormous" v-show="activeStatus == true">Successfully!</h1>
         <ul class="list-unstyled">
-          <li>或者你可以去:</li>
+          <li>Or you can :</li>
           <li class="link-type">
-            <router-link to="/login"><a>返回登陆</a></router-link>
+            <router-link to="/login"><a>Back to Login</a></router-link>
           </li>
-          <li><a href="#" @click.prevent="dialogVisible=true">点我看图</a></li>
+          <li><a href="#" @click.prevent="dialogVisible=true">Look at the picture. </a></li>
         </ul>
       </el-col>
       <el-col :span="12">
         <img :src="errGif" width="313" height="428" alt="Girl has dropped her ice cream.">
       </el-col>
     </el-row>
-    <el-dialog :visible.sync="dialogVisible" title="随便看">
+    <el-dialog :visible.sync="dialogVisible" title="Welcome">
       <img :src="ewizardClap" class="pan-img">
     </el-dialog>
   </div>

@@ -102,6 +102,7 @@ public class CourseTeacherController {
     @PostMapping("/addCourse")
     public JSONObject addCourse(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "content,teacherName,capacity,courseDate");
+        logger.info("-----------CourseTeacherController addCourse："+requestJson.get("content")+"----------");
         return courseTeacherService.addCourse(requestJson);
     }
 
@@ -121,7 +122,7 @@ public class CourseTeacherController {
         }else{
             CommonUtil.hasAllRequired(requestJson, "grade,teacherType,tuitionType");
         }
-
+        logger.info("-----------CourseTeacherController updateCourse："+requestJson.get("id")+"----------");
         return courseTeacherService.updateCourse(requestJson);
     }
     @RequiresPermissions("course-teacher:update")
@@ -135,6 +136,13 @@ public class CourseTeacherController {
     @PostMapping("/updateCourseArea")
     public JSONObject updateCourseArea(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id, courseArea");
+        return courseTeacherService.updateFinalTuition(requestJson);
+    }
+
+    @RequiresPermissions("course-teacher:update")
+    @PostMapping("/updateComments")
+    public JSONObject updateComments(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id, comments");
         return courseTeacherService.updateFinalTuition(requestJson);
     }
 
@@ -153,6 +161,8 @@ public class CourseTeacherController {
         JSONObject json = new JSONObject();
         json.put("id",requestJson.getInteger("id"));
         json.put("deleteStatus","2");
+        logger.info("-----------CourseTeacherController deleteCourse："+requestJson.getInteger("id")+"----------");
+
         return courseTeacherService.deleteCourse(json);
     }
 
@@ -170,6 +180,8 @@ public class CourseTeacherController {
         json.put("id",requestJson.getInteger("id"));
         json.put("deleteStatus","2");
         json.put("status","disabled");
+        logger.info("-----------CourseTeacherController disabledCourse："+requestJson.getInteger("id")+"----------");
+
         return courseTeacherService.disabledCourse(json);
     }
 }

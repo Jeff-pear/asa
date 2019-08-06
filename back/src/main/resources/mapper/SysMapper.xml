@@ -86,11 +86,21 @@
     </insert>
 
     <select id="listAttachment" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT
-        id        id,
-        location,business_id,origin_fileName, DATE_FORMAT(create_date, '%Y.%m.%d') createDate
-        FROM sys_attach
-        WHERE id=#{id}
+        SELECT s.id id, s.location,s.business_id,s.origin_fileName,
+        DATE_FORMAT(s.create_date, '%Y.%m.%d') createDate,
+        s.type,
+        CASE type
+        WHEN 'course-teacher' THEN t.content
+        WHEN 'course-student' THEN u.nickname
+        ELSE '其他' END as content
+        FROM sys_attach s left join course_teacher t on t.id = s.business_id
+        left join course_student cs on cs.id = s.business_id
+        left join sys_user u on cs.select_user_id = u.id
+        WHERE 1=1
+        <if test="id !='' and id !=null">
+            and s.id=#{id}
+        </if>
+
     </select>
 
     <update id="updateAttachmentBusinessById" >

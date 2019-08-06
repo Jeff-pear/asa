@@ -12,6 +12,7 @@ const getters = {
   permission_routers: state => state.permission.routers,
   addRouters: state => state.permission.addRouters,
   groupTag: state => state.user.groupTag,
-  period: state => state.user.period
+  period: state => state.user.period,
+  needResetPwd: state => state.user.needResetPwd
 }
 export default getters

@@ -65,34 +65,36 @@
 
     <select id="listCourse" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-        w.id id,
-        w.course_id courseId,
-        w.select_user_id selectUserId,
-          date_format(w.create_date, '%Y.%m.%d %T') createDate,
-          date_format(w.update_date, '%Y.%m.%d %T') updateDate,
+            w.id id,
+            w.course_id courseId,
+            w.select_user_id selectUserId,
+            date_format(w.create_date, '%Y.%m.%d %T') createDate,
+            date_format(w.update_date, '%Y.%m.%d %T') updateDate,
 
-        u.content content,
-        u.brief,
-        u.capacity,
-        w.course_date courseDateStudent,
-        u.tuition,
-        s.nickname,
-        u.grade,
-        w.is_pay isPay,
-        u.course_area courseArea,
-        u.tuition_type tuitionType,
-        u.final_tuition finalTuition,
-        u.need_training_aid needTrainingAid,
-        u.phone,u.price,u.recommend_brand recommendBrand,
-        sys_attach.origin_fileName originFileName,
-        sys_attach.id attachId,
-        sys_attach2.origin_fileName originFileNameStu,
-        sys_attach2.id attachIdStu
+            u.content content,
+            u.brief,
+            u.capacity,
+            w.course_date courseDateStudent,
+            u.tuition,
+            s.nickname,
+            u.grade,
+            w.is_pay isPay,
+            u.course_area courseArea,
+            u.tuition_type tuitionType,
+            u.final_tuition finalTuition,
+            u.need_training_aid needTrainingAid,
+            u.phone,u.price,u.recommend_brand recommendBrand,
+            sys_attach.origin_fileName originFileName,
+            sys_attach.id attachId,
+            sys_attach2.origin_fileName originFileNameStu,
+            sys_attach2.id attachIdStu
         FROM course_student w
-          LEFT JOIN course_teacher u ON w.course_id = u.id
-          LEFT JOIN sys_user s ON u.create_user = s.id
-          left JOIN sys_attach on u.id= sys_attach.business_id and sys_attach.type='course-teacher'
-          left JOIN sys_attach sys_attach2 on w.id= sys_attach2.business_id and sys_attach2.type='course-student'
+            LEFT JOIN course_teacher u ON w.course_id = u.id
+            LEFT JOIN sys_user s ON u.create_user = s.id
+            left JOIN sys_attach on u.id= sys_attach.business_id and sys_attach.type='course-teacher'
+            and sys_attach.id in (select max(e.id) from sys_attach e where e.business_id = sys_attach.business_id)
+            left JOIN sys_attach sys_attach2 on w.id= sys_attach2.business_id and sys_attach2.type='course-student'
+            and sys_attach2.id in (select max(e.id) from sys_attach e where e.business_id = sys_attach2.business_id)
         WHERE w.delete_status = '1'
 
         <if test="selectUserId !='' and selectUserId !=null">
@@ -109,7 +111,7 @@
             )
         </if>
               ORDER BY w.id DESC
-        <if test="offSet !='' and offSet !=null and pageRow !='' and pageRow !=null">
+        <if test="pageRow !='' and pageRow !=null">
             LIMIT #{offSet}, #{pageRow}
         </if>
     </select>
@@ -134,6 +136,9 @@
         </if>
         <if test="adminDisabled !='' and adminDisabled !=null">
             , admin_disabled = #{adminDisabled}
+        </if>
+        <if test="updateBy !='' and updateBy !=null">
+            , update_by = #{updateBy}
         </if>
         WHERE id = #{id}
     </update>

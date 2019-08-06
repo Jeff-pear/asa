@@ -17,7 +17,7 @@
       </el-col>
       <el-col :span="12">
         <el-form-item>
-          <el-input type="number" v-model="price" min="0" :placeholder="$t('teacher.price')"></el-input>
+          <el-input type="text" v-model="price" :placeholder="$t('teacher.price')"></el-input>
         </el-form-item>
       </el-col>
     </el-row>

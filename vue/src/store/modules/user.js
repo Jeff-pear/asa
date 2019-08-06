@@ -13,6 +13,7 @@ const user = {
     menus: [],
     permissions: [],
     period: {},
+    needResetPwd:''
   },
   mutations: {
     SET_USER: (state, userInfo) => {
@@ -24,6 +25,9 @@ const user = {
       state.groupTag = userInfo.groupTag;
       state.period = userInfo.period;
     },
+    SET_NEED_SET_PWD: (state, needResetPwd) => {
+      state.needResetPwd = needResetPwd;
+    },
     RESET_USER: (state) => {
       console.log(state);
       state.nickname = "";
@@ -33,6 +37,7 @@ const user = {
       state.permissions = [];
       state.groupTag = 0;
       state.period = {};
+      state.needResetPwd = '';
     }
   },
   actions: {
@@ -64,6 +69,7 @@ const user = {
           //储存用户信息
           commit('SET_USER', data.userPermission);
           //cookie保存登录状态,仅靠vuex保存的话,页面刷新就会丢失登录状态
+          commit('SET_NEED_SET_PWD', data.needResetPwd);
           setToken();
           //生成路由
           let userPermission = data.userPermission ;

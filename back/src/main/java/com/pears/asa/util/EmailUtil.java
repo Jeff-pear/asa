@@ -8,7 +8,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.internet.MimeMessage;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class EmailUtil {
@@ -48,5 +49,30 @@ public class EmailUtil {
             logger.error(e.getMessage());
             return false;
         }
+    }
+
+    private static List<Map<String,Object>> queryForList(){
+        final List<Map<String,Object>> result = new ArrayList<>();
+        for(int i = 0; i < 15; i++){
+            final Map <String,Object> map = new LinkedHashMap();
+            map.put("key","key"+i);
+            map.put("value","value"+i);
+            result.add(map);
+
+        }
+        return result;
+    }
+    public static void main(String[] args){
+
+        final List<Map<String,Object>> steps = queryForList();
+
+        for(Iterator<Map<String,Object>> it=steps.iterator();it.hasNext();)
+        {
+            System.out.println(it.next());
+        }
+        final Map <String,String> result = steps.stream().collect(Collectors.toMap(s->(String)s.get("key"),s->(String)s.get("value")));
+
+        result.entrySet().forEach(e->System.out.println(e.getKey()+"-->"+e.getValue()));
+
     }
 }

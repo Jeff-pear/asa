@@ -28,12 +28,13 @@
               <svg-icon icon-class="user_type"></svg-icon>
             </span>
             <el-select @change="handleChange" v-model="registerForm.roleId" :placeholder="$t('register.userType')">
-              <el-option
-                v-for="item in roleList"
-                :key="item.roleId"
-                :label="item.roleName"
-                :value="item.roleId">
-              </el-option>
+              <!--<el-option-->
+                <!--v-for="item in roleList"-->
+                <!--:key="item.roleId"-->
+                <!--:label="item.roleName"-->
+                <!--:value="item.roleId">-->
+
+              <el-option label="Teacher" value="3"></el-option>
             </el-select>
           </el-form-item>
         </el-col>

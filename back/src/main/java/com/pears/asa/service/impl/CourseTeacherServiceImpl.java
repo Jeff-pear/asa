@@ -3,16 +3,20 @@ package com.pears.asa.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pears.asa.config.properties.EmailConfig;
 import com.pears.asa.dao.CourseStudentDao;
 import com.pears.asa.dao.CourseTeacherDao;
 import com.pears.asa.dao.SysDao;
-import com.pears.asa.service.CourseStudentService;
 import com.pears.asa.service.CourseTeacherService;
 import com.pears.asa.util.CommonUtil;
+import com.pears.asa.util.EmailUtil;
 import com.pears.asa.util.constants.Constants;
 import com.pears.asa.util.constants.ErrorEnum;
+import com.pears.asa.util.model.MailVO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +34,9 @@ import java.util.List;
 @Service
 public class CourseTeacherServiceImpl implements CourseTeacherService {
 
+    private static Logger logger = LoggerFactory.getLogger(CourseTeacherServiceImpl.class);
+    @Autowired
+    EmailConfig emailConfig;
     @Autowired
     private CourseTeacherDao courseTeacherDao;
     @Autowired
@@ -252,7 +259,32 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
             });
         }
         exeUpdateCourse(jsonObject);
-        return CommonUtil.successJson();
+
+        if(StringUtils.hasText(jsonObject.getString("email"))){
+            //send email
+            MailVO vo = new MailVO();
+            vo.setSubject(CommonUtil.getI18NMessage("email.disabledTitle",null));
+            vo.setFromUser(Constants.EMAIL_SENDER);
+            vo.setToUser(jsonObject.getString("email"));
+
+            String url = CommonUtil.getI18NMessage("email.disabledContent",new String[]{jsonObject.getString("content")});
+
+            StringBuffer sb = new StringBuffer();
+            sb.append("<html><head></head><body><h1>"+CommonUtil.getI18NMessage("email.part1",null)+"</h1>")
+                    .append("<p style=''>"+url+"</p><p>"+CommonUtil.getI18NMessage("email.part3",null)+"</p>");
+            vo.setContent(sb.toString());
+            EmailUtil e = new EmailUtil();
+            if(e.sendMailHtml(vo,emailConfig)){
+                return CommonUtil.successJson();
+            }else{
+                return CommonUtil.errorJson(ErrorEnum.E_00003);
+            }
+        }else{
+            logger.info("无法找到接受者email！！！！！！！！！！");
+            return CommonUtil.successJson();
+        }
+
+
     }
 
     @Override
@@ -263,6 +295,14 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     @Override
     public JSONObject listCourseResult4Finance(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
+
+        if(StringUtils.hasText(jsonObject.getString("gradeAndClassRequest"))){
+            String[] arr = jsonObject.getString("gradeAndClassRequest").split(",");
+            jsonObject.put("gradeVal",arr[0]);
+            if(arr.length>1){
+                jsonObject.put("classVal",arr[1]);
+            }
+        }
         int count = courseTeacherDao.countCourseResult4Finance(jsonObject);
         List<JSONObject> list = courseTeacherDao.listCourseResult4Finance(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);

@@ -1,7 +1,9 @@
 <template>
   <div class="period-container" >
     <el-form class="small-space" :model="tempPeriod" label-position="left" label-width="130px"
-             style='width: 450px; margin-left:50px;'>
+             style=' margin-left:50px;'>
+      <div style="color: red;margin-bottom: 8px;">系统将在财务审核费用截止日期第二天01:00:00自动执行系统任务<br/>（任务规则：教师课程中状态为publish的并且该课程有大于等于5人已财务确认收款，则认为成功）<br/></div>
+
       <el-form-item label="教师选课周期">
         <div class="block">
           <el-date-picker
@@ -71,13 +73,15 @@
         <!--<el-radio v-model="tempPeriod.type" label="1">补选</el-radio>-->
       </el-form-item>
       <el-form-item label="备注">
-        <el-input type="text" v-model="tempPeriod.comments">
-        </el-input>
+        <div class="block" style="width: 350px;">
+          <el-input type="text" v-model="tempPeriod.comments">
+          </el-input>
+        </div>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer footer-left" >
       <el-button type="success" @click="setPeriod">发 布</el-button>
-      <span style="color: red;">系统将在财务审核费用截止日期第二天01:00:00自动执行系统任务</span>
+
     </div>
 
     <el-table :data="list" v-loading.body="listLoading" style="margin-top: 10px; " element-loading-text="拼命加载中" border fit

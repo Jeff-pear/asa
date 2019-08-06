@@ -3,12 +3,16 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-button type="primary" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加
+          <el-input class="filter-item" placeholder="用户名" v-model="listQuery.username"
+                    size="small" ref="searchBtn" style="width: 200px;"
+                    @keyup.enter.native="handleFilter" clearable/>
+          <el-button class="filter-item" type="primary" icon="el-icon-search" style="margin-left: 10px;" size="small"  @click="handleFilter">{{ $t('table.search') }}</el-button>
+          <el-button type="primary" class="filter-item" v-if="hasPerm('user:add')" icon="el-icon-edit" size="small" @click="showCreate">添加
           </el-button>
         </el-form-item>
       </el-form>
     </div>
-    <el-table :data="list" height="530" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
+    <el-table :data="list" height="480" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
       <!--<el-table-column type="expand">-->
         <!--<template slot-scope="props">-->
@@ -38,6 +42,12 @@
       <el-table-column align="center" label="角色" width="100">
         <template slot-scope="scope">
           <el-tag type="success" v-text="scope.row.roleName" v-if="scope.row.roleId===1"></el-tag>
+          <el-tooltip placement="top" effect="light" v-else-if="scope.row.roleId===4">
+            <div slot="content">年级：{{formatGrade(scope.row.grade)}}<br/>班级：{{scope.row.class}}</div>
+            <el-tag type="danger" v-text="scope.row.roleName" ></el-tag>
+          </el-tooltip>
+
+
           <el-tag type="primary" v-text="scope.row.roleName" v-else></el-tag>
         </template>
       </el-table-column>
@@ -104,6 +114,21 @@
           <el-input type="text" v-model="tempUser.nicknameCn">
           </el-input>
         </el-form-item>
+        <el-form-item label="年级" style="width: 335px;">
+          <el-select placeholder="请选择" v-model="tempUser.grade">
+            <el-option
+                       v-for="item in options"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+
+        </el-form-item>
+        <el-form-item label="班级" >
+          <el-input type="text" v-model="tempUser.class">
+          </el-input>
+        </el-form-item>
         <el-form-item label="激活状态" required>
           <el-radio v-model="tempUser.activeStatus" label="1">激活</el-radio>
           <el-radio v-model="tempUser.activeStatus" label="0">无效</el-radio>
@@ -136,7 +161,39 @@
         listQuery: {
           pageNum: 1,//页码
           pageRow: 50,//每页条数
+          username: '',
         },
+        options: [{
+          value: '0',
+          label: 'KG'
+        }, {
+          value: '1',
+          label: 'G1'
+        }, {
+          value: '2',
+          label: 'G2'
+        }, {
+          value: '3',
+          label: 'G3'
+        }, {
+          value: '4',
+          label: 'G4'
+        }, {
+          value: '5',
+          label: 'G5'
+        }, {
+          value: '6',
+          label: 'G6'
+        }, {
+          value: '7',
+          label: 'G7'
+        }, {
+          value: '8',
+          label: 'G8'
+        }, {
+          value: '9',
+          label: 'G9'
+        }],
         roles: [],//角色列表
         dialogStatus: 'create',
         dialogFormVisible: false,
@@ -152,6 +209,8 @@
           roleId: '',
           userId: '',
           email: '',
+          grade: '',
+          class: '',
           activeStatus: ''
         }
       }
@@ -168,6 +227,10 @@
       ])
     },
     methods: {
+      handleFilter(){
+        this.listQuery.pageNum = 1;
+        this.getList();
+      },
       getAllRoles() {
         this.api({
           url: "/user/getAllRoles",
@@ -207,6 +270,20 @@
       getIndex($index) {
         //表格序号
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
+      },
+      formatGrade(arrVal){
+        function formatSingle(val){
+          let resultVal = '';
+          if(val == 0){
+            resultVal = 'KG'
+          }else{
+            resultVal = 'G'+String(val);
+          }
+          return resultVal;
+        }
+        if(arrVal!=undefined){
+          return formatSingle(arrVal);
+        }
       },
       showCreate() {
         //显示新增对话框
@@ -277,6 +354,10 @@
         }).then(() => {
           let user = _vue.list[$index];
           user.deleteStatus = '2';
+          user.username += '__d';
+          user.nickname += '__d';
+          user.nicknameCn += '__d';
+          user.email += '__d';
           _vue.api({
             url: "/user/updateUser",
             method: "post",

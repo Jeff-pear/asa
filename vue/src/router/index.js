@@ -100,12 +100,19 @@ export const asyncRouterMap = [
         meta: {title: 'period', icon: 'peroid'},
         menu: 'period'
       },
+      // {
+      //   path: 'email',
+      //   name: 'email',
+      //   component: _import('sys/email'),
+      //   meta: {title: 'Email', icon: 'mail'},
+      //   menu: 'email'
+      // },
       {
-        path: 'email',
-        name: 'email',
-        component: _import('sys/email'),
-        meta: {title: 'Email', icon: 'mail'},
-        menu: 'email'
+        path: 'attach',
+        name: 'attach',
+        component: _import('sys/attach'),
+        meta: {title: 'Attach', icon: 'attachment'},
+        menu: 'attach'
       },
 
     ]

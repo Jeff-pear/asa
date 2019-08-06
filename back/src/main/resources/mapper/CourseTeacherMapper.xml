@@ -137,6 +137,7 @@
           w.course_date courseDate,
           w.tuition,
           w.create_user,
+          u.email,
           w.update_user,
           w.grade,
           w.tuition_type tuitionType,
@@ -148,11 +149,12 @@
         w.need_training_aid needTrainingAid,
         w.phone,w.price,w.recommend_brand recommendBrand,
             sys_attach.origin_fileName originFileName,
-            sys_attach.id attachId
+            sys_attach.id attachId,
+        w.comments
         FROM course_teacher w
           LEFT JOIN sys_user u ON w.teacher_name = u.id
           left JOIN sys_attach on w.id= sys_attach.business_id and sys_attach.type='course-teacher'
-
+        and sys_attach.id in (select max(e.id) from sys_attach e where e.business_id = sys_attach.business_id)
         WHERE w.delete_status = '1'
         <if test="content !='' and content !=null">
             AND w.content like concat(concat('%',#{content}),'%')
@@ -169,7 +171,8 @@
         <if test="studentGradeFilter !='' and studentGradeFilter != null">
             AND w.grade like concat(concat('%',#{studentGradeFilter}),'%')
         </if>
-        <if test="offSet !='' and offSet !=null and pageRow !='' and pageRow !=null">
+        order by courseDate asc
+        <if test="pageRow !='' and pageRow !=null and pageRow != '-1'">
             LIMIT #{offSet}, #{pageRow}
         </if>
 
@@ -277,21 +280,52 @@
             u1.nickname nicknameStu,
             u1.nickname_cn nickNameCnStu,
             u1.grade,
+            u1.class,
              s.is_pay isPay,
              s.finance_is_pay financeIsPay,
              s.course_date courseDate,
              t.content content,
+              u2.email,
              t.course_date courseDateTeacher,
              t.final_tuition finalTuition,
               t.course_area courseArea,
              u2.nickname nicknameTeacher,
              u2.nickname_cn nicknameTeacher,
-            a.id attachId,a.origin_fileName originFileName
+            a.id attachId,a.origin_fileName originFileName,
+            s.update_by
         from course_student s
           left join course_teacher t on t.id = s.course_id
           left join sys_user u1 on u1.id = s.select_user_id
           left join sys_user u2 on u2.id = t.teacher_name
           left join sys_attach a on a.business_id = s.id and a.type = 'course-student'
+              and a.id in (select max(e.id) from sys_attach e where e.business_id = a.business_id)
+        where s.delete_status = '1' and t.delete_status = '1'
+
+        <if test="content !='' and content !=null">
+            AND t.content like concat(concat('%',#{content}),'%')
+        </if>
+        <if test="statusPublish !='' and statusPublish !=null">
+            AND t.status = 'publish'
+        </if>
+        <if test="statusSuccess !='' and statusSuccess !=null">
+            AND t.status = 'success'
+        </if>
+        <if test="gradeVal !='' and gradeVal !=null">
+            AND u1.grade = #{gradeVal}
+        </if>
+        <if test="classVal !='' and classVal !=null">
+            AND u1.class = #{classVal}
+        </if>
+        <if test="notContainSystem !='' and notContainSystem !=null">
+            and s.update_by is null and t.final_tuition is not null
+        </if>
+        order by s.course_id asc, u1.grade asc, u1.class asc
+    </select>
+    <select id="countCourseResult4Finance" resultType="Integer">
+    SELECT count(0)
+        from course_student s
+        left join sys_user u1 on u1.id = s.select_user_id
+        left join course_teacher t on t.id = s.course_id
         where s.delete_status = '1' and t.delete_status = '1'
         <if test="content !='' and content !=null">
             AND t.content like concat(concat('%',#{content}),'%')
@@ -302,15 +336,11 @@
         <if test="statusSuccess !='' and statusSuccess !=null">
             AND t.status = 'success'
         </if>
-        order by s.course_id asc
-    </select>
-    <select id="countCourseResult4Finance" resultType="Integer">
-    SELECT count(0)
-        from course_student s
-        left join course_teacher t on t.id = s.course_id
-        where s.delete_status = '1' and t.delete_status = '1'
-        <if test="content !='' and content !=null">
-            AND t.content like concat(concat('%',#{content}),'%')
+        <if test="gradeVal !='' and gradeVal !=null">
+            AND u1.grade = #{gradeVal}
+        </if>
+        <if test="classVal !='' and classVal !=null">
+            AND u1.class = #{classVal}
         </if>
     </select>
 </mapper>

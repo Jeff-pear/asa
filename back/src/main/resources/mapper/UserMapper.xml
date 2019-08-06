@@ -7,6 +7,9 @@
         SELECT count(0)
         FROM sys_user u
         WHERE u.delete_status = '1'
+        <if test="username !='' and username !=null">
+            AND username like concat(concat('%',#{username}),'%')
+        </if>
     </select>
 
     <select id="countUserByCondition" resultType="Integer">
@@ -34,7 +37,8 @@
         <result column="deleteStatus" property="deleteStatus"/>
         <result column="activeStatus" property="activeStatus"/>
         <result column="email" property="email"/>
-
+        <result column="grade" property="grade"/>
+        <result column="class" property="class"/>
         <collection property="permissionList" ofType="String">
             <id column="permissionName" property="permissionName"/>
         </collection>
@@ -55,12 +59,17 @@
                      active_status                           activeStatus,
                      email                                   email,
                     password                                  password,
+                    grade,
+                    class,
                      DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
                      DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
                  FROM sys_user
                  WHERE delete_status = '1'
+                <if test="username !='' and username !=null">
+                    AND username like concat(concat('%',#{username}),'%')
+                </if>
                  ORDER BY id
-                <if test="offSet !='' and offSet !=null and pageRow !='' and pageRow !=null">
+                <if test="pageRow !='' and pageRow !=null">
                     LIMIT #{offSet}, #{pageRow}
                 </if>
              ) u
@@ -104,6 +113,12 @@
         <if test="activeStatus !='' and activeStatus !=null">
             , active_status
         </if>
+        <if test="grade !='' and grade !=null">
+            , grade
+        </if>
+        <if test="class !='' and class !=null">
+            , class
+        </if>
         ) VALUES
             (#{username}, #{password}, #{nickname}, #{nicknameCn}, #{roleId}
 
@@ -112,6 +127,12 @@
         </if>
         <if test="activeStatus !='' and activeStatus !=null">
             , #{activeStatus}
+        </if>
+        <if test="grade !='' and grade !=null">
+            , #{grade}
+        </if>
+        <if test="class !='' and class !=null">
+            , #{class}
         </if>
         )
     </insert>
@@ -151,6 +172,9 @@
     <update id="updateUser">
         UPDATE sys_user
         SET id=id
+        <if test="username !='' and username !=null">
+            ,username = #{username}
+        </if>
         <if test="nickname !='' and nickname !=null">
             ,nickname = #{nickname}
         </if>
@@ -171,6 +195,12 @@
         </if>
         <if test="deleteStatus !='' and deleteStatus !=null">
             , delete_status = #{deleteStatus}
+        </if>
+        <if test="grade !='' and grade !=null">
+            , grade = #{grade}
+        </if>
+        <if test="class !='' and class !=null">
+            , class = #{class}
         </if>
         WHERE id = #{userId}
     </update>

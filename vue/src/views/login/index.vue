@@ -14,14 +14,14 @@
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input v-model="loginForm.username" autoComplete="on"/>
+        <el-input v-model="loginForm.username" autoComplete="off" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" ></svg-icon>
         </span>
         <el-input type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password"
-                  autoComplete="on"></el-input>
+                  autoComplete="off"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
@@ -29,29 +29,24 @@
         </el-button>
       </el-form-item>
       <div class="registerBtn"><svg-icon icon-class="user"/>
-        <router-link to="/register"><a>去注册</a></router-link>
+        <router-link to="/register"><a>{{ $t('common.toRegister')}}</a></router-link>
       </div>
 
-      <div class="tips">
-        <span style="margin-right:36px;">{{ $t('login.username') }} : admin</span>
-        <span>{{ $t('login.password') }} : 123456</span>
-      </div>
-      <div class="tips">
-        <span style="margin-right:51px;">{{ $t('login.username') }} : test</span>
-        <span>{{ $t('login.password') }} : 123456</span>
-      </div>
-      <div class="tips">
-        <span style="margin-right:28px;">{{ $t('login.username') }} : finance</span>
-        <span>{{ $t('login.password') }} : 123456</span>
-      </div>
-      <div class="tips">
-        <span style="margin-right:18px;">{{ $t('login.username') }} : xiaoming</span>
-        <span>{{ $t('login.password') }} : 123456</span>
-      </div>
-      <div class="tips">
-        <span style="margin-right:21px;">{{ $t('login.username') }} : xiaofang</span>
-        <span>{{ $t('login.password') }} : 123456</span>
-      </div>
+      <!--<div class="tips">-->
+        <!--<span style="margin-right:36px;">{{ $t('login.username') }} : admin</span>-->
+      <!--</div>-->
+      <!--<div class="tips">-->
+        <!--<span style="margin-right:51px;">{{ $t('login.username') }} : test</span>-->
+      <!--</div>-->
+      <!--<div class="tips">-->
+        <!--<span style="margin-right:28px;">{{ $t('login.username') }} : finance</span>-->
+      <!--</div>-->
+      <!--<div class="tips">-->
+        <!--<span style="margin-right:18px;">{{ $t('login.username') }} : xiaoming</span>-->
+      <!--</div>-->
+      <!--<div class="tips">-->
+        <!--<span style="margin-right:21px;">{{ $t('login.username') }} : xiaofang</span>-->
+      <!--</div>-->
     </el-form>
   </div>
 </template>
@@ -67,8 +62,8 @@
         // ee: 'https://07033320a.github.io/images/login_bg.JPG',
         loginBg:"background-image: url('https://07033320a.github.io/images/login_bg.JPG') ",
         loginForm: {
-          username: 'admin',
-          password: '123456'
+          username: '',
+          password: ''
         },
         loginRules: {
           username: [{required: true, trigger: 'blur', message: "请输入用户名"}],
@@ -117,8 +112,8 @@
     -moz-background-size: 100% 100%;
     //background: url(https://harsima.github.io/vue-backend/static/images/default/login.caef9df.jpg) 50% no-repeat;
     input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
-      -webkit-text-fill-color: #fff !important;
+      -webkit-box-shadow: 0 0 0px 1000px #e5e5e5 inset !important;
+      -webkit-text-fill-color: black !important;
     }
     input {
       background: transparent;

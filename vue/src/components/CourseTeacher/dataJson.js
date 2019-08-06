@@ -22,6 +22,9 @@ export const courseAreaOptions =[
     },{
       value: 'K204',
       label: 'K204'
+    },{
+      value: 'K205',
+      label: 'K205'
     }]
   },{
   label: '小学楼',

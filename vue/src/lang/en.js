@@ -14,6 +14,7 @@ export default {
     externalTeacher:'External Teacher',
     courseName: 'Course Name(Detail)',
     studentNum: 'Student Num',
+    remainNum: 'Surplus quota',
     grade: 'Grade',
     tuition: 'Tuition',
     tuitionOption1: '(Person*Lesson)',
@@ -45,7 +46,8 @@ export default {
     yes: 'Yes',
     no: 'No',
     isPay: 'Has Pay',
-    courseArea: 'Location'
+    courseArea: 'Location',
+    gradeAndClass: 'Grade / Class'
 
   },
   student:{
@@ -57,10 +59,14 @@ export default {
     payAttach: 'Payment Attachment',
     select: 'Select This',
     name: 'Student',
-    hasPay: 'Has Pay'
+    hasPay: 'Has Pay',
+    class: 'Class',
+    notice: 'Notice'
   },
   common:{
     loading: 'Loading...',
+    tips: 'Tips',
+    toModify: 'Change my password',
     checkAll: 'ALL',
     pleaseSelect: 'Please Select',
     deleteSuccess: 'Delete successfully',
@@ -70,7 +76,11 @@ export default {
     downloadSuccess: 'Download Successfully!',
     operationSuccess: 'Operation Successfully',
     restrictionUpload: 'The current restriction is to select one file. Please delete the previous attachment first.',
-    fileUploadSize: 'Upload file size should not exceed {0}MB!'
+    fileUploadSize: 'Upload file size should not exceed {0}MB!',
+    toRegister: 'To register',
+    role:'Role',
+    studentRole: 'Student',
+    teacherRole: 'Teacher'
   },
   route: {
     dashboard: 'Dashboard',
@@ -96,7 +106,10 @@ export default {
   profile: {
     oldPwd:'Old Password',
     newPwd:'New Password',
-    confirmPwd:'Confirm Password'
+    confirmPwd:'Confirm Password',
+    personalTab:'Personal Info',
+    pwdTab:'Reset Password',
+    notice: 'To ensure account security, please change your default password',
   },
   login: {
     title: 'ASA User Login',
@@ -154,7 +167,7 @@ export default {
     emailReg: 'Incorrect mailbox address',
     phoneNeedNum: 'Phone must be number',
     nickNameRequire: 'Please enter the English full Name',
-    nickNameCnRequire: '请输入中文名',
+    nickNameCnRequire: 'Please enter the Chinese full Name',
   },
   excel: {
     export: 'Export',
